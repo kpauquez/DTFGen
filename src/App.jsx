@@ -39,6 +39,7 @@ const App = () => {
   // Referencias para el scroll
   const posSectionRef = useRef(null);
   const negSectionRef = useRef(null);
+  const resultsSectionRef = useRef(null);
 
   useEffect(() => {
     fetch("./hmr-bank.json")
@@ -88,10 +89,9 @@ const App = () => {
     setNegativePrompt(buildString(Object.keys(NEGATIVE_LABELS)));
   }, [hmrCards, bank]);
 
-  // Función genérica para scroll
   const scrollToSection = (ref) => {
-    if (ref.current) {
-      const offset = 100; // Espacio para que no quede pegado al menú sticky
+    if (ref && ref.current) {
+      const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = ref.current.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -114,6 +114,13 @@ const App = () => {
     const nextState = !showNegTabs;
     setShowNegTabs(nextState);
     if (nextState) setTimeout(() => scrollToSection(negSectionRef), 100);
+  };
+
+  // NUEVA FUNCIÓN: Toggle Plantillas + Scroll al inicio
+  const handleToggleTemplates = () => {
+    const nextState = !showTemplates;
+    setShowTemplates(nextState);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const randomizePositive = () => {
@@ -235,13 +242,20 @@ const App = () => {
       onMouseOut={(e) => e.currentTarget.style.opacity = 0.8}
       >
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <button 
+            onClick={() => scrollToSection(resultsSectionRef)} 
+            style={{ backgroundColor: "#333", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ↓ VER PROMPT
+          </button>
           <button onClick={handleTogglePos} style={{ backgroundColor: showPosTabs ? "#4c1d95" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
             {showPosTabs ? "Ocultar Positivos" : "Ver Positivos"}
           </button>
           <button onClick={handleToggleNeg} style={{ backgroundColor: showNegTabs ? "#991b1b" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
             {showNegTabs ? "Ocultar Negativos" : "Ver Negativos"}
           </button>
-          <button onClick={() => setShowTemplates(!showTemplates)} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
+          {/* BOTÓN MODIFICADO: AHORA LLAMA A handleToggleTemplates */}
+          <button onClick={handleToggleTemplates} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
             {showTemplates ? "Ocultar Plantillas" : "Ver Plantillas"}
           </button>
         </div>
@@ -273,7 +287,6 @@ const App = () => {
                 GUARDAR SELECCIÓN
               </button>
             </div>
-            {/* ... Resto del panel de plantillas ... */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "10px", marginBottom: "20px" }}>
               {templates.map(t => (
                 <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "10px", borderRadius: "10px", border: "1px solid #333" }}>
@@ -295,7 +308,6 @@ const App = () => {
           </div>
         )}
 
-        {/* SECCIÓN POSITIVA */}
         <div ref={posSectionRef}>
           <h2 style={{ fontSize: "14px", color: "#7c3aed", marginBottom: "15px", letterSpacing: "1px" }}>CONFIGURACIÓN POSITIVA</h2>
           {showPosTabs && (
@@ -314,7 +326,6 @@ const App = () => {
           </div>
         </div>
 
-        {/* SECCIÓN NEGATIVA */}
         <div ref={negSectionRef} style={{ borderTop: "1px solid #222", paddingTop: "40px" }}>
           <h2 style={{ fontSize: "14px", color: "#ef4444", marginBottom: "15px", letterSpacing: "1px" }}>PROMPT NEGATIVO (EVITAR)</h2>
           {showNegTabs && (
@@ -333,8 +344,7 @@ const App = () => {
           </div>
         </div>
 
-        {/* RESULTADOS EDITABLES */}
-        <div style={{ marginTop: "50px", padding: "25px", backgroundColor: "#0f0f0f", borderRadius: "20px", border: "2px solid #333" }}>
+        <div ref={resultsSectionRef} style={{ marginTop: "50px", padding: "25px", backgroundColor: "#0f0f0f", borderRadius: "20px", border: "2px solid #333" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
             <div style={{ width: "100%" }}>
               <span style={{ fontSize: "10px", color: "#7c3aed", fontWeight: "bold" }}>PROMPT POSITIVO (EDITABLE)</span>
