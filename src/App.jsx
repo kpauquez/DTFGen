@@ -31,9 +31,6 @@ const App = () => {
 
   const [templates, setTemplates] = useState([]);
   const [templateName, setTemplateName] = useState("");
-
-  const [showPosTabs, setShowPosTabs] = useState(true);
-  const [showNegTabs, setShowNegTabs] = useState(true);
   const [showTemplates, setShowTemplates] = useState(false);
 
   // Referencias para el scroll
@@ -91,7 +88,7 @@ const App = () => {
 
   const scrollToSection = (ref) => {
     if (ref && ref.current) {
-      const offset = 140; // Mayor offset por si el menú crece en altura en móviles
+      const offset = 100; 
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = ref.current.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -104,21 +101,8 @@ const App = () => {
     }
   };
 
-  const handleTogglePos = () => {
-    const nextState = !showPosTabs;
-    setShowPosTabs(nextState);
-    if (nextState) setTimeout(() => scrollToSection(posSectionRef), 100);
-  };
-
-  const handleToggleNeg = () => {
-    const nextState = !showNegTabs;
-    setShowNegTabs(nextState);
-    if (nextState) setTimeout(() => scrollToSection(negSectionRef), 100);
-  };
-
   const handleToggleTemplates = () => {
-    const nextState = !showTemplates;
-    setShowTemplates(nextState);
+    setShowTemplates(!showTemplates);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -230,7 +214,7 @@ const App = () => {
   return (
     <div style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#e0e0e0", fontFamily: "sans-serif" }}>
       
-      {/* MENÚ SUPERIOR FLOTANTE RESPONSIVO */}
+      {/* MENÚ SUPERIOR FLOTANTE */}
       <nav style={{
         position: "sticky", 
         top: 0, 
@@ -238,34 +222,38 @@ const App = () => {
         backgroundColor: "rgba(15, 15, 15, 0.9)",
         backdropFilter: "blur(12px)", 
         borderBottom: "1px solid #333", 
-        padding: "10px 15px", // Reducido para móvil
+        padding: "10px 15px", 
         display: "flex", 
-        flexWrap: "wrap", // Permite que los botones bajen de línea
+        flexWrap: "wrap", 
         justifyContent: "center", 
         alignItems: "center",
         gap: "10px",
         opacity: 0.95
       }}>
-        {/* GRUPO DE ACCIONES DE VISTA */}
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
+          <button 
+            onClick={() => scrollToSection(posSectionRef)} 
+            style={{ backgroundColor: "#4c1d95", color: "#fff", border: "1px solid #7c3aed", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ↑ POSITIVO
+          </button>
+          <button 
+            onClick={() => scrollToSection(negSectionRef)} 
+            style={{ backgroundColor: "#991b1b", color: "#fff", border: "1px solid #ef4444", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ↓ NEGATIVO
+          </button>
           <button 
             onClick={() => scrollToSection(resultsSectionRef)} 
             style={{ backgroundColor: "#333", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
           >
-            ↓ PROMPT
-          </button>
-          <button onClick={handleTogglePos} style={{ backgroundColor: showPosTabs ? "#4c1d95" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
-            {showPosTabs ? "Ocultar +" : "Ver +"}
-          </button>
-          <button onClick={handleToggleNeg} style={{ backgroundColor: showNegTabs ? "#991b1b" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
-            {showNegTabs ? "Ocultar -" : "Ver -"}
+            RESULTADOS
           </button>
           <button onClick={handleToggleTemplates} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
             Plantillas
           </button>
         </div>
 
-        {/* GRUPO DE ACCIONES DE COPIA Y MEZCLA */}
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
           <button onClick={handleCopyPos} style={{ backgroundColor: copiedPos ? "#10b981" : "#4c1d95", color: "#fff", border: "none", padding: "7px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
             {copiedPos ? "OK!" : "COPY +"}
@@ -279,7 +267,7 @@ const App = () => {
         </div>
       </nav>
 
-      <div style={{ padding: "20px 15px" }}> {/* Ajustado para móvil */}
+      <div style={{ padding: "20px 15px" }}>
         
         {/* PLANTILLAS */}
         {showTemplates && (
@@ -315,15 +303,14 @@ const App = () => {
 
         <div ref={posSectionRef}>
           <h2 style={{ fontSize: "13px", color: "#7c3aed", marginBottom: "12px" }}>CONFIGURACIÓN POSITIVA</h2>
-          {showPosTabs && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
-              {Object.keys(HMR_LABELS).map(key => (
-                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
-                  {HMR_LABELS[key]}
-                </div>
-              ))}
-            </div>
-          )}
+          {/* TABS POSITIVOS SIEMPRE VISIBLES */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
+            {Object.keys(HMR_LABELS).map(key => (
+              <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
+                {HMR_LABELS[key]}
+              </div>
+            ))}
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px", marginBottom: "40px" }}>
             {Object.keys(HMR_LABELS).map(key => hmrCards[key]?.active && (
               <Card key={key} id={key} label={HMR_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#7c3aed" />
@@ -333,15 +320,14 @@ const App = () => {
 
         <div ref={negSectionRef} style={{ borderTop: "1px solid #222", paddingTop: "30px" }}>
           <h2 style={{ fontSize: "13px", color: "#ef4444", marginBottom: "12px" }}>PROMPT NEGATIVO</h2>
-          {showNegTabs && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px", padding: "10px", backgroundColor: "#1a0a0a", borderRadius: "10px", border: "1px solid #991b1b33" }}>
-              {Object.keys(NEGATIVE_LABELS).map(key => (
-                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
-                  {NEGATIVE_LABELS[key]}
-                </div>
-              ))}
-            </div>
-          )}
+          {/* TABS NEGATIVOS SIEMPRE VISIBLES */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px", padding: "10px", backgroundColor: "#1a0a0a", borderRadius: "10px", border: "1px solid #991b1b33" }}>
+            {Object.keys(NEGATIVE_LABELS).map(key => (
+              <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
+                {NEGATIVE_LABELS[key]}
+              </div>
+            ))}
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px", marginBottom: "40px" }}>
             {Object.keys(NEGATIVE_LABELS).map(key => hmrCards[key]?.active && (
               <Card key={key} id={key} label={NEGATIVE_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#ef4444" isNeg />
