@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// Categorías Positivas
 const HMR_LABELS = {
   sujeto: "Sujeto", pose: "Pose", accion: "Acción", ambiente: "Ambiente",
   estilo: "Estilo", iluminacion: "Iluminación", atmosfera: "Atmósfera",
@@ -7,195 +8,431 @@ const HMR_LABELS = {
   formato: "Formato", paleta: "Paleta", fondo: "Fondo", mascara: "Máscara"
 };
 
-const MULTI_SELECT_CATS = ["fondo", "mascara"];
+// Categorías Negativas
+const NEGATIVE_LABELS = {
+  n_calidad: "⭐ Calidad",
+  n_anatomia: "🦴 Anatomía",
+  n_rostro: "😐 Rostro",
+  n_estilo: "🎨 Estilo NO deseado",
+  n_composicion: "🖼 Composición",
+  n_texto: "💬 Texto y Marcas"
+};
+
+const MULTI_SELECT_CATS = ["fondo", "mascara", "n_calidad", "n_anatomia", "n_rostro", "n_estilo", "n_composicion", "n_texto"];
 
 const App = () => {
   const [bank, setBank] = useState(null);
   const [hmrCards, setHmrCards] = useState({});
   const [prompt, setPrompt] = useState("");
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [copied, setCopied] = useState(false); // Estado para el feedback de copiado
+  const [negativePrompt, setNegativePrompt] = useState("");
+  
+  const [copiedPos, setCopiedPos] = useState(false);
+  const [copiedNeg, setCopiedNeg] = useState(false);
+
+  const [templates, setTemplates] = useState([]);
+  const [templateName, setTemplateName] = useState("");
+
+  // Estados de visibilidad
+  const [showPosTabs, setShowPosTabs] = useState(true);
+  const [showNegTabs, setShowNegTabs] = useState(true);
+  const [showTemplates, setShowTemplates] = useState(false); // Oculto por defecto
 
   useEffect(() => {
     fetch("./hmr-bank.json")
       .then(res => res.json())
       .then(data => {
-        setBank(data);
+        const fullData = {
+          ...data,
+          n_calidad: ["baja calidad", "borroso", "pixelado", "ruido", "granulado", "desenfocado"],
+          n_anatomia: ["mala anatomía", "deformado", "extremidades extra", "dedos extra", "manos malformadas", "proporciones incorrectas"],
+          n_rostro: ["feo", "rostro deformado", "ojos malos", "ojos bizcos", "dientes malos"],
+          n_estilo: ["caricatura", "anime", "boceto", "render 3D", "estilo infantil"],
+          n_composicion: ["recortado", "fuera de cuadro", "duplicado", "sobresaturado", "marco"],
+          n_texto: ["texto", "marca de agua", "firma", "logo"]
+        };
+        setBank(fullData);
+
         const initialState = {};
-        Object.keys(HMR_LABELS).forEach(key => {
+        const allKeys = [...Object.keys(HMR_LABELS), ...Object.keys(NEGATIVE_LABELS)];
+        allKeys.forEach(key => {
           initialState[key] = {
-            selected: MULTI_SELECT_CATS.includes(key) ? [] : (data[key]?.[0] || ""),
+            selected: MULTI_SELECT_CATS.includes(key) ? [] : (fullData[key]?.[0] || ""),
             active: true,
             manual: ""
           };
         });
         setHmrCards(initialState);
+        
+        const saved = localStorage.getItem("hmr_templates");
+        if (saved) setTemplates(JSON.parse(saved));
       })
       .catch(err => console.error("Error al cargar JSON", err));
   }, []);
 
   useEffect(() => {
     if (!bank) return;
-    const finalString = Object.keys(HMR_LABELS)
+    const buildString = (keys) => keys
       .filter(key => hmrCards[key]?.active)
       .map(key => {
         const card = hmrCards[key];
         if (card.manual.trim() !== "") return card.manual.trim();
-        if (Array.isArray(card.selected)) return card.selected.join(", ");
-        return card.selected;
+        return Array.isArray(card.selected) ? card.selected.join(", ") : card.selected;
       })
       .filter(Boolean)
       .join(", ");
-    setPrompt(finalString);
+
+    setPrompt(buildString(Object.keys(HMR_LABELS)));
+    setNegativePrompt(buildString(Object.keys(NEGATIVE_LABELS)));
   }, [hmrCards, bank]);
 
-  // Función de copiado con feedback
-  const handleCopy = () => {
-    if (!prompt) return;
+  const randomizePositive = () => {
+    setHmrCards(prev => {
+      const newState = { ...prev };
+      Object.keys(HMR_LABELS).forEach(key => {
+        if (bank[key] && bank[key].length > 0) {
+          const options = bank[key];
+          if (MULTI_SELECT_CATS.includes(key)) {
+            const shuffled = [...options].sort(() => 0.5 - Math.random());
+            newState[key] = { 
+              ...newState[key], 
+              selected: shuffled.slice(0, Math.floor(Math.random() * 3) + 1),
+              manual: "" 
+            };
+          } else {
+            const randomOpt = options[Math.floor(Math.random() * options.length)];
+            newState[key] = { 
+              ...newState[key], 
+              selected: randomOpt,
+              manual: "" 
+            };
+          }
+        }
+      });
+      return newState;
+    });
+  };
+
+  const handleCopyPos = () => {
     navigator.clipboard.writeText(prompt);
-    setCopied(true);
-    
-    // Volver al estado original tras 2 segundos
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+    setCopiedPos(true);
+    setTimeout(() => setCopiedPos(false), 2000);
+  };
+
+  const handleCopyNeg = () => {
+    navigator.clipboard.writeText(negativePrompt);
+    setCopiedNeg(true);
+    setTimeout(() => setCopiedNeg(false), 2000);
   };
 
   const toggleCategory = (key) => {
-    setHmrCards(prev => ({
-      ...prev,
-      [key]: { ...prev[key], active: !prev[key].active }
-    }));
+    setHmrCards(prev => ({...prev, [key]: { ...prev[key], active: !prev[key].active }}));
   };
 
   const handleMultiSelect = (key, value) => {
     setHmrCards(prev => {
-      const currentSelection = prev[key].selected;
-      const newSelection = currentSelection.includes(value)
-        ? currentSelection.filter(item => item !== value)
-        : [...currentSelection, value];
-      return { ...prev, [key]: { ...prev[key], selected: newSelection } };
+      const current = prev[key].selected;
+      const next = current.includes(value) ? current.filter(i => i !== value) : [...current, value];
+      return { ...prev, [key]: { ...prev[key], selected: next } };
     });
+  };
+
+  const saveTemplate = () => {
+    if (!templateName.trim()) return alert("Ingresa un nombre para la plantilla");
+    const newTemplate = {
+      id: Date.now(),
+      name: templateName,
+      data: JSON.parse(JSON.stringify(hmrCards))
+    };
+    const updated = [...templates, newTemplate];
+    setTemplates(updated);
+    localStorage.setItem("hmr_templates", JSON.stringify(updated));
+    setTemplateName("");
+  };
+
+  const loadTemplate = (template) => {
+    setHmrCards(template.data);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const deleteTemplate = (id) => {
+    const updated = templates.filter(t => t.id !== id);
+    setTemplates(updated);
+    localStorage.setItem("hmr_templates", JSON.stringify(updated));
+  };
+
+  const renameTemplate = (id, newName) => {
+    const updated = templates.map(t => t.id === id ? { ...t, name: newName } : t);
+    setTemplates(updated);
+    localStorage.setItem("hmr_templates", JSON.stringify(updated));
+  };
+
+  const exportTemplates = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templates));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "plantillas_prompt.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  const importTemplates = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        setTemplates(imported);
+        localStorage.setItem("hmr_templates", JSON.stringify(imported));
+      } catch (err) {
+        alert("Error al importar el archivo JSON");
+      }
+    };
+    reader.readAsText(file);
   };
 
   if (!bank) return <div style={{ color: "#888", padding: "20px" }}>Cargando...</div>;
 
   return (
-    <div style={{ 
-      padding: "30px", 
-      paddingBottom: isMinimized ? "100px" : "250px", 
-      backgroundColor: "#050505", 
-      minHeight: "100vh", 
-      color: "#e0e0e0", 
-      fontFamily: "sans-serif",
-      transition: "padding 0.3s ease"
-    }}>
+    <div style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#e0e0e0", fontFamily: "sans-serif" }}>
       
-      {/* MENU DE CHIPS */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "30px", padding: "15px", backgroundColor: "#0f0f0f", borderRadius: "15px", border: "1px solid #1a1a1a" }}>
-        {Object.keys(HMR_LABELS).map(key => (
-          <div key={key} onClick={() => toggleCategory(key)} style={{
-            padding: "8px 16px", borderRadius: "20px", fontSize: "12px", fontWeight: "600", cursor: "pointer",
-            backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "transparent",
-            borderColor: hmrCards[key]?.active ? "#7c3aed" : "#333",
-            color: hmrCards[key]?.active ? "#fff" : "#666",
-            border: "1px solid"
-          }}>
-            {HMR_LABELS[key]}
-          </div>
-        ))}
-      </div>
+      {/* MENÚ SUPERIOR FLOTANTE */}
+      <nav style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
+        backgroundColor: "rgba(15, 15, 15, 0.85)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid #333",
+        padding: "12px 30px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        opacity: 0.8,
+        transition: "opacity 0.3s ease",
+      }}
+      onMouseOver={(e) => e.currentTarget.style.opacity = 1}
+      onMouseOut={(e) => e.currentTarget.style.opacity = 0.8}
+      >
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button 
+            onClick={() => setShowPosTabs(!showPosTabs)}
+            style={{ 
+              backgroundColor: showPosTabs ? "#4c1d95" : "#111", 
+              color: "#fff", border: "1px solid #444", padding: "6px 12px", 
+              borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" 
+            }}
+          >
+            {showPosTabs ? "Ocultar Positivos" : "Ver Positivos"}
+          </button>
+          <button 
+            onClick={() => setShowNegTabs(!showNegTabs)}
+            style={{ 
+              backgroundColor: showNegTabs ? "#991b1b" : "#111", 
+              color: "#fff", border: "1px solid #444", padding: "6px 12px", 
+              borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" 
+            }}
+          >
+            {showNegTabs ? "Ocultar Negativos" : "Ver Negativos"}
+          </button>
+          <button 
+            onClick={() => setShowTemplates(!showTemplates)}
+            style={{ 
+              backgroundColor: showTemplates ? "#065f46" : "#111", 
+              color: "#fff", border: "1px solid #444", padding: "6px 12px", 
+              borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" 
+            }}
+          >
+            {showTemplates ? "Ocultar Plantillas" : "Ver Plantillas"}
+          </button>
+        </div>
 
-      {/* GRILLA DE TARJETAS */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "20px" }}>
-        {Object.keys(HMR_LABELS).map(key => (
-          hmrCards[key]?.active && (
-            <div key={key} style={{ background: "#111", border: "1px solid #222", borderRadius: "16px", padding: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px" }}>
-                <span style={{ fontSize: "11px", color: "#555", fontWeight: "bold" }}>{HMR_LABELS[key].toUpperCase()}</span>
-                <button onClick={() => toggleCategory(key)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer" }}>×</button>
-              </div>
-
-              {MULTI_SELECT_CATS.includes(key) ? (
-                <div style={{ maxHeight: "150px", overflowY: "auto", marginBottom: "12px", opacity: hmrCards[key].manual.trim() !== "" ? 0.4 : 1 }}>
-                  {bank[key]?.map((option, index) => (
-                    <label key={index} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px", cursor: "pointer", fontSize: "13px", borderBottom: "1px solid #1a1a1a" }}>
-                      <input type="checkbox" disabled={hmrCards[key].manual.trim() !== ""} checked={hmrCards[key].selected.includes(option)} onChange={() => handleMultiSelect(key, option)} />
-                      {option}
-                    </label>
-                  ))}
-                </div>
-              ) : (
-                <select
-                  disabled={hmrCards[key].manual.trim() !== ""}
-                  value={hmrCards[key].selected}
-                  onChange={(e) => setHmrCards(prev => ({...prev, [key]: {...prev[key], selected: e.target.value}}))}
-                  style={{ width: "100%", padding: "10px", backgroundColor: "#1a1a1a", color: hmrCards[key].manual.trim() !== "" ? "#444" : "#ddd", border: "1px solid #333", borderRadius: "8px", marginBottom: "12px", opacity: hmrCards[key].manual.trim() !== "" ? 0.5 : 1 }}
-                >
-                  {bank[key]?.map((option, index) => (
-                    <option key={index} value={option}>{option}</option>
-                  ))}
-                </select>
-              )}
-
-              <input
-                type="text"
-                placeholder="Texto manual..."
-                value={hmrCards[key].manual}
-                onChange={(e) => setHmrCards(prev => ({...prev, [key]: {...prev[key], manual: e.target.value}}))}
-                style={{ width: "100%", padding: "12px", backgroundColor: "#050505", color: "#a78bfa", border: "1px solid #7c3aed55", borderRadius: "8px", fontSize: "13px", boxSizing: "border-box" }}
-              />
-            </div>
-          )
-        ))}
-      </div>
-
-      {/* FOOTER COLAPSABLE CON BOTÓN DINÁMICO */}
-      <div style={{ 
-        position: "fixed", 
-        bottom: isMinimized ? "-120px" : "20px", 
-        left: "50%", 
-        transform: "translateX(-50%)", 
-        width: "90%", maxWidth: "1000px",
-        backgroundColor: "#111", borderRadius: "16px", border: "1px solid #7c3aed", 
-        boxShadow: "0px -10px 40px rgba(0,0,0,0.9)", zIndex: 1000,
-        transition: "bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-      }}>
-        <button onClick={() => setIsMinimized(!isMinimized)} style={{ position: "absolute", top: "-20px", right: "20px", backgroundColor: "#7c3aed", color: "white", border: "none", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", fontWeight: "bold", fontSize: "18px" }}>
-          {isMinimized ? "↑" : "↓"}
+        <button 
+          onClick={randomizePositive}
+          style={{ 
+            backgroundColor: "#7c3aed", color: "#fff", border: "none", 
+            padding: "8px 20px", borderRadius: "20px", fontSize: "12px", 
+            cursor: "pointer", fontWeight: "bold", boxShadow: "0 0 15px rgba(124, 58, 237, 0.4)" 
+          }}
+        >
+          🎲 MEZCLA ALEATORIA
         </button>
+      </nav>
 
-        <div style={{ padding: "20px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "20px" }}>
-            <div style={{ flex: 1 }}>
-              <span style={{ fontSize: "10px", color: "#7c3aed", fontWeight: "bold" }}>PROMPT GENERADO</span>
-              <div style={{ marginTop: "8px", color: "#fff", fontSize: "14px", maxHeight: "120px", overflowY: "auto" }}>
-                {prompt || "Esperando selección..."}
-              </div>
+      <div style={{ padding: "30px" }}>
+        
+        {/* PLANTILLAS (SECCIÓN AHORA AL INICIO) */}
+        {showTemplates && (
+          <div style={{ 
+            backgroundColor: "#111", padding: "25px", borderRadius: "15px", border: "1px solid #333", 
+            marginBottom: "50px", animation: "fadeIn 0.3s ease" 
+          }}>
+            <h2 style={{ fontSize: "14px", color: "#10b981", marginBottom: "15px", letterSpacing: "1px" }}>PLANTILLAS Y EXPORTACIÓN</h2>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+              <input 
+                type="text" 
+                placeholder="Nombre de la nueva plantilla..." 
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                style={{ flex: 1, padding: "10px", backgroundColor: "#000", border: "1px solid #333", color: "#fff", borderRadius: "8px", boxSizing: "border-box" }}
+              />
+              <button onClick={saveTemplate} style={{ backgroundColor: "#10b981", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
+                GUARDAR SELECCIÓN
+              </button>
             </div>
-            
-            {/* BOTÓN CON CAMBIO DE ESTADO Y COLOR */}
-            <button 
-              onClick={handleCopy} 
-              style={{ 
-                backgroundColor: copied ? "#10b981" : "#7c3aed", // Verde si está copiado, morado normal
-                color: "#fff", 
-                border: "none", 
-                padding: "12px 25px", 
-                borderRadius: "8px", 
-                cursor: "pointer", 
-                fontWeight: "bold", 
-                whiteSpace: "nowrap", 
-                alignSelf: "center",
-                transition: "all 0.3s ease",
-                minWidth: "120px",
-                boxShadow: copied ? "0 0 20px rgba(16,185,129,0.4)" : "none"
-              }}
-            >
-              {copied ? "¡Copiado! ✓" : "Copiar Prompt"}
-            </button>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "10px", marginBottom: "20px" }}>
+              {templates.map(t => (
+                <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "10px", borderRadius: "10px", border: "1px solid #333" }}>
+                  <input 
+                    type="text" 
+                    value={t.name} 
+                    onChange={(e) => renameTemplate(t.id, e.target.value)}
+                    style={{ backgroundColor: "transparent", border: "none", color: "#10b981", fontSize: "12px", fontWeight: "bold", width: "100%", marginBottom: "8px" }}
+                  />
+                  <div style={{ display: "flex", gap: "5px" }}>
+                    <button onClick={() => loadTemplate(t)} style={{ flex: 1, background: "#059669", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "10px", cursor: "pointer" }}>CARGAR</button>
+                    <button onClick={() => deleteTemplate(t.id)} style={{ flex: 1, background: "#dc2626", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "10px", cursor: "pointer" }}>BORRAR</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: "10px", borderTop: "1px solid #222", paddingTop: "15px" }}>
+              <button onClick={exportTemplates} style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "bold" }}>
+                📤 EXPORTAR A JSON
+              </button>
+              <label style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "bold", textAlign: "center" }}>
+                📥 IMPORTAR DESDE JSON
+                <input type="file" onChange={importTemplates} style={{ display: "none" }} accept=".json" />
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* SECCIÓN POSITIVA */}
+        <h2 style={{ fontSize: "14px", color: "#7c3aed", marginBottom: "15px", letterSpacing: "1px" }}>CONFIGURACIÓN POSITIVA</h2>
+        
+        {showPosTabs && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px" }}>
+            {Object.keys(HMR_LABELS).map(key => (
+              <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "6px 12px", borderRadius: "15px", fontSize: "11px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
+                {HMR_LABELS[key]}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "15px", marginBottom: "50px" }}>
+          {Object.keys(HMR_LABELS).map(key => (
+            hmrCards[key]?.active && (
+              <Card key={key} id={key} label={HMR_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#7c3aed" />
+            )
+          ))}
+        </div>
+
+        {/* SECCIÓN NEGATIVA */}
+        <div style={{ borderTop: "1px solid #222", paddingTop: "40px" }}>
+          <h2 style={{ fontSize: "14px", color: "#ef4444", marginBottom: "15px", letterSpacing: "1px" }}>PROMPT NEGATIVO (EVITAR)</h2>
+          
+          {showNegTabs && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px", padding: "12px", backgroundColor: "#1a0a0a", borderRadius: "12px", border: "1px solid #991b1b33" }}>
+              {Object.keys(NEGATIVE_LABELS).map(key => (
+                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "6px 12px", borderRadius: "15px", fontSize: "11px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
+                  {NEGATIVE_LABELS[key]}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "15px", marginBottom: "50px" }}>
+            {Object.keys(NEGATIVE_LABELS).map(key => (
+              hmrCards[key]?.active && (
+                <Card key={key} id={key} label={NEGATIVE_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#ef4444" isNeg />
+              )
+            ))}
           </div>
         </div>
+
+        {/* RESULTADOS */}
+        <div style={{ marginTop: "50px", padding: "25px", backgroundColor: "#0f0f0f", borderRadius: "20px", border: "2px solid #333" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+            <div>
+              <span style={{ fontSize: "10px", color: "#7c3aed", fontWeight: "bold" }}>PROMPT POSITIVO</span>
+              <div style={{ backgroundColor: "#050505", padding: "15px", borderRadius: "10px", border: "1px solid #222", marginTop: "10px", color: "#fff", fontSize: "13px", minHeight: "60px", wordBreak: "break-all" }}>
+                {prompt || "..."}
+              </div>
+              <button onClick={handleCopyPos} style={{ width: "100%", marginTop: "10px", backgroundColor: copiedPos ? "#10b981" : "#7c3aed", color: "#fff", border: "none", padding: "12px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px", transition: "0.3s" }}>
+                {copiedPos ? "¡COPIADO! ✓" : "COPIAR POSITIVO"}
+              </button>
+            </div>
+
+            <div>
+              <span style={{ fontSize: "10px", color: "#ef4444", fontWeight: "bold" }}>PROMPT NEGATIVO</span>
+              <div style={{ backgroundColor: "#050505", padding: "15px", borderRadius: "10px", border: "1px solid #222", marginTop: "10px", color: "#fca5a5", fontSize: "13px", minHeight: "60px", wordBreak: "break-all" }}>
+                {negativePrompt || "..."}
+              </div>
+              <button onClick={handleCopyNeg} style={{ width: "100%", marginTop: "10px", backgroundColor: copiedNeg ? "#10b981" : "#ef4444", color: "#fff", border: "none", padding: "12px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px", transition: "0.3s" }}>
+                {copiedNeg ? "¡COPIADO! ✓" : "COPIAR NEGATIVO"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Card = ({ id, label, hmrCards, bank, toggleCategory, handleMultiSelect, setHmrCards, color, isNeg }) => {
+  const isManualActive = hmrCards[id].manual.trim() !== "";
+  const clearManual = () => setHmrCards(prev => ({ ...prev, [id]: { ...prev[id], manual: "" } }));
+
+  return (
+    <div style={{ 
+      background: isNeg ? "#1a0a0a" : "#111", 
+      border: `1px solid ${isNeg ? "#991b1b44" : "#222"}`, 
+      borderRadius: "12px", padding: "15px", boxSizing: "border-box"
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+        <span style={{ fontSize: "10px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
+        <button onClick={() => toggleCategory(id)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer" }}>×</button>
+      </div>
+
+      {!isManualActive && (
+        <div style={{ marginBottom: "10px" }}>
+          {MULTI_SELECT_CATS.includes(id) ? (
+            <div style={{ maxHeight: "120px", overflowY: "auto" }}>
+              {bank[id]?.map((opt, i) => (
+                <label key={i} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "4px 0", fontSize: "12px", cursor: "pointer" }}>
+                  <input type="checkbox" checked={hmrCards[id].selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} />
+                  {opt}
+                </label>
+              ))}
+            </div>
+          ) : (
+            <select 
+              value={hmrCards[id].selected} 
+              onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], selected: e.target.value}}))} 
+              style={{ width: "100%", padding: "8px", backgroundColor: "#050505", color: "#ccc", border: "1px solid #333", borderRadius: "6px" }}
+            >
+              {bank[id]?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
+            </select>
+          )}
+        </div>
+      )}
+
+      <div style={{ position: "relative" }}>
+        <input 
+          type="text" 
+          placeholder="Escribir manual..." 
+          value={hmrCards[id].manual} 
+          onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} 
+          style={{ 
+            width: "100%", padding: "8px 30px 8px 8px", backgroundColor: "#000", 
+            color: isNeg ? "#f87171" : "#a78bfa", border: isManualActive ? `1px solid ${color}` : "1px solid #222", 
+            borderRadius: "6px", fontSize: "12px", boxSizing: "border-box"
+          }} 
+        />
+        {isManualActive && <button onClick={clearManual} style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: color, cursor: "pointer" }}>×</button>}
       </div>
     </div>
   );
