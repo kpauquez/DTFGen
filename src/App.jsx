@@ -91,7 +91,7 @@ const App = () => {
 
   const scrollToSection = (ref) => {
     if (ref && ref.current) {
-      const offset = 100;
+      const offset = 140; // Mayor offset por si el menú crece en altura en móviles
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = ref.current.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -116,7 +116,6 @@ const App = () => {
     if (nextState) setTimeout(() => scrollToSection(negSectionRef), 100);
   };
 
-  // NUEVA FUNCIÓN: Toggle Plantillas + Scroll al inicio
   const handleToggleTemplates = () => {
     const nextState = !showTemplates;
     setShowTemplates(nextState);
@@ -231,77 +230,83 @@ const App = () => {
   return (
     <div style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#e0e0e0", fontFamily: "sans-serif" }}>
       
-      {/* MENÚ SUPERIOR FLOTANTE */}
+      {/* MENÚ SUPERIOR FLOTANTE RESPONSIVO */}
       <nav style={{
-        position: "sticky", top: 0, zIndex: 1000, backgroundColor: "rgba(15, 15, 15, 0.85)",
-        backdropFilter: "blur(12px)", borderBottom: "1px solid #333", padding: "12px 30px",
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        opacity: 0.8, transition: "opacity 0.3s ease"
-      }}
-      onMouseOver={(e) => e.currentTarget.style.opacity = 1}
-      onMouseOut={(e) => e.currentTarget.style.opacity = 0.8}
-      >
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        position: "sticky", 
+        top: 0, 
+        zIndex: 1000, 
+        backgroundColor: "rgba(15, 15, 15, 0.9)",
+        backdropFilter: "blur(12px)", 
+        borderBottom: "1px solid #333", 
+        padding: "10px 15px", // Reducido para móvil
+        display: "flex", 
+        flexWrap: "wrap", // Permite que los botones bajen de línea
+        justifyContent: "center", 
+        alignItems: "center",
+        gap: "10px",
+        opacity: 0.95
+      }}>
+        {/* GRUPO DE ACCIONES DE VISTA */}
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
           <button 
             onClick={() => scrollToSection(resultsSectionRef)} 
-            style={{ backgroundColor: "#333", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}
+            style={{ backgroundColor: "#333", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
           >
-            ↓ VER PROMPT
+            ↓ PROMPT
           </button>
-          <button onClick={handleTogglePos} style={{ backgroundColor: showPosTabs ? "#4c1d95" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
-            {showPosTabs ? "Ocultar Positivos" : "Ver Positivos"}
+          <button onClick={handleTogglePos} style={{ backgroundColor: showPosTabs ? "#4c1d95" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
+            {showPosTabs ? "Ocultar +" : "Ver +"}
           </button>
-          <button onClick={handleToggleNeg} style={{ backgroundColor: showNegTabs ? "#991b1b" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
-            {showNegTabs ? "Ocultar Negativos" : "Ver Negativos"}
+          <button onClick={handleToggleNeg} style={{ backgroundColor: showNegTabs ? "#991b1b" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
+            {showNegTabs ? "Ocultar -" : "Ver -"}
           </button>
-          {/* BOTÓN MODIFICADO: AHORA LLAMA A handleToggleTemplates */}
-          <button onClick={handleToggleTemplates} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 12px", borderRadius: "6px", fontSize: "11px", cursor: "pointer", fontWeight: "bold" }}>
-            {showTemplates ? "Ocultar Plantillas" : "Ver Plantillas"}
+          <button onClick={handleToggleTemplates} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
+            Plantillas
           </button>
         </div>
 
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <button onClick={handleCopyPos} style={{ backgroundColor: copiedPos ? "#10b981" : "#4c1d95", color: "#fff", border: "none", padding: "8px 15px", borderRadius: "8px", fontSize: "11px", cursor: "pointer", fontWeight: "bold", transition: "0.2s" }}>
-            {copiedPos ? "¡LISTO! ✓" : "COPIAR POS"}
+        {/* GRUPO DE ACCIONES DE COPIA Y MEZCLA */}
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
+          <button onClick={handleCopyPos} style={{ backgroundColor: copiedPos ? "#10b981" : "#4c1d95", color: "#fff", border: "none", padding: "7px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
+            {copiedPos ? "OK!" : "COPY +"}
           </button>
-          <button onClick={handleCopyNeg} style={{ backgroundColor: copiedNeg ? "#10b981" : "#991b1b", color: "#fff", border: "none", padding: "8px 15px", borderRadius: "8px", fontSize: "11px", cursor: "pointer", fontWeight: "bold", transition: "0.2s" }}>
-            {copiedNeg ? "¡LISTO! ✓" : "COPIAR NEG"}
+          <button onClick={handleCopyNeg} style={{ backgroundColor: copiedNeg ? "#10b981" : "#991b1b", color: "#fff", border: "none", padding: "7px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
+            {copiedNeg ? "OK!" : "COPY -"}
           </button>
-          <div style={{ width: "1px", height: "20px", backgroundColor: "#333", margin: "0 5px" }} />
-          <button onClick={randomizePositive} style={{ backgroundColor: "#7c3aed", color: "#fff", border: "none", padding: "8px 20px", borderRadius: "20px", fontSize: "12px", cursor: "pointer", fontWeight: "bold", boxShadow: "0 0 15px rgba(124, 58, 237, 0.4)" }}>
-            🎲 MEZCLA ALEATORIA
+          <button onClick={randomizePositive} style={{ backgroundColor: "#7c3aed", color: "#fff", border: "none", padding: "7px 15px", borderRadius: "20px", fontSize: "10px", cursor: "pointer", fontWeight: "bold", boxShadow: "0 0 10px rgba(124, 58, 237, 0.3)" }}>
+            🎲 MEZCLA
           </button>
         </div>
       </nav>
 
-      <div style={{ padding: "30px" }}>
+      <div style={{ padding: "20px 15px" }}> {/* Ajustado para móvil */}
         
         {/* PLANTILLAS */}
         {showTemplates && (
-          <div style={{ backgroundColor: "#111", padding: "25px", borderRadius: "15px", border: "1px solid #333", marginBottom: "50px" }}>
-            <h2 style={{ fontSize: "14px", color: "#10b981", marginBottom: "15px", letterSpacing: "1px" }}>PLANTILLAS Y EXPORTACIÓN</h2>
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-              <input type="text" placeholder="Nombre de la nueva plantilla..." value={templateName} onChange={(e) => setTemplateName(e.target.value)} 
-                style={{ flex: 1, padding: "10px", backgroundColor: "#000", border: "1px solid #333", color: "#fff", borderRadius: "8px", boxSizing: "border-box" }} />
-              <button onClick={saveTemplate} style={{ backgroundColor: "#10b981", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-                GUARDAR SELECCIÓN
+          <div style={{ backgroundColor: "#111", padding: "15px", borderRadius: "12px", border: "1px solid #333", marginBottom: "30px" }}>
+            <h2 style={{ fontSize: "12px", color: "#10b981", marginBottom: "12px", letterSpacing: "1px" }}>PLANTILLAS</h2>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "15px", flexDirection: "column" }}>
+              <input type="text" placeholder="Nombre plantilla..." value={templateName} onChange={(e) => setTemplateName(e.target.value)} 
+                style={{ width: "100%", padding: "10px", backgroundColor: "#000", border: "1px solid #333", color: "#fff", borderRadius: "8px", boxSizing: "border-box" }} />
+              <button onClick={saveTemplate} style={{ backgroundColor: "#10b981", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px" }}>
+                GUARDAR ACTUAL
               </button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "10px", marginBottom: "20px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "8px", marginBottom: "15px" }}>
               {templates.map(t => (
-                <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "10px", borderRadius: "10px", border: "1px solid #333" }}>
-                  <input type="text" value={t.name} onChange={(e) => renameTemplate(t.id, e.target.value)} style={{ backgroundColor: "transparent", border: "none", color: "#10b981", fontSize: "12px", fontWeight: "bold", width: "100%", marginBottom: "8px", boxSizing: "border-box" }} />
-                  <div style={{ display: "flex", gap: "5px" }}>
-                    <button onClick={() => loadTemplate(t)} style={{ flex: 1, background: "#059669", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "10px", cursor: "pointer" }}>CARGAR</button>
-                    <button onClick={() => deleteTemplate(t.id)} style={{ flex: 1, background: "#dc2626", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "10px", cursor: "pointer" }}>BORRAR</button>
+                <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "8px", borderRadius: "8px", border: "1px solid #333" }}>
+                  <input type="text" value={t.name} onChange={(e) => renameTemplate(t.id, e.target.value)} style={{ backgroundColor: "transparent", border: "none", color: "#10b981", fontSize: "11px", fontWeight: "bold", width: "100%", marginBottom: "5px" }} />
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    <button onClick={() => loadTemplate(t)} style={{ flex: 1, background: "#059669", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "9px" }}>CARGAR</button>
+                    <button onClick={() => deleteTemplate(t.id)} style={{ flex: 1, background: "#dc2626", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "9px" }}>X</button>
                   </div>
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", gap: "10px", borderTop: "1px solid #222", paddingTop: "15px" }}>
-              <button onClick={exportTemplates} style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "bold" }}>📤 EXPORTAR A JSON</button>
-              <label style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "bold", textAlign: "center" }}>
-                📥 IMPORTAR DESDE JSON
+            <div style={{ display: "flex", gap: "8px", borderTop: "1px solid #222", paddingTop: "12px" }}>
+              <button onClick={exportTemplates} style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px" }}>📤 EXPORTAR</button>
+              <label style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", textAlign: "center" }}>
+                📥 IMPORTAR
                 <input type="file" onChange={importTemplates} style={{ display: "none" }} accept=".json" />
               </label>
             </div>
@@ -309,55 +314,55 @@ const App = () => {
         )}
 
         <div ref={posSectionRef}>
-          <h2 style={{ fontSize: "14px", color: "#7c3aed", marginBottom: "15px", letterSpacing: "1px" }}>CONFIGURACIÓN POSITIVA</h2>
+          <h2 style={{ fontSize: "13px", color: "#7c3aed", marginBottom: "12px" }}>CONFIGURACIÓN POSITIVA</h2>
           {showPosTabs && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
               {Object.keys(HMR_LABELS).map(key => (
-                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "6px 12px", borderRadius: "15px", fontSize: "11px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
+                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
                   {HMR_LABELS[key]}
                 </div>
               ))}
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "15px", marginBottom: "50px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px", marginBottom: "40px" }}>
             {Object.keys(HMR_LABELS).map(key => hmrCards[key]?.active && (
               <Card key={key} id={key} label={HMR_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#7c3aed" />
             ))}
           </div>
         </div>
 
-        <div ref={negSectionRef} style={{ borderTop: "1px solid #222", paddingTop: "40px" }}>
-          <h2 style={{ fontSize: "14px", color: "#ef4444", marginBottom: "15px", letterSpacing: "1px" }}>PROMPT NEGATIVO (EVITAR)</h2>
+        <div ref={negSectionRef} style={{ borderTop: "1px solid #222", paddingTop: "30px" }}>
+          <h2 style={{ fontSize: "13px", color: "#ef4444", marginBottom: "12px" }}>PROMPT NEGATIVO</h2>
           {showNegTabs && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px", padding: "12px", backgroundColor: "#1a0a0a", borderRadius: "12px", border: "1px solid #991b1b33" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px", padding: "10px", backgroundColor: "#1a0a0a", borderRadius: "10px", border: "1px solid #991b1b33" }}>
               {Object.keys(NEGATIVE_LABELS).map(key => (
-                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "6px 12px", borderRadius: "15px", fontSize: "11px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
+                <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
                   {NEGATIVE_LABELS[key]}
                 </div>
               ))}
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "15px", marginBottom: "50px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px", marginBottom: "40px" }}>
             {Object.keys(NEGATIVE_LABELS).map(key => hmrCards[key]?.active && (
               <Card key={key} id={key} label={NEGATIVE_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#ef4444" isNeg />
             ))}
           </div>
         </div>
 
-        <div ref={resultsSectionRef} style={{ marginTop: "50px", padding: "25px", backgroundColor: "#0f0f0f", borderRadius: "20px", border: "2px solid #333" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+        <div ref={resultsSectionRef} style={{ marginTop: "40px", padding: "20px", backgroundColor: "#0f0f0f", borderRadius: "15px", border: "2px solid #333" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div style={{ width: "100%" }}>
-              <span style={{ fontSize: "10px", color: "#7c3aed", fontWeight: "bold" }}>PROMPT POSITIVO (EDITABLE)</span>
-              <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} style={{ width: "100%", backgroundColor: "#050505", padding: "15px", borderRadius: "10px", border: "1px solid #222", marginTop: "10px", color: "#fff", fontSize: "13px", minHeight: "100px", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box", display: "block" }} />
-              <button onClick={handleCopyPos} style={{ width: "100%", marginTop: "10px", backgroundColor: copiedPos ? "#10b981" : "#7c3aed", color: "#fff", border: "none", padding: "12px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px" }}>
-                {copiedPos ? "¡COPIADO! ✓" : "COPIAR POSITIVO"}
+              <span style={{ fontSize: "9px", color: "#7c3aed", fontWeight: "bold" }}>PROMPT POSITIVO</span>
+              <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} style={{ width: "100%", backgroundColor: "#050505", padding: "12px", borderRadius: "8px", border: "1px solid #222", marginTop: "8px", color: "#fff", fontSize: "12px", minHeight: "80px", resize: "vertical", boxSizing: "border-box" }} />
+              <button onClick={handleCopyPos} style={{ width: "100%", marginTop: "8px", backgroundColor: copiedPos ? "#10b981" : "#7c3aed", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", fontWeight: "bold", fontSize: "11px" }}>
+                {copiedPos ? "¡COPIADO!" : "COPIAR POSITIVO"}
               </button>
             </div>
             <div style={{ width: "100%" }}>
-              <span style={{ fontSize: "10px", color: "#ef4444", fontWeight: "bold" }}>PROMPT NEGATIVO (EVITAR EDITABLE)</span>
-              <textarea value={negativePrompt} onChange={(e) => setNegativePrompt(e.target.value)} style={{ width: "100%", backgroundColor: "#050505", padding: "15px", borderRadius: "10px", border: "1px solid #222", marginTop: "10px", color: "#fca5a5", fontSize: "13px", minHeight: "100px", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box", display: "block" }} />
-              <button onClick={handleCopyNeg} style={{ width: "100%", marginTop: "10px", backgroundColor: copiedNeg ? "#10b981" : "#ef4444", color: "#fff", border: "none", padding: "12px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px" }}>
-                {copiedNeg ? "¡COPIADO! ✓" : "COPIAR NEGATIVO"}
+              <span style={{ fontSize: "9px", color: "#ef4444", fontWeight: "bold" }}>PROMPT NEGATIVO</span>
+              <textarea value={negativePrompt} onChange={(e) => setNegativePrompt(e.target.value)} style={{ width: "100%", backgroundColor: "#050505", padding: "12px", borderRadius: "8px", border: "1px solid #222", marginTop: "8px", color: "#fca5a5", fontSize: "12px", minHeight: "80px", resize: "vertical", boxSizing: "border-box" }} />
+              <button onClick={handleCopyNeg} style={{ width: "100%", marginTop: "8px", backgroundColor: copiedNeg ? "#10b981" : "#ef4444", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", fontWeight: "bold", fontSize: "11px" }}>
+                {copiedNeg ? "¡COPIADO!" : "COPIAR NEGATIVO"}
               </button>
             </div>
           </div>
@@ -372,32 +377,32 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, handleMultiSelect, se
   const clearManual = () => setHmrCards(prev => ({ ...prev, [id]: { ...prev[id], manual: "" } }));
 
   return (
-    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isNeg ? "#991b1b44" : "#222"}`, borderRadius: "12px", padding: "15px", boxSizing: "border-box" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-        <span style={{ fontSize: "10px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
+    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+        <span style={{ fontSize: "9px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
         <button onClick={() => toggleCategory(id)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer" }}>×</button>
       </div>
       {!isManualActive && (
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: "8px" }}>
           {MULTI_SELECT_CATS.includes(id) ? (
-            <div style={{ maxHeight: "120px", overflowY: "auto" }}>
+            <div style={{ maxHeight: "100px", overflowY: "auto" }}>
               {bank[id]?.map((opt, i) => (
-                <label key={i} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "4px 0", fontSize: "12px", cursor: "pointer" }}>
+                <label key={i} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "3px 0", fontSize: "11px", cursor: "pointer" }}>
                   <input type="checkbox" checked={hmrCards[id].selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} />
                   {opt}
                 </label>
               ))}
             </div>
           ) : (
-            <select value={hmrCards[id].selected} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], selected: e.target.value}}))} style={{ width: "100%", padding: "8px", backgroundColor: "#050505", color: "#ccc", border: "1px solid #333", borderRadius: "6px" }}>
+            <select value={hmrCards[id].selected} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], selected: e.target.value}}))} style={{ width: "100%", padding: "6px", backgroundColor: "#050505", color: "#ccc", border: "1px solid #333", borderRadius: "6px", fontSize: "11px" }}>
               {bank[id]?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
             </select>
           )}
         </div>
       )}
       <div style={{ position: "relative" }}>
-        <input type="text" placeholder="Escribir manual..." value={hmrCards[id].manual} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} style={{ width: "100%", padding: "8px 30px 8px 8px", backgroundColor: "#000", color: isNeg ? "#f87171" : "#a78bfa", border: isManualActive ? `1px solid ${color}` : "1px solid #222", borderRadius: "6px", fontSize: "12px", boxSizing: "border-box" }} />
-        {isManualActive && <button onClick={clearManual} style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: color, cursor: "pointer" }}>×</button>}
+        <input type="text" placeholder="Manual..." value={hmrCards[id].manual} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} style={{ width: "100%", padding: "6px 25px 6px 6px", backgroundColor: "#000", color: isNeg ? "#f87171" : "#a78bfa", border: isManualActive ? `1px solid ${color}` : "1px solid #222", borderRadius: "6px", fontSize: "11px", boxSizing: "border-box" }} />
+        {isManualActive && <button onClick={clearManual} style={{ position: "absolute", right: "6px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: color, cursor: "pointer" }}>×</button>}
       </div>
     </div>
   );
