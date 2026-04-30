@@ -231,6 +231,27 @@ const App = () => {
         opacity: 0.95
       }}>
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
+          {/* BOTÓN QINEGEN */}
+          <a 
+            href="https://perchance.org/qinegen" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              textDecoration: "none",
+              backgroundColor: "#0ea5e9", 
+              color: "#fff", 
+              border: "1px solid #38bdf8", 
+              padding: "6px 12px", 
+              borderRadius: "6px", 
+              fontSize: "10px", 
+              cursor: "pointer", 
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center"
+            }}
+          >
+            ⚡ QINEGEN
+          </a>
           <button 
             onClick={() => scrollToSection(posSectionRef)} 
             style={{ backgroundColor: "#4c1d95", color: "#fff", border: "1px solid #7c3aed", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
@@ -303,7 +324,6 @@ const App = () => {
 
         <div ref={posSectionRef}>
           <h2 style={{ fontSize: "13px", color: "#7c3aed", marginBottom: "12px" }}>CONFIGURACIÓN POSITIVA</h2>
-          {/* TABS POSITIVOS SIEMPRE VISIBLES */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
             {Object.keys(HMR_LABELS).map(key => (
               <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
@@ -320,7 +340,6 @@ const App = () => {
 
         <div ref={negSectionRef} style={{ borderTop: "1px solid #222", paddingTop: "30px" }}>
           <h2 style={{ fontSize: "13px", color: "#ef4444", marginBottom: "12px" }}>PROMPT NEGATIVO</h2>
-          {/* TABS NEGATIVOS SIEMPRE VISIBLES */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px", padding: "10px", backgroundColor: "#1a0a0a", borderRadius: "10px", border: "1px solid #991b1b33" }}>
             {Object.keys(NEGATIVE_LABELS).map(key => (
               <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#991b1b" : "#111", border: "1px solid #444" }}>
