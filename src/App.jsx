@@ -190,9 +190,7 @@ const App = () => {
     setHmrCards(prev => {
       const newState = { ...prev };
       Object.keys(HMR_LABELS).forEach(key => {
-        // CORRECCIÓN: Si hay texto manual, esta tarjeta no se toca
         if (newState[key].manual.trim() !== "") return;
-
         if (bank[key] && bank[key].length > 0) {
           const options = bank[key];
           if (MULTI_SELECT_CATS.includes(key)) {
@@ -311,14 +309,10 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
   return (
     <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isManualActive || cardData.showManual ? color : isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box", minHeight: "100px", display: "flex", flexDirection: "column", position: "relative" }}>
       
-      {/* Cabecera de la Tarjeta */}
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", alignItems: "center" }}>
         <span style={{ fontSize: "9px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
-        
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          {/* ICONO DE CANDADO: Solo si hay texto manual */}
           {isManualActive && <LockIcon color={color} />}
-          
           {!cardData.showManual && (
             <div style={{ display: "flex", gap: "8px" }}>
               <button onClick={() => toggleManualInput(id)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: "2px" }}>
@@ -330,7 +324,6 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
         </div>
       </div>
       
-      {/* Selector (Se oculta si showManual es true) */}
       {!cardData.showManual ? (
         <div style={{ flex: 1 }}>
           {MULTI_SELECT_CATS.includes(id) ? (
@@ -349,7 +342,6 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
           )}
         </div>
       ) : (
-        /* Input Manual (Se muestra solo si showManual es true) */
         <div style={{ position: "relative", flex: 1, display: "flex", alignItems: "center" }}>
           <input 
             type="text" 
@@ -360,7 +352,10 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
             style={{ width: "100%", padding: "8px 30px 8px 8px", backgroundColor: "#000", color: color, border: `1px solid ${color}`, borderRadius: "6px", fontSize: "11px", boxSizing: "border-box" }} 
           />
           <button 
-            onClick={() => toggleManualInput(id)} 
+            onClick={() => {
+              // CORRECCIÓN: Al dar click en X, se limpia el texto manual y se oculta el input
+              setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: "", showManual: false}}));
+            }} 
             style={{ position: "absolute", right: "8px", background: "none", border: "none", color: color, cursor: "pointer", fontSize: "14px", fontWeight: "bold" }}
           >
             ×
