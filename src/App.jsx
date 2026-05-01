@@ -25,7 +25,7 @@ const EditIcon = ({ size = 12, color = "#666" }) => (
   </svg>
 );
 
-const LockIcon = ({ size = 12, color = "#f97316" }) => (
+const LockIcon = ({ size = 12, color = "#666" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -95,7 +95,8 @@ const App = () => {
             selected: MULTI_SELECT_CATS.includes(key) ? [] : (fullData[key]?.[0] || ""),
             active: true,
             manual: "",
-            showManual: false
+            showManual: false,
+            locked: false
           };
         });
         setHmrCards(initialState);
@@ -179,6 +180,7 @@ const App = () => {
   };
 
   const handleMultiSelect = (key, value) => {
+    if (hmrCards[key].locked) return;
     setHmrCards(prev => {
       const current = prev[key].selected;
       const next = current.includes(value) ? current.filter(i => i !== value) : [...current, value];
@@ -190,7 +192,8 @@ const App = () => {
     setHmrCards(prev => {
       const newState = { ...prev };
       Object.keys(HMR_LABELS).forEach(key => {
-        if (newState[key].manual.trim() !== "") return;
+        if (newState[key].locked || newState[key].manual.trim() !== "") return;
+
         if (bank[key] && bank[key].length > 0) {
           const options = bank[key];
           if (MULTI_SELECT_CATS.includes(key)) {
@@ -304,15 +307,27 @@ const App = () => {
 
 const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, handleMultiSelect, setHmrCards, color, isNeg }) => {
   const cardData = hmrCards[id];
-  const isManualActive = cardData.manual.trim() !== "";
+  const isLocked = cardData.locked;
+
+  const toggleLock = () => {
+    setHmrCards(prev => ({
+      ...prev,
+      [id]: { ...prev[id], locked: !prev[id].locked }
+    }));
+  };
 
   return (
-    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isManualActive || cardData.showManual ? color : isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box", minHeight: "100px", display: "flex", flexDirection: "column", position: "relative" }}>
+    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isLocked || cardData.showManual ? color : isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box", minHeight: "100px", display: "flex", flexDirection: "column", position: "relative" }}>
       
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", alignItems: "center" }}>
         <span style={{ fontSize: "9px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
+        
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          {isManualActive && <LockIcon color={color} />}
+          {/* BOTON CANDADO SIEMPRE VISIBLE */}
+          <button onClick={toggleLock} style={{ background: "none", border: "none", cursor: "pointer", padding: "2px", display: "flex", alignItems: "center" }}>
+            <LockIcon color={isLocked ? "#7c3aed" : "#666"} />
+          </button>
+          
           {!cardData.showManual && (
             <div style={{ display: "flex", gap: "8px" }}>
               <button onClick={() => toggleManualInput(id)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: "2px" }}>
@@ -329,14 +344,14 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
           {MULTI_SELECT_CATS.includes(id) ? (
             <div style={{ maxHeight: "100px", overflowY: "auto", paddingRight: "5px" }}>
               {bank[id]?.map((opt, i) => (
-                <label key={i} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "4px 0", fontSize: "11px", cursor: "pointer", color: cardData.selected.includes(opt) ? color : "#ccc" }}>
-                  <input type="checkbox" checked={cardData.selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} style={{ accentColor: color }} />
+                <label key={i} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "4px 0", fontSize: "11px", cursor: "pointer", color: cardData.selected.includes(opt) ? color : "#ccc", opacity: isLocked ? 0.6 : 1 }}>
+                  <input type="checkbox" disabled={isLocked} checked={cardData.selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} style={{ accentColor: color }} />
                   {opt}
                 </label>
               ))}
             </div>
           ) : (
-            <select value={cardData.selected} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], selected: e.target.value}}))} style={{ width: "100%", padding: "6px", backgroundColor: "#050505", color: "#ccc", border: "1px solid #333", borderRadius: "6px", fontSize: "11px" }}>
+            <select disabled={isLocked} value={cardData.selected} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], selected: e.target.value}}))} style={{ width: "100%", padding: "6px", backgroundColor: "#050505", color: "#ccc", border: "1px solid #333", borderRadius: "6px", fontSize: "11px", opacity: isLocked ? 0.6 : 1 }}>
               {bank[id]?.map((opt, i) => <option key={i} value={opt}>{opt}</option>)}
             </select>
           )}
@@ -346,20 +361,27 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, toggleManualInput, ha
           <input 
             type="text" 
             autoFocus
+            disabled={isLocked}
             placeholder="Escribe manual..." 
             value={cardData.manual} 
             onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} 
-            style={{ width: "100%", padding: "8px 30px 8px 8px", backgroundColor: "#000", color: color, border: `1px solid ${color}`, borderRadius: "6px", fontSize: "11px", boxSizing: "border-box" }} 
+            style={{ width: "100%", padding: "8px 30px 8px 8px", backgroundColor: "#000", color: color, border: `1px solid ${color}`, borderRadius: "6px", fontSize: "11px", boxSizing: "border-box", opacity: isLocked ? 0.6 : 1 }} 
           />
-          <button 
-            onClick={() => {
-              // CORRECCIÓN: Al dar click en X, se limpia el texto manual y se oculta el input
-              setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: "", showManual: false}}));
-            }} 
-            style={{ position: "absolute", right: "8px", background: "none", border: "none", color: color, cursor: "pointer", fontSize: "14px", fontWeight: "bold" }}
-          >
-            ×
-          </button>
+          {/* BOTON X DENTRO DEL INPUT: Aparece solo si hay texto */}
+          {cardData.manual.length > 0 && (
+            <button 
+              onClick={() => {
+                if (isLocked) {
+                  setHmrCards(prev => ({...prev, [id]: {...prev[id], showManual: false}}));
+                } else {
+                  setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: "", showManual: false}}));
+                }
+              }} 
+              style={{ position: "absolute", right: "8px", background: "none", border: "none", color: color, cursor: "pointer", fontSize: "14px", fontWeight: "bold" }}
+            >
+              ×
+            </button>
+          )}
         </div>
       )}
     </div>
