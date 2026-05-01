@@ -1,11 +1,31 @@
 import { useState, useEffect, useRef } from "react";
 
-// Categorías Positivas
+// Componentes de Iconos SVG
+const BotIcon = ({ size = 16, color = "#fff" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ marginRight: "6px" }}>
+    <rect x="4" y="10" width="16" height="11" rx="3" fill="#3b82f6" />
+    <circle cx="9" cy="15" r="1.5" fill="#1e3a8a" />
+    <circle cx="15" cy="15" r="1.5" fill="#1e3a8a" />
+    <path d="M12 7V10" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="12" cy="7" r="1.5" fill="#ef4444" />
+  </svg>
+);
+
+const PromptIcon = ({ size = 14, color = "#fff" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ marginRight: "6px" }}>
+    <rect x="2" y="4" width="20" height="14" rx="3" fill="#334155" />
+    <path d="M7 8L10 11L7 14" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="12" y1="14" x2="17" y2="14" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+// Categorías Positivas - SE AGREGA DTF
 const HMR_LABELS = {
   sujeto: "Sujeto", pose: "Pose", accion: "Acción", ambiente: "Ambiente",
   estilo: "Estilo", iluminacion: "Iluminación", atmosfera: "Atmósfera",
   detalles: "Detalles", angulo: "Ángulo", calidad: "Calidad",
-  formato: "Formato", paleta: "Paleta", fondo: "Fondo", mascara: "Máscara"
+  formato: "Formato", paleta: "Paleta", fondo: "Fondo", mascara: "Máscara",
+  dtf: "DTF" // Nueva categoría
 };
 
 // Categorías Negativas
@@ -18,7 +38,15 @@ const NEGATIVE_LABELS = {
   n_texto: "💬 Texto y Marcas"
 };
 
-const MULTI_SELECT_CATS = ["fondo", "mascara", "n_calidad", "n_anatomia", "n_rostro", "n_estilo", "n_composicion", "n_texto"];
+// SE AGREGA "dtf" A MULTI_SELECT_CATS
+const MULTI_SELECT_CATS = ["dtf", "fondo", "mascara", "n_calidad", "n_anatomia", "n_rostro", "n_estilo", "n_composicion", "n_texto"];
+
+// Paleta de colores por categoría
+const GET_COLOR = (key) => {
+  if (key === "dtf") return "#f97316"; // Naranja para DTF
+  if (NEGATIVE_LABELS[key]) return "#ef4444"; // Rojo para negativos
+  return "#7c3aed"; // Violeta para el resto de positivos
+};
 
 const App = () => {
   const [bank, setBank] = useState(null);
@@ -33,7 +61,6 @@ const App = () => {
   const [templateName, setTemplateName] = useState("");
   const [showTemplates, setShowTemplates] = useState(false);
 
-  // Referencias para el scroll
   const posSectionRef = useRef(null);
   const negSectionRef = useRef(null);
   const resultsSectionRef = useRef(null);
@@ -44,6 +71,7 @@ const App = () => {
       .then(data => {
         const fullData = {
           ...data,
+          dtf: data.dtf || [   "masterpiece", "modern graphic illustration", "poster style", "transparent background", "centered composition", "vector style", "sticker design",  "flat design", "flat color", "thick white outline", "sharp outlines", "solid palette", "clean composition", "clean shapes", "sharp design", "bold lines", "clean lines", "white background", "isolated white", "high contrast", "vivid colors"],
           n_calidad: ["baja calidad", "borroso", "pixelado", "ruido", "granulado", "desenfocado"],
           n_anatomia: ["mala anatomía", "deformado", "extremidades extra", "dedos extra", "manos malformadas", "proporciones incorrectas"],
           n_rostro: ["feo", "rostro deformado", "ojos malos", "ojos bizcos", "dientes malos"],
@@ -94,10 +122,7 @@ const App = () => {
       const elementPosition = elementRect - bodyRect;
       const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
 
@@ -177,12 +202,6 @@ const App = () => {
     localStorage.setItem("hmr_templates", JSON.stringify(updated));
   };
 
-  const renameTemplate = (id, newName) => {
-    const updated = templates.map(t => t.id === id ? { ...t, name: newName } : t);
-    setTemplates(updated);
-    localStorage.setItem("hmr_templates", JSON.stringify(updated));
-  };
-
   const exportTemplates = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(templates));
     const downloadAnchorNode = document.createElement('a');
@@ -214,62 +233,37 @@ const App = () => {
   return (
     <div style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#e0e0e0", fontFamily: "sans-serif" }}>
       
-      {/* MENÚ SUPERIOR FLOTANTE */}
       <nav style={{
-        position: "sticky", 
-        top: 0, 
-        zIndex: 1000, 
-        backgroundColor: "rgba(15, 15, 15, 0.9)",
-        backdropFilter: "blur(12px)", 
-        borderBottom: "1px solid #333", 
-        padding: "10px 15px", 
-        display: "flex", 
-        flexWrap: "wrap", 
-        justifyContent: "center", 
-        alignItems: "center",
-        gap: "10px",
-        opacity: 0.95
+        position: "sticky", top: 0, zIndex: 1000, backgroundColor: "rgba(15, 15, 15, 0.9)",
+        backdropFilter: "blur(12px)", borderBottom: "1px solid #333", padding: "10px 15px", 
+        display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center",
+        gap: "10px", opacity: 0.95
       }}>
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
-          {/* BOTÓN QINEGEN */}
-          <a 
-            href="https://perchance.org/qinegen" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{ 
-              textDecoration: "none",
-              backgroundColor: "#0ea5e9", 
-              color: "#fff", 
-              border: "1px solid #38bdf8", 
-              padding: "6px 12px", 
-              borderRadius: "6px", 
-              fontSize: "10px", 
-              cursor: "pointer", 
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center"
-            }}
+          <a href="https://perchance.org/qinegen" target="_blank" rel="noopener noreferrer"
+            style={{ textDecoration: "none", backgroundColor: "#1e40af", color: "#fff", border: "1px solid #3b82f6", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center" }}
           >
-            ⚡ QINEGEN
+            <BotIcon /> QINEGEN
           </a>
-          <button 
-            onClick={() => scrollToSection(posSectionRef)} 
-            style={{ backgroundColor: "#4c1d95", color: "#fff", border: "1px solid #7c3aed", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
+          
+          <button onClick={() => scrollToSection(posSectionRef)} 
+            style={{ backgroundColor: "#4c1d95", color: "#fff", border: "1px solid #7c3aed", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center" }}
           >
-            ↑ POSITIVO
+            <PromptIcon /> POSITIVO
           </button>
-          <button 
-            onClick={() => scrollToSection(negSectionRef)} 
-            style={{ backgroundColor: "#991b1b", color: "#fff", border: "1px solid #ef4444", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
+
+          <button onClick={() => scrollToSection(negSectionRef)} 
+            style={{ backgroundColor: "#991b1b", color: "#fff", border: "1px solid #ef4444", padding: "6px 12px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center" }}
           >
-            ↓ NEGATIVO
+            <PromptIcon /> NEGATIVO
           </button>
-          <button 
-            onClick={() => scrollToSection(resultsSectionRef)} 
-            style={{ backgroundColor: "#333", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}
+
+          <button onClick={() => scrollToSection(resultsSectionRef)} 
+            style={{ backgroundColor: "#334155", color: "#fff", border: "1px solid #475569", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center" }}
           >
-            RESULTADOS
+            <PromptIcon /> RESULTADOS
           </button>
+
           <button onClick={handleToggleTemplates} style={{ backgroundColor: showTemplates ? "#065f46" : "#111", color: "#fff", border: "1px solid #444", padding: "6px 10px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", fontWeight: "bold" }}>
             Plantillas
           </button>
@@ -290,33 +284,43 @@ const App = () => {
 
       <div style={{ padding: "20px 15px" }}>
         
-        {/* PLANTILLAS */}
+        {/* SECCIÓN DE PLANTILLAS CORREGIDA */}
         {showTemplates && (
           <div style={{ backgroundColor: "#111", padding: "15px", borderRadius: "12px", border: "1px solid #333", marginBottom: "30px" }}>
-            <h2 style={{ fontSize: "12px", color: "#10b981", marginBottom: "12px", letterSpacing: "1px" }}>PLANTILLAS</h2>
-            <div style={{ display: "flex", gap: "8px", marginBottom: "15px", flexDirection: "column" }}>
-              <input type="text" placeholder="Nombre plantilla..." value={templateName} onChange={(e) => setTemplateName(e.target.value)} 
-                style={{ width: "100%", padding: "10px", backgroundColor: "#000", border: "1px solid #333", color: "#fff", borderRadius: "8px", boxSizing: "border-box" }} />
-              <button onClick={saveTemplate} style={{ backgroundColor: "#10b981", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "12px" }}>
+            <h2 style={{ fontSize: "12px", color: "#10b981", marginBottom: "12px", letterSpacing: "1px" }}>GESTIÓN DE PLANTILLAS</h2>
+            
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+              <input 
+                type="text" 
+                placeholder="Nombre de la plantilla..." 
+                value={templateName} 
+                onChange={(e) => setTemplateName(e.target.value)} 
+                style={{ flex: 1, backgroundColor: "#050505", border: "1px solid #333", padding: "8px", borderRadius: "6px", color: "#fff", fontSize: "12px" }}
+              />
+              <button onClick={saveTemplate} style={{ backgroundColor: "#10b981", color: "#fff", border: "none", padding: "8px 15px", borderRadius: "6px", cursor: "pointer", fontWeight: "bold", fontSize: "11px" }}>
                 GUARDAR ACTUAL
               </button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "8px", marginBottom: "15px" }}>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px", marginBottom: "20px" }}>
               {templates.map(t => (
-                <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "8px", borderRadius: "8px", border: "1px solid #333" }}>
-                  <input type="text" value={t.name} onChange={(e) => renameTemplate(t.id, e.target.value)} style={{ backgroundColor: "transparent", border: "none", color: "#10b981", fontSize: "11px", fontWeight: "bold", width: "100%", marginBottom: "5px" }} />
+                <div key={t.id} style={{ backgroundColor: "#1a1a1a", padding: "10px", borderRadius: "8px", border: "1px solid #222", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: "bold", color: "#ddd", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.name}</span>
                   <div style={{ display: "flex", gap: "4px" }}>
-                    <button onClick={() => loadTemplate(t)} style={{ flex: 1, background: "#059669", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "9px" }}>CARGAR</button>
-                    <button onClick={() => deleteTemplate(t.id)} style={{ flex: 1, background: "#dc2626", color: "white", border: "none", padding: "5px", borderRadius: "4px", fontSize: "9px" }}>X</button>
+                    <button onClick={() => loadTemplate(t)} style={{ flex: 1, backgroundColor: "#1e40af", color: "#fff", border: "none", padding: "5px", borderRadius: "4px", fontSize: "9px", cursor: "pointer" }}>CARGAR</button>
+                    <button onClick={() => deleteTemplate(t.id)} style={{ backgroundColor: "#991b1b", color: "#fff", border: "none", padding: "5px 8px", borderRadius: "4px", fontSize: "9px", cursor: "pointer" }}>✕</button>
                   </div>
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", gap: "8px", borderTop: "1px solid #222", paddingTop: "12px" }}>
-              <button onClick={exportTemplates} style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px" }}>📤 EXPORTAR</button>
-              <label style={{ flex: 1, backgroundColor: "#4b5563", color: "#fff", border: "none", padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", textAlign: "center" }}>
-                📥 IMPORTAR
-                <input type="file" onChange={importTemplates} style={{ display: "none" }} accept=".json" />
+
+            <div style={{ display: "flex", gap: "10px", borderTop: "1px solid #222", paddingTop: "15px" }}>
+              <button onClick={exportTemplates} style={{ flex: 1, backgroundColor: "#334155", color: "#fff", border: "none", padding: "8px", borderRadius: "6px", fontSize: "10px", cursor: "pointer" }}>
+                EXPORTAR JSON
+              </button>
+              <label style={{ flex: 1, backgroundColor: "#334155", color: "#fff", padding: "8px", borderRadius: "6px", fontSize: "10px", cursor: "pointer", textAlign: "center" }}>
+                IMPORTAR JSON
+                <input type="file" accept=".json" onChange={importTemplates} style={{ display: "none" }} />
               </label>
             </div>
           </div>
@@ -326,14 +330,23 @@ const App = () => {
           <h2 style={{ fontSize: "13px", color: "#7c3aed", marginBottom: "12px" }}>CONFIGURACIÓN POSITIVA</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
             {Object.keys(HMR_LABELS).map(key => (
-              <div key={key} onClick={() => toggleCategory(key)} style={{ padding: "5px 10px", borderRadius: "12px", fontSize: "10px", cursor: "pointer", backgroundColor: hmrCards[key]?.active ? "#4c1d95" : "#111", border: "1px solid #333" }}>
+              <div key={key} onClick={() => toggleCategory(key)} 
+                style={{ 
+                  padding: "5px 10px", 
+                  borderRadius: "12px", 
+                  fontSize: "10px", 
+                  cursor: "pointer", 
+                  backgroundColor: hmrCards[key]?.active ? GET_COLOR(key) : "#111", 
+                  border: "1px solid #333",
+                  transition: "all 0.2s"
+                }}>
                 {HMR_LABELS[key]}
               </div>
             ))}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "12px", marginBottom: "40px" }}>
             {Object.keys(HMR_LABELS).map(key => hmrCards[key]?.active && (
-              <Card key={key} id={key} label={HMR_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color="#7c3aed" />
+              <Card key={key} id={key} label={HMR_LABELS[key]} hmrCards={hmrCards} bank={bank} toggleCategory={toggleCategory} handleMultiSelect={handleMultiSelect} setHmrCards={setHmrCards} color={GET_COLOR(key)} />
             ))}
           </div>
         </div>
@@ -354,6 +367,7 @@ const App = () => {
           </div>
         </div>
 
+        {/* Sección de resultados */}
         <div ref={resultsSectionRef} style={{ marginTop: "40px", padding: "20px", backgroundColor: "#0f0f0f", borderRadius: "15px", border: "2px solid #333" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div style={{ width: "100%" }}>
@@ -382,7 +396,7 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, handleMultiSelect, se
   const clearManual = () => setHmrCards(prev => ({ ...prev, [id]: { ...prev[id], manual: "" } }));
 
   return (
-    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box" }}>
+    <div style={{ background: isNeg ? "#1a0a0a" : "#111", border: `1px solid ${isManualActive ? color : isNeg ? "#991b1b44" : "#222"}`, borderRadius: "10px", padding: "12px", boxSizing: "border-box", transition: "border 0.3s" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
         <span style={{ fontSize: "9px", color: color, fontWeight: "bold" }}>{label.toUpperCase()}</span>
         <button onClick={() => toggleCategory(id)} style={{ background: "none", border: "none", color: "#444", cursor: "pointer" }}>×</button>
@@ -390,10 +404,10 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, handleMultiSelect, se
       {!isManualActive && (
         <div style={{ marginBottom: "8px" }}>
           {MULTI_SELECT_CATS.includes(id) ? (
-            <div style={{ maxHeight: "100px", overflowY: "auto" }}>
+            <div style={{ maxHeight: "100px", overflowY: "auto", paddingRight: "5px" }}>
               {bank[id]?.map((opt, i) => (
-                <label key={i} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "3px 0", fontSize: "11px", cursor: "pointer" }}>
-                  <input type="checkbox" checked={hmrCards[id].selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} />
+                <label key={i} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "4px 0", fontSize: "11px", cursor: "pointer", color: hmrCards[id].selected.includes(opt) ? color : "#ccc" }}>
+                  <input type="checkbox" checked={hmrCards[id].selected.includes(opt)} onChange={() => handleMultiSelect(id, opt)} style={{ accentColor: color }} />
                   {opt}
                 </label>
               ))}
@@ -406,7 +420,7 @@ const Card = ({ id, label, hmrCards, bank, toggleCategory, handleMultiSelect, se
         </div>
       )}
       <div style={{ position: "relative" }}>
-        <input type="text" placeholder="Manual..." value={hmrCards[id].manual} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} style={{ width: "100%", padding: "6px 25px 6px 6px", backgroundColor: "#000", color: isNeg ? "#f87171" : "#a78bfa", border: isManualActive ? `1px solid ${color}` : "1px solid #222", borderRadius: "6px", fontSize: "11px", boxSizing: "border-box" }} />
+        <input type="text" placeholder="Escribe aquí..." value={hmrCards[id].manual} onChange={(e) => setHmrCards(prev => ({...prev, [id]: {...prev[id], manual: e.target.value}}))} style={{ width: "100%", padding: "6px 25px 6px 6px", backgroundColor: "#000", color: color, border: isManualActive ? `1px solid ${color}` : "1px solid #222", borderRadius: "6px", fontSize: "11px", boxSizing: "border-box" }} />
         {isManualActive && <button onClick={clearManual} style={{ position: "absolute", right: "6px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: color, cursor: "pointer" }}>×</button>}
       </div>
     </div>
