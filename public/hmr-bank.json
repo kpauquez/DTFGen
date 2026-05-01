@@ -192,5 +192,28 @@
     "grunge",
     "halftone",
     "wavyhalf"
+  ],
+  "DTF": [
+    "masterpiece",
+    "modern graphic illustration", 
+    "poster style",
+    "transparent background",
+    "centered composition",
+    "vector style",
+    "sticker design", 
+    "flat design",
+    "flat color",
+    "thick white outline",
+    "sharp outlines",
+    "solid palette",
+    "clean composition",
+    "clean shapes",
+    "sharp design",
+    "bold lines",
+    "clean lines",
+    "white background", 
+    "isolated white",
+    "high contrast",
+    "vivid colors"
   ]
 }
