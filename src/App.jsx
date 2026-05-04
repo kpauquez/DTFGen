@@ -307,6 +307,328 @@ const TextoModule = ({ textos, setTextos, textoTab, setTextoTab, showTextos, set
   );
 };
 
+// ── MÓDULO IMAGEN → CONCEPTO (Ollama / moondream) ─────────────────────
+const OLLAMA_URL    = "http://localhost:11434";
+const VISION_MODEL  = "moondream";
+
+// Prompt estructurado que le pedimos a moondream — responde en inglés,
+// nosotros lo usamos directo como prompt para el generador de imágenes.
+const VISION_PROMPT = `You are an expert at analyzing images for AI image generation prompts, specialized in DTF apparel print design.
+Analyze this image and respond ONLY with a valid JSON object. No markdown, no backticks, no explanation.
+Use short descriptive English phrases (max 15 words each). Use null if a category clearly doesn't apply.
+
+Required JSON keys:
+{
+  "sujeto": "main subject or character",
+  "pose": "body position or stance",
+  "accion": "action or movement",
+  "ambiente": "background or environment",
+  "estilo": "visual style (vector, flat, realistic, etc)",
+  "iluminacion": "lighting description",
+  "atmosfera": "mood or atmosphere",
+  "detalles": "textures, patterns or extra details",
+  "angulo": "camera angle or perspective"
+}`;
+
+// Parsea el JSON devuelto por moondream y filtra nulls
+const parsearRespuestaOllama = (raw) => {
+  // moondream a veces envuelve en ```json ... ```
+  const clean = raw.replace(/```json\s*/gi, "").replace(/```/g, "").trim();
+  // Buscar el primer { ... } válido
+  const start = clean.indexOf("{");
+  const end   = clean.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("Sin JSON en respuesta");
+  const parsed = JSON.parse(clean.slice(start, end + 1));
+  // Filtrar nulls y strings vacíos
+  return Object.fromEntries(
+    Object.entries(parsed).filter(([, v]) => v && typeof v === "string" && v.trim())
+  );
+};
+
+const ImagenConceptoModule = ({ hmrCards, setHmrCards }) => {
+  const [showPanel, setShowPanel]     = useState(false);
+  const [imgPreview, setImgPreview]   = useState(null);
+  const [imgBase64, setImgBase64]     = useState(null);   // base64 puro sin prefijo
+  const [analizando, setAnalizando]   = useState(false);
+  const [resultado, setResultado]     = useState(null);   // { sujeto, estilo, ... }
+  const [aplicado, setAplicado]       = useState(false);
+  const [error, setError]             = useState("");
+  const [ollamaOk, setOllamaOk]       = useState(null);  // null=sin chequear, true/false
+
+  // Chequea que Ollama esté corriendo al abrir el panel
+  const checkOllama = async () => {
+    try {
+      const res = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(3000) });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const modelos = (data.models || []).map(m => m.name);
+      const tieneModelo = modelos.some(m => m.startsWith(VISION_MODEL));
+      if (!tieneModelo) {
+        setOllamaOk(false);
+        setError(`Ollama está corriendo pero no encontré el modelo "${VISION_MODEL}". Ejecutá: ollama pull ${VISION_MODEL}`);
+      } else {
+        setOllamaOk(true);
+        setError("");
+      }
+    } catch {
+      setOllamaOk(false);
+      setError("No se pudo conectar con Ollama en localhost:11434. ¿Está corriendo?");
+    }
+  };
+
+  const handlePanelToggle = () => {
+    setShowPanel(v => {
+      if (!v && ollamaOk === null) checkOllama();
+      return !v;
+    });
+  };
+
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith("image/")) return;
+    setResultado(null);
+    setAplicado(false);
+    setError("");
+
+    // Preview
+    const previewReader = new FileReader();
+    previewReader.onload = (e) => setImgPreview(e.target.result);
+    previewReader.readAsDataURL(file);
+
+    // Base64 puro (sin el prefijo data:image/...;base64,)
+    const b64Reader = new FileReader();
+    b64Reader.onload = (e) => {
+      const full = e.target.result;
+      setImgBase64(full.split(",")[1]);
+    };
+    b64Reader.readAsDataURL(file);
+  };
+
+  const analizarImagen = async () => {
+    if (!imgBase64 || analizando) return;
+    setAnalizando(true);
+    setResultado(null);
+    setError("");
+
+    try {
+      const res = await fetch(`${OLLAMA_URL}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: VISION_MODEL,
+          prompt: VISION_PROMPT,
+          images: [imgBase64],
+          stream: false,
+          options: { temperature: 0.2, num_predict: 400 },
+        }),
+      });
+
+      if (!res.ok) throw new Error(`Ollama respondió ${res.status}`);
+      const data = await res.json();
+      const raw  = data?.response || "";
+      if (!raw) throw new Error("Respuesta vacía de moondream");
+
+      const parsed = parsearRespuestaOllama(raw);
+      if (Object.keys(parsed).length === 0) throw new Error("No se detectaron categorías en la imagen");
+      setResultado(parsed);
+    } catch (e) {
+      setError(e.message || "Error al analizar la imagen");
+    } finally {
+      setAnalizando(false);
+    }
+  };
+
+  const aplicarACards = () => {
+    if (!resultado) return;
+    setHmrCards(prev => {
+      const next = { ...prev };
+      Object.entries(resultado).forEach(([cat, valor]) => {
+        if (next[cat]) {
+          next[cat] = { ...next[cat], manual: valor, showManual: true, active: true, locked: true };
+        }
+      });
+      return next;
+    });
+    setAplicado(true);
+    setTimeout(() => setAplicado(false), 3000);
+  };
+
+  const limpiar = () => {
+    setImgPreview(null);
+    setImgBase64(null);
+    setResultado(null);
+    setAplicado(false);
+    setError("");
+  };
+
+  const cardCount = resultado ? Object.keys(resultado).length : 0;
+
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      {/* Header toggle */}
+      <button
+        onClick={handlePanelToggle}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: showPanel ? "#0e0a18" : "#111", border: `1.5px solid ${showPanel ? "#3a2050" : "#1e1e2a"}`, borderRadius: showPanel ? "11px 11px 0 0" : "11px", cursor: "pointer", transition: "all 0.2s" }}
+        onMouseOver={(e) => { if (!showPanel) e.currentTarget.style.borderColor = "#6a3a9a"; }}
+        onMouseOut={(e) => { if (!showPanel) e.currentTarget.style.borderColor = "#1e1e2a"; }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "14px" }}>🖼</span>
+          <span style={{ color: "#a78bfa", fontWeight: "700", fontSize: "12.5px", letterSpacing: "0.4px" }}>IMAGEN → CONCEPTO</span>
+          <span style={{ color: "#3a2a4a", fontSize: "10.5px" }}>— moondream analiza y llena las tarjetas</span>
+          {ollamaOk === true && <span style={{ background: "#14301a", border: "1px solid #2a6a2a", borderRadius: "999px", padding: "1px 8px", fontSize: "10px", color: "#4caf50" }}>● Ollama OK</span>}
+          {ollamaOk === false && <span style={{ background: "#301414", border: "1px solid #6a2a2a", borderRadius: "999px", padding: "1px 8px", fontSize: "10px", color: "#ef4444" }}>● Ollama offline</span>}
+        </div>
+        <span style={{ color: "#444", fontSize: "12px" }}>{showPanel ? "▲" : "▼"}</span>
+      </button>
+
+      {showPanel && (
+        <div style={{ background: "#0a0810", border: "1.5px solid #3a2050", borderTop: "none", borderRadius: "0 0 11px 11px", padding: "16px" }}>
+
+          {/* Error de conexión */}
+          {error && !analizando && (
+            <div style={{ marginBottom: "12px", padding: "10px 13px", background: "#1a0e10", border: "1.5px solid #5a2020", borderRadius: "9px" }}>
+              <p style={{ color: "#ef4444", fontSize: "11.5px", lineHeight: "1.5" }}>⚠ {error}</p>
+              {ollamaOk === false && (
+                <div style={{ marginTop: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <p style={{ color: "#5a3a3a", fontSize: "10.5px" }}>Para instalar moondream ejecutá en tu terminal:</p>
+                  <code style={{ background: "#111", border: "1px solid #3a2020", borderRadius: "5px", padding: "5px 10px", color: "#c084fc", fontSize: "11px", display: "block" }}>
+                    ollama pull moondream
+                  </code>
+                  <button
+                    onClick={checkOllama}
+                    style={{ alignSelf: "flex-start", marginTop: "6px", padding: "5px 12px", background: "none", border: "1px solid #3a2050", borderRadius: "7px", color: "#a78bfa", fontSize: "11px", cursor: "pointer" }}
+                    onMouseOver={(e) => { e.currentTarget.style.borderColor = "#a78bfa"; }}
+                    onMouseOut={(e) => { e.currentTarget.style.borderColor = "#3a2050"; }}
+                  >↺ Reintentar conexión</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
+            {/* Drop zone / preview */}
+            <label
+              style={{ flexShrink: 0, width: "110px", height: "100px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "5px", background: "#111", border: `1.5px dashed ${analizando ? "#6a3a9a" : "#3a2050"}`, borderRadius: "10px", cursor: analizando ? "not-allowed" : "pointer", transition: "all 0.2s", overflow: "hidden" }}
+              onMouseOver={(e) => { if (!analizando) e.currentTarget.style.borderColor = "#a78bfa88"; }}
+              onMouseOut={(e) => { e.currentTarget.style.borderColor = analizando ? "#6a3a9a" : "#3a2050"; }}
+              onDragOver={(e) => { e.preventDefault(); e.currentTarget.style.borderColor = "#a78bfa"; }}
+              onDrop={(e) => { e.preventDefault(); if (!analizando) handleFile(e.dataTransfer.files?.[0]); }}
+            >
+              <input type="file" accept="image/*" style={{ display: "none" }} disabled={analizando}
+                onChange={(e) => { handleFile(e.target.files?.[0]); e.target.value = ""; }}
+              />
+              {imgPreview
+                ? <img src={imgPreview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: analizando ? 0.5 : 1, transition: "opacity 0.2s" }} />
+                : <>
+                    <span style={{ fontSize: "22px", opacity: 0.35 }}>🖼</span>
+                    <p style={{ color: "#3a2a5a", fontSize: "10px", textAlign: "center", lineHeight: "1.4" }}>Soltá o<br/>subí imagen</p>
+                    <p style={{ color: "#252535", fontSize: "9px" }}>JPG · PNG · WEBP</p>
+                  </>
+              }
+            </label>
+
+            {/* Panel derecho */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+
+              {/* Estado: sin imagen */}
+              {!imgPreview && !analizando && (
+                <p style={{ color: "#3a2a5a", fontSize: "11px", lineHeight: "1.6" }}>
+                  Subí una imagen de referencia. <span style={{ color: "#5a4a7a" }}>moondream</span> la analizará localmente con Ollama y llenará automáticamente las tarjetas de Sujeto, Estilo, Ambiente, Iluminación y más.
+                </p>
+              )}
+
+              {/* Estado: imagen cargada, sin analizar */}
+              {imgPreview && !analizando && !resultado && (
+                <>
+                  <p style={{ color: "#5a4a7a", fontSize: "11px" }}>Imagen lista. Hacé clic en Analizar para que moondream describa sus características.</p>
+                  <button
+                    onClick={analizarImagen}
+                    disabled={ollamaOk === false}
+                    style={{ padding: "10px 16px", background: ollamaOk === false ? "#1a1a2e" : "linear-gradient(135deg, #3b0764, #6d28d9)", border: `1.5px solid ${ollamaOk === false ? "#252545" : "#7c3aed55"}`, borderRadius: "9px", color: ollamaOk === false ? "#333355" : "#e9d5ff", fontWeight: "700", fontSize: "12.5px", cursor: ollamaOk === false ? "not-allowed" : "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", gap: "8px" }}
+                    onMouseOver={(e) => { if (ollamaOk !== false) e.currentTarget.style.filter = "brightness(1.15)"; }}
+                    onMouseOut={(e) => { e.currentTarget.style.filter = "none"; }}
+                  >
+                    <span style={{ fontSize: "15px" }}>🔍</span> Analizar con moondream
+                  </button>
+                </>
+              )}
+
+              {/* Estado: analizando */}
+              {analizando && (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px", background: "#110e1a", border: "1px solid #3a2050", borderRadius: "9px" }}>
+                  <span style={{ display: "inline-block", animation: "spin 1s linear infinite", fontSize: "18px" }}>⟳</span>
+                  <div>
+                    <p style={{ color: "#a78bfa", fontWeight: "600", fontSize: "12.5px" }}>moondream analizando...</p>
+                    <p style={{ color: "#3a2a5a", fontSize: "10.5px", marginTop: "2px" }}>Puede tardar 15–40 seg en la primera llamada (carga del modelo)</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Estado: resultado listo */}
+              {resultado && !analizando && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <p style={{ color: "#6a5a8a", fontSize: "10.5px", fontWeight: "600" }}>DETECTADO POR MOONDREAM:</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                    {Object.entries(resultado).map(([cat, val]) => (
+                      <div key={cat} style={{ background: "#1a1228", border: "1px solid #3a2060", borderRadius: "6px", padding: "4px 9px", fontSize: "10.5px", maxWidth: "100%" }}>
+                        <span style={{ color: "#a78bfa", fontWeight: "600" }}>{HMR_LABELS[cat] || cat}: </span>
+                        <span style={{ color: "#7777aa" }}>{val.length > 40 ? val.slice(0, 40) + "…" : val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Éxito al aplicar */}
+          {aplicado && (
+            <div style={{ marginTop: "12px", padding: "10px 13px", background: "#0e1a0e", border: "1.5px solid #2a4a2a", borderRadius: "9px" }}>
+              <p style={{ color: "#4caf50", fontWeight: "700", fontSize: "13px" }}>✓ ¡{cardCount} tarjeta{cardCount !== 1 ? "s" : ""} actualizada{cardCount !== 1 ? "s" : ""}!</p>
+              <p style={{ color: "#2a5a2a", fontSize: "11px", marginTop: "3px" }}>Los valores se cargaron en modo manual con lock activado. Podés editarlos en cada tarjeta.</p>
+            </div>
+          )}
+
+          {/* Acciones */}
+          {(imgPreview || resultado) && (
+            <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+              {resultado && !aplicado && (
+                <button
+                  onClick={aplicarACards}
+                  style={{ flex: 1, padding: "9px 14px", background: "linear-gradient(135deg, #3b0764, #6d28d9)", border: "1.5px solid #7c3aed55", borderRadius: "9px", color: "#e9d5ff", fontWeight: "700", fontSize: "12px", cursor: "pointer", transition: "all 0.2s" }}
+                  onMouseOver={(e) => { e.currentTarget.style.filter = "brightness(1.15)"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.filter = "none"; }}
+                >
+                  ✦ Aplicar {cardCount} tarjetas
+                </button>
+              )}
+              {resultado && !analizando && (
+                <button
+                  onClick={analizarImagen}
+                  style={{ padding: "9px 13px", background: "none", border: "1px solid #3a2050", borderRadius: "9px", color: "#6a4a8a", fontSize: "11px", cursor: "pointer", transition: "all 0.15s" }}
+                  onMouseOver={(e) => { e.currentTarget.style.borderColor = "#a78bfa88"; e.currentTarget.style.color = "#a78bfa"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.borderColor = "#3a2050"; e.currentTarget.style.color = "#6a4a8a"; }}
+                >↺ Re-analizar</button>
+              )}
+              <button
+                onClick={limpiar}
+                style={{ padding: "9px 13px", background: "none", border: "1px solid #2a2a3a", borderRadius: "9px", color: "#444", fontSize: "11px", cursor: "pointer", transition: "all 0.15s" }}
+                onMouseOver={(e) => { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#888"; }}
+                onMouseOut={(e) => { e.currentTarget.style.borderColor = "#2a2a3a"; e.currentTarget.style.color = "#444"; }}
+              >✕ Limpiar</button>
+            </div>
+          )}
+
+          <p style={{ color: "#1e1828", fontSize: "10px", marginTop: "12px", lineHeight: "1.6" }}>
+            Modelo: <span style={{ color: "#3a2a5a" }}>moondream</span> vía Ollama en localhost:11434 · 
+            Los valores se generan en inglés, listos para tu workflow de ComfyUI.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // --- COMPONENTE PRINCIPAL ---
 const App = () => {
   const [bank, setBank] = useState(null);
@@ -983,6 +1305,13 @@ const App = () => {
           setTextoTab={setTextoTab}
           showTextos={showTextos}
           setShowTextos={setShowTextos}
+        />
+
+        {/* MÓDULO IMAGEN → CONCEPTO */}
+        <ImagenConceptoModule
+          hmrCards={hmrCards}
+          setHmrCards={setHmrCards}
+          bank={bank}
         />
 
         {/* RESULTADOS */}
