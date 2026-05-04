@@ -57,6 +57,256 @@ const GET_COLOR = (key) => {
 
 const STORAGE_KEY = "prompt_generator_saves";
 
+// ── MÓDULO DE TEXTO ───────────────────────────────────────────────────
+const FONT_STYLES  = ["Negrita", "Cursiva", "Subrayada", "Versalitas", "Mayúsculas"];
+const FILL_TYPES   = ["Sólido", "Degradado", "Metálico", "Transparente"];
+const TEXT_EFFECTS = ["Sombra", "Resplandor", "Relieve", "Distorsión", "3D", "Contorno doble"];
+const TEXT_ALIGN   = ["Izquierda", "Centro", "Derecha", "Justificado"];
+const TEXT_ORDER   = ["Delante del sujeto", "Detrás del sujeto"];
+
+const emptyText = () => ({
+  id: Date.now() + Math.random(),
+  contenido: "",
+  fuente: "",
+  estilos: [],
+  colorRelleno: "",
+  tipoRelleno: "Sólido",
+  colorContorno: "",
+  anchoContorno: "",
+  efectos: [],
+  alineacion: "Centro",
+  orden: "Delante del sujeto",
+  ordenCustom: "",
+  ideogram: false,
+});
+
+const buildTextPrompt = (t) => {
+  if (!t.contenido.trim()) return null;
+  const parts = [];
+  parts.push(`text: "${t.contenido.trim()}"`);
+  if (t.fuente)       parts.push(`font: ${t.fuente}${t.estilos.length ? " " + t.estilos.map(s => s.toLowerCase()).join(" ") : ""}`);
+  else if (t.estilos.length) parts.push(`font style: ${t.estilos.map(s => s.toLowerCase()).join(", ")}`);
+  if (t.colorRelleno) parts.push(`fill: ${t.colorRelleno} ${t.tipoRelleno.toLowerCase()}`);
+  else if (t.tipoRelleno !== "Sólido") parts.push(`fill: ${t.tipoRelleno.toLowerCase()}`);
+  if (t.colorContorno) parts.push(`stroke: ${t.colorContorno}${t.anchoContorno ? " " + t.anchoContorno : ""}`);
+  if (t.efectos.length) parts.push(t.efectos.map(e => e.toLowerCase()).join(", ") + " effect");
+  parts.push(`${t.alineacion.toLowerCase()} aligned`);
+  const ord = t.ordenCustom.trim() || t.orden;
+  parts.push(ord.toLowerCase());
+  if (t.ideogram) parts.push("legible typography, crisp text rendering");
+  return parts.join(", ");
+};
+
+const TextoModule = ({ textos, setTextos, textoTab, setTextoTab, showTextos, setShowTextos }) => {
+  const t = textos[textoTab] || textos[0];
+
+  const update = (field, val) =>
+    setTextos(prev => prev.map((tx, i) => i === textoTab ? { ...tx, [field]: val } : tx));
+
+  const toggleMulti = (field, val) =>
+    setTextos(prev => prev.map((tx, i) => {
+      if (i !== textoTab) return tx;
+      const arr = tx[field];
+      return { ...tx, [field]: arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val] };
+    }));
+
+  const addText = () => { setTextos(prev => [...prev, emptyText()]); setTextoTab(textos.length); };
+  const removeText = (idx) => {
+    if (textos.length === 1) { setTextos([emptyText()]); setTextoTab(0); return; }
+    setTextos(prev => prev.filter((_, i) => i !== idx));
+    setTextoTab(Math.max(0, textoTab - (idx <= textoTab ? 1 : 0)));
+  };
+
+  const chipStyle = (active, color = "#8888dd") => ({
+    padding: "5px 11px", borderRadius: "999px", fontSize: "11.5px", cursor: "pointer", whiteSpace: "nowrap",
+    border: `1.5px solid ${active ? color : "#2a2a2a"}`,
+    background: active ? color + "22" : "#181818",
+    color: active ? color : "#555",
+    fontWeight: active ? "600" : "400", transition: "all 0.15s",
+  });
+
+  const inputStyle = (hasVal) => ({
+    flex: 1, background: hasVal ? "#141420" : "#181818",
+    border: `1.5px solid ${hasVal ? "#5555aa" : "#252525"}`,
+    borderRadius: "8px", padding: "7px 11px",
+    color: hasVal ? "#c8c8ff" : "#555",
+    fontSize: "12px", outline: "none", transition: "all 0.18s",
+  });
+
+  const labelStyle = { color: "#888", fontWeight: "600", fontSize: "11px", letterSpacing: "0.4px", textTransform: "uppercase", marginBottom: "6px", display: "block" };
+
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      {/* Header toggle */}
+      <button
+        onClick={() => setShowTextos(v => !v)}
+        style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: showTextos ? "#0e0e1a" : "#111", border: `1.5px solid ${showTextos ? "#3a3a6a" : "#1e1e2a"}`, borderRadius: showTextos ? "11px 11px 0 0" : "11px", cursor: "pointer", transition: "all 0.2s" }}
+        onMouseOver={(e) => { if (!showTextos) e.currentTarget.style.borderColor = "#4a4a8a"; }}
+        onMouseOut={(e) => { if (!showTextos) e.currentTarget.style.borderColor = "#1e1e2a"; }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "14px" }}>🔤</span>
+          <span style={{ color: "#8888dd", fontWeight: "700", fontSize: "12.5px", letterSpacing: "0.4px" }}>MÓDULO DE TEXTO</span>
+          <span style={{ color: "#3a3a5a", fontSize: "10.5px" }}>— integrá tipografía al diseño</span>
+          {textos.some(tx => tx.contenido.trim()) && (
+            <span style={{ background: "#8888dd33", border: "1px solid #8888dd55", borderRadius: "999px", padding: "1px 8px", fontSize: "11px", color: "#8888dd" }}>
+              {textos.filter(tx => tx.contenido.trim()).length} texto{textos.filter(tx => tx.contenido.trim()).length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+        <span style={{ color: "#444", fontSize: "12px" }}>{showTextos ? "▲" : "▼"}</span>
+      </button>
+
+      {showTextos && (
+        <div style={{ background: "#0e0e14", border: "1.5px solid #3a3a6a", borderTop: "none", borderRadius: "0 0 11px 11px", padding: "14px" }}>
+          {/* TABS */}
+          <div style={{ display: "flex", gap: "6px", marginBottom: "14px", flexWrap: "wrap", alignItems: "center" }}>
+            {textos.map((tx, i) => (
+              <div key={tx.id} style={{ display: "flex", alignItems: "center" }}>
+                <button onClick={() => setTextoTab(i)}
+                  style={{ padding: "5px 13px", borderRadius: textos.length > 1 ? "999px 0 0 999px" : "999px", border: `1.5px solid ${textoTab === i ? "#8888dd" : "#2a2a4a"}`, borderRight: textos.length > 1 ? "none" : undefined, background: textoTab === i ? "#8888dd22" : "#111", color: textoTab === i ? "#8888dd" : "#444", fontWeight: textoTab === i ? "700" : "400", fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}
+                >
+                  {tx.contenido.trim() ? `"${tx.contenido.slice(0, 12)}${tx.contenido.length > 12 ? "…" : ""}"` : `Texto ${i + 1}`}
+                </button>
+                {textos.length > 1 && (
+                  <button onClick={() => removeText(i)}
+                    style={{ padding: "5px 7px", borderRadius: "0 999px 999px 0", border: `1.5px solid ${textoTab === i ? "#8888dd" : "#2a2a4a"}`, background: textoTab === i ? "#8888dd22" : "#111", color: "#554466", fontSize: "10px", cursor: "pointer" }}
+                    onMouseOver={(e) => { e.currentTarget.style.color = "#cc4444"; }}
+                    onMouseOut={(e) => { e.currentTarget.style.color = "#554466"; }}
+                  >✕</button>
+                )}
+              </div>
+            ))}
+            {textos.length < 5 && (
+              <button onClick={addText}
+                style={{ padding: "5px 11px", borderRadius: "999px", border: "1.5px dashed #2a2a4a", background: "none", color: "#444", fontSize: "12px", cursor: "pointer", transition: "all 0.15s" }}
+                onMouseOver={(e) => { e.currentTarget.style.borderColor = "#8888dd"; e.currentTarget.style.color = "#8888dd"; }}
+                onMouseOut={(e) => { e.currentTarget.style.borderColor = "#2a2a4a"; e.currentTarget.style.color = "#444"; }}
+              >+ Agregar</button>
+            )}
+          </div>
+
+          {/* CONTENIDO */}
+          <div style={{ marginBottom: "14px" }}>
+            <span style={labelStyle}>Contenido del texto</span>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <input value={t.contenido} onChange={(e) => update("contenido", e.target.value)}
+                placeholder='Ej: MODO DIABLO, Est. 2024...'
+                style={{ ...inputStyle(!!t.contenido), flex: 1 }}
+                onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+                onBlur={(e) => { e.target.style.borderColor = t.contenido ? "#5555aa" : "#252525"; e.target.style.color = t.contenido ? "#c8c8ff" : "#555"; }}
+              />
+              <button onClick={() => update("ideogram", !t.ideogram)} title="Optimizar para Ideogram"
+                style={{ padding: "7px 11px", borderRadius: "8px", border: `1.5px solid ${t.ideogram ? "#0ea5e9" : "#252525"}`, background: t.ideogram ? "#0ea5e922" : "#181818", color: t.ideogram ? "#0ea5e9" : "#444", fontSize: "11px", fontWeight: "600", cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s" }}
+              >Ⓘ Ideogram</button>
+            </div>
+          </div>
+
+          {/* TIPOGRAFÍA */}
+          <div style={{ marginBottom: "14px" }}>
+            <span style={labelStyle}>Tipografía</span>
+            <input value={t.fuente} onChange={(e) => update("fuente", e.target.value)}
+              placeholder='Ej: Impact, Bebas Neue, Arial Black...'
+              style={{ ...inputStyle(!!t.fuente), width: "100%", marginBottom: "8px" }}
+              onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+              onBlur={(e) => { e.target.style.borderColor = t.fuente ? "#5555aa" : "#252525"; e.target.style.color = t.fuente ? "#c8c8ff" : "#555"; }}
+            />
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              {FONT_STYLES.map(s => (
+                <button key={s} onClick={() => toggleMulti("estilos", s)} style={chipStyle(t.estilos.includes(s))}
+                  onMouseOver={(e) => { if (!t.estilos.includes(s)) { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#aaa"; }}}
+                  onMouseOut={(e) => { if (!t.estilos.includes(s)) { e.currentTarget.style.borderColor = "#2a2a2a"; e.currentTarget.style.color = "#555"; }}}
+                >{s}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* COLOR */}
+          <div style={{ marginBottom: "14px" }}>
+            <span style={labelStyle}>Color y relleno</span>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
+              <input value={t.colorRelleno} onChange={(e) => update("colorRelleno", e.target.value)}
+                placeholder='Relleno: ej: dorado, #FFD700...'
+                style={{ ...inputStyle(!!t.colorRelleno), minWidth: "120px" }}
+                onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+                onBlur={(e) => { e.target.style.borderColor = t.colorRelleno ? "#5555aa" : "#252525"; e.target.style.color = t.colorRelleno ? "#c8c8ff" : "#555"; }}
+              />
+              <input value={t.colorContorno} onChange={(e) => update("colorContorno", e.target.value)}
+                placeholder='Contorno: ej: negro, rojo...'
+                style={{ ...inputStyle(!!t.colorContorno), minWidth: "120px" }}
+                onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+                onBlur={(e) => { e.target.style.borderColor = t.colorContorno ? "#5555aa" : "#252525"; e.target.style.color = t.colorContorno ? "#c8c8ff" : "#555"; }}
+              />
+              <input value={t.anchoContorno} onChange={(e) => update("anchoContorno", e.target.value)}
+                placeholder='Ancho: ej: 3px, grueso...'
+                style={{ ...inputStyle(!!t.anchoContorno), minWidth: "100px" }}
+                onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+                onBlur={(e) => { e.target.style.borderColor = t.anchoContorno ? "#5555aa" : "#252525"; e.target.style.color = t.anchoContorno ? "#c8c8ff" : "#555"; }}
+              />
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              {FILL_TYPES.map(f => (
+                <button key={f} onClick={() => update("tipoRelleno", f)} style={chipStyle(t.tipoRelleno === f, "#F5C518")}
+                  onMouseOver={(e) => { if (t.tipoRelleno !== f) { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#aaa"; }}}
+                  onMouseOut={(e) => { if (t.tipoRelleno !== f) { e.currentTarget.style.borderColor = "#2a2a2a"; e.currentTarget.style.color = "#555"; }}}
+                >{f}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* EFECTOS */}
+          <div style={{ marginBottom: "14px" }}>
+            <span style={labelStyle}>Efectos</span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              {TEXT_EFFECTS.map(ef => (
+                <button key={ef} onClick={() => toggleMulti("efectos", ef)} style={chipStyle(t.efectos.includes(ef), "#e040fb")}
+                  onMouseOver={(e) => { if (!t.efectos.includes(ef)) { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#aaa"; }}}
+                  onMouseOut={(e) => { if (!t.efectos.includes(ef)) { e.currentTarget.style.borderColor = "#2a2a2a"; e.currentTarget.style.color = "#555"; }}}
+                >{ef}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* POSICIÓN */}
+          <div style={{ marginBottom: "10px" }}>
+            <span style={labelStyle}>Posición y orden</span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "8px" }}>
+              {TEXT_ALIGN.map(a => (
+                <button key={a} onClick={() => update("alineacion", a)} style={chipStyle(t.alineacion === a, "#4caf50")}
+                  onMouseOver={(e) => { if (t.alineacion !== a) { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#aaa"; }}}
+                  onMouseOut={(e) => { if (t.alineacion !== a) { e.currentTarget.style.borderColor = "#2a2a2a"; e.currentTarget.style.color = "#555"; }}}
+                >{a}</button>
+              ))}
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "8px" }}>
+              {TEXT_ORDER.map(o => (
+                <button key={o} onClick={() => update("orden", o)} style={chipStyle(t.orden === o, "#29b6f6")}
+                  onMouseOver={(e) => { if (t.orden !== o) { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.color = "#aaa"; }}}
+                  onMouseOut={(e) => { if (t.orden !== o) { e.currentTarget.style.borderColor = "#2a2a2a"; e.currentTarget.style.color = "#555"; }}}
+                >{o}</button>
+              ))}
+            </div>
+            <input value={t.ordenCustom} onChange={(e) => update("ordenCustom", e.target.value)}
+              placeholder='O especificá: ej: sobre las llamas, detrás del sol...'
+              style={{ ...inputStyle(!!t.ordenCustom), width: "100%" }}
+              onFocus={(e) => { e.target.style.borderColor = "#8888ddaa"; e.target.style.color = "#e0e0e0"; }}
+              onBlur={(e) => { e.target.style.borderColor = t.ordenCustom ? "#5555aa" : "#252525"; e.target.style.color = t.ordenCustom ? "#c8c8ff" : "#555"; }}
+            />
+          </div>
+
+          {/* PREVIEW */}
+          {t.contenido.trim() && (
+            <div style={{ marginTop: "10px", padding: "9px 12px", background: "#111", borderRadius: "8px", border: "1px solid #2a2a4a" }}>
+              <p style={{ color: "#3a3a6a", fontSize: "10px", marginBottom: "3px", fontWeight: "600" }}>PREVIEW EN PROMPT:</p>
+              <p style={{ color: "#7777bb", fontSize: "11.5px", lineHeight: "1.5", fontStyle: "italic" }}>{buildTextPrompt(t)}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // --- COMPONENTE PRINCIPAL ---
 const App = () => {
   const [bank, setBank] = useState(null);
@@ -67,6 +317,11 @@ const App = () => {
   const [activeTabNeg, setActiveTabNeg] = useState(TABS_CONFIG.NEGATIVO[0].id);
   const [loadingAI, setLoadingAI] = useState(false);
   const [sendingComfy, setSendingComfy] = useState(false);
+
+  // Estado para el Módulo de Texto
+  const [textos, setTextos] = useState([emptyText()]);
+  const [textoTab, setTextoTab] = useState(0);
+  const [showTextos, setShowTextos] = useState(false);
 
   // Estado para el Modal de Pesos
   const [selection, setSelection] = useState({ text: "", start: 0, end: 0, target: "", x: 0, y: 0, visible: false });
@@ -194,9 +449,11 @@ const App = () => {
       .filter(Boolean)
       .join(", ");
 
-    setPrompt(buildString(Object.keys(HMR_LABELS)));
+    const basePrompt = buildString(Object.keys(HMR_LABELS));
+    const textParts = textos.map(buildTextPrompt).filter(Boolean).join(", ");
+    setPrompt([basePrompt, textParts].filter(Boolean).join(", "));
     setNegativePrompt(buildString(Object.keys(NEGATIVE_LABELS)));
-  }, [hmrCards, bank]);
+  }, [hmrCards, bank, textos]);
 
   // --- LÓGICA DE LIMPIEZA / ACTIVACIÓN ---
   const toggleGroupActive = (type) => {
@@ -717,6 +974,16 @@ const App = () => {
             ))}
           </div>
         </div>
+
+        {/* MÓDULO DE TEXTO */}
+        <TextoModule
+          textos={textos}
+          setTextos={setTextos}
+          textoTab={textoTab}
+          setTextoTab={setTextoTab}
+          showTextos={showTextos}
+          setShowTextos={setShowTextos}
+        />
 
         {/* RESULTADOS */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", backgroundColor: "#000", padding: "20px", borderRadius: "12px", border: "1px solid #222" }}>
