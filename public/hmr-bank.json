@@ -215,5 +215,14 @@
     "isolated white",
     "high contrast",
     "vivid colors"
-  ]
+  ],
+  
+  "dtf": ["masterpiece", "modern graphic illustration", "poster style", "transparent background", "centered composition", "vector style", "sticker design",  "flat design", "flat color", "thick white outline", "sharp outlines", "solid palette", "clean composition", "clean shapes", "sharp design", "bold lines", "clean lines", "white background", "isolated white", "high contrast", "vivid colors"],
+  "n_calidad": ["baja calidad", "borroso", "pixelado", "ruido", "granulado", "desenfocado"],
+  "n_anatomia": ["mala anatomía", "deformado", "extremidades extra", "proporciones incorrectas"],
+  "n_rostro": ["feo", "rostro deformado", "ojos malos", "dientes malos"],
+  "n_estilo": ["caricatura", "anime", "boceto", "render 3D"],
+  "n_composicion": ["recortado", "fuera de cuadro", "duplicado", "marco"],
+  "n_texto": ["texto", "marca de agua", "firma", "logo"]
+
 }
