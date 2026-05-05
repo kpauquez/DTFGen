@@ -311,39 +311,45 @@ const TextoModule = ({ textos, setTextos, textoTab, setTextoTab, showTextos, set
 const OLLAMA_URL    = "http://localhost:11434";
 const VISION_MODEL  = "moondream";
 
-// Prompt estructurado que le pedimos a moondream — responde en inglés,
-// nosotros lo usamos directo como prompt para el generador de imágenes.
-const VISION_PROMPT = `You are an expert at analyzing images for AI image generation prompts, specialized in DTF apparel print design.
-Analyze this image and respond ONLY with a valid JSON object. No markdown, no backticks, no explanation.
-Use short descriptive English phrases (max 15 words each). Use null if a category clearly doesn't apply.
+// moondream no sigue formato JSON confiablemente — le hacemos preguntas
+// simples una por una y parseamos texto libre.
+const VISION_PROMPTS = [
+  { key: "sujeto",      q: "What is the main subject or character in this image? Answer in one short phrase, no punctuation." },
+  { key: "estilo",      q: "What is the art style of this image? (vector, flat, realistic, cartoon, grunge, etc). One short phrase." },
+  { key: "ambiente",    q: "Describe the background or setting. One short phrase." },
+  { key: "atmosfera",   q: "What is the mood or atmosphere? One short phrase." },
+  { key: "iluminacion", q: "Describe the lighting. One short phrase." },
+  { key: "detalles",    q: "Any notable textures or patterns? One short phrase." },
+  { key: "angulo",      q: "What is the camera angle or point of view? One short phrase." },
+];
 
-Required JSON keys:
-{
-  "sujeto": "main subject or character",
-  "pose": "body position or stance",
-  "accion": "action or movement",
-  "ambiente": "background or environment",
-  "estilo": "visual style (vector, flat, realistic, etc)",
-  "iluminacion": "lighting description",
-  "atmosfera": "mood or atmosphere",
-  "detalles": "textures, patterns or extra details",
-  "angulo": "camera angle or perspective"
-}`;
-
-// Parsea el JSON devuelto por moondream y filtra nulls
-const parsearRespuestaOllama = (raw) => {
-  // moondream a veces envuelve en ```json ... ```
-  const clean = raw.replace(/```json\s*/gi, "").replace(/```/g, "").trim();
-  // Buscar el primer { ... } válido
-  const start = clean.indexOf("{");
-  const end   = clean.lastIndexOf("}");
-  if (start === -1 || end === -1) throw new Error("Sin JSON en respuesta");
-  const parsed = JSON.parse(clean.slice(start, end + 1));
-  // Filtrar nulls y strings vacíos
-  return Object.fromEntries(
-    Object.entries(parsed).filter(([, v]) => v && typeof v === "string" && v.trim())
-  );
+// Llama a Ollama una pregunta a la vez y acumula resultados
+const analizarConOllama = async (imgBase64, onProgress) => {
+  const resultado = {};
+  for (const { key, q } of VISION_PROMPTS) {
+    onProgress(key);
+    const res = await fetch(`${OLLAMA_URL}/api/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: VISION_MODEL,
+        prompt: q,
+        images: [imgBase64],
+        stream: false,
+        options: { temperature: 0.1, num_predict: 50 },
+      }),
+    });
+    if (!res.ok) throw new Error(`Ollama respondió ${res.status}`);
+    const data = await res.json();
+    const val = (data?.response || "").trim()
+      .replace(/^["'`]+|["'`]+$/g, "")
+      .replace(/\n.*/s, "")
+      .trim();
+    if (val && val.length > 2) resultado[key] = val;
+  }
+  return resultado;
 };
+
 
 const ImagenConceptoModule = ({ hmrCards, setHmrCards }) => {
   const [showPanel, setShowPanel]     = useState(false);
@@ -354,6 +360,7 @@ const ImagenConceptoModule = ({ hmrCards, setHmrCards }) => {
   const [aplicado, setAplicado]       = useState(false);
   const [error, setError]             = useState("");
   const [ollamaOk, setOllamaOk]       = useState(null);  // null=sin chequear, true/false
+  const [progreso, setProgreso]       = useState("");    // categoría actual siendo analizada
 
   // Chequea que Ollama esté corriendo al abrir el panel
   const checkOllama = async () => {
@@ -408,30 +415,16 @@ const ImagenConceptoModule = ({ hmrCards, setHmrCards }) => {
     setAnalizando(true);
     setResultado(null);
     setError("");
+    setProgreso("");
 
     try {
-      const res = await fetch(`${OLLAMA_URL}/api/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: VISION_MODEL,
-          prompt: VISION_PROMPT,
-          images: [imgBase64],
-          stream: false,
-          options: { temperature: 0.2, num_predict: 400 },
-        }),
-      });
-
-      if (!res.ok) throw new Error(`Ollama respondió ${res.status}`);
-      const data = await res.json();
-      const raw  = data?.response || "";
-      if (!raw) throw new Error("Respuesta vacía de moondream");
-
-      const parsed = parsearRespuestaOllama(raw);
-      if (Object.keys(parsed).length === 0) throw new Error("No se detectaron categorías en la imagen");
+      const parsed = await analizarConOllama(imgBase64, (cat) => setProgreso(cat));
+      if (Object.keys(parsed).length === 0) throw new Error("moondream no devolvió resultados. Probá con otra imagen.");
       setResultado(parsed);
+      setProgreso("");
     } catch (e) {
       setError(e.message || "Error al analizar la imagen");
+      setProgreso("");
     } finally {
       setAnalizando(false);
     }
@@ -555,11 +548,24 @@ const ImagenConceptoModule = ({ hmrCards, setHmrCards }) => {
 
               {/* Estado: analizando */}
               {analizando && (
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px", background: "#110e1a", border: "1px solid #3a2050", borderRadius: "9px" }}>
-                  <span style={{ display: "inline-block", animation: "spin 1s linear infinite", fontSize: "18px" }}>⟳</span>
-                  <div>
-                    <p style={{ color: "#a78bfa", fontWeight: "600", fontSize: "12.5px" }}>moondream analizando...</p>
-                    <p style={{ color: "#3a2a5a", fontSize: "10.5px", marginTop: "2px" }}>Puede tardar 15–40 seg en la primera llamada (carga del modelo)</p>
+                <div style={{ padding: "12px", background: "#110e1a", border: "1px solid #3a2050", borderRadius: "9px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                    <span style={{ display: "inline-block", animation: "spin 1s linear infinite", fontSize: "18px" }}>⟳</span>
+                    <div>
+                      <p style={{ color: "#a78bfa", fontWeight: "600", fontSize: "12.5px" }}>moondream analizando...</p>
+                      <p style={{ color: "#3a2a5a", fontSize: "10.5px", marginTop: "2px" }}>7 preguntas · puede tardar 30–60 seg</p>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                    {VISION_PROMPTS.map(({ key }) => {
+                      const done = resultado && resultado[key];
+                      const active = progreso === key;
+                      return (
+                        <span key={key} style={{ padding: "3px 9px", borderRadius: "999px", fontSize: "10px", border: `1px solid ${done ? "#2a6a2a" : active ? "#6a3a9a" : "#2a1a3a"}`, background: done ? "#0e2a0e" : active ? "#2a1040" : "none", color: done ? "#4caf50" : active ? "#a78bfa" : "#3a2050", transition: "all 0.3s" }}>
+                          {done ? "✓ " : active ? "⟳ " : ""}{HMR_LABELS[key] || key}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               )}
