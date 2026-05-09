@@ -71,5 +71,11 @@
       "fav": false
     }
   ],
-  "tools": []
+  "tools": [
+    {
+      "id": "t1778301694672",
+      "name": "Pinterest",
+      "url": "www.pínterest.com"
+    }
+  ]
 }
