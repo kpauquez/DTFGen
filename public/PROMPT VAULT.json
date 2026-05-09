@@ -109,6 +109,12 @@
       "name": "CLAUDE",
       "url": "https://claude.ai/new",
       "category": "🤖 IAS"
+    },
+    {
+      "id": "t1778359097445",
+      "name": "COPILOT",
+      "url": "http://www.copilot.com/",
+      "category": "🤖 IAS"
     }
   ]
 }
