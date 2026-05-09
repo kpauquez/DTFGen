@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778306622517",
+      "titulo": "MEJORAR IMAGEN",
+      "categoria": "UPSCALE",
+      "tags": "#upscale",
+      "promptPos": "Retrato ultra detallado en 4K, Full HD. Textura de piel hiperrealista, detalles finos, piel de niña. Upscale 2x, enfoque nítido, estilo fotográfico profesional — obra maestra, foto premiada.",
+      "promptNeg": "blurry, low resolution, pixelated, noisy, jpeg artifacts, messy edges, soft focus, extra limbs, distorted face, bad anatomy, multiple faces, background clutter, text, watermark, logo, frame, border, washed colors, dull tones",
+      "notas": "Retrato ultra vectorizado en 4K, Full HD. Detalles finos. Upscale 2x, enfoque nítido, estilo vector profesional — obra maestra, foto premiada\\\\n\\\\nTIPS PRO: ink outlines, cel shading, comic style rendering, adobe illustrator vector look, clean stroke lines",
+      "imgUrl": "https://scontent.faep4-3.fna.fbcdn.net/v/t39.30808-6/687838035_1538282030992252_776951265079869939_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_eui2=AeHWMWbpEYcM09dHLoSEQOA9LyG8z1DFZX8vIbzPUMVlfzU1le1QjQL8yRBbkcOWL8s&_nc_ohc=kJ3MmsqdnF0Q7kNvwG3Nq9c&_nc_oc=AdpkEesi12Dq1OU_Us4YdAJtLC3uQU0RqlBol5qD00fAuKO0pYj_1R_46SWEwY0eHn6DBj5fVmQjy4PYilRjhszy&_nc_zt=23&_nc_ht=scontent.faep4-3.fna&_nc_gid=e2XglM3MTfrV1ZVFGmOcaw&_nc_ss=782a8&oh=00_Af5SkDoRsC-1YG6HRSLwYML9CgHPdRngFTT5ygleT6QWxA&oe=6A005F56",
+      "link": "ttps://www.facebook.com/share/p/1ECvSMPfxW/",
+      "linkLabel": "Facebook",
+      "modelo": "ChatGPT",
+      "fav": false
+    },
+    {
       "id": "p1778284601138",
       "titulo": "NAVE ESPACIAL",
       "categoria": "ESPACIAL",
