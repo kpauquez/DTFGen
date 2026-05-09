@@ -157,6 +157,12 @@
       "name": "SEAART",
       "url": "https://seaart.ai/es",
       "category": "🎨 IMG GEN"
+    },
+    {
+      "id": "t1778363781664",
+      "name": "UPSAMPLER",
+      "url": "https://upsampler.com/free-image-upscaler-no-signup",
+      "category": "🔍 UPSCALERS"
     }
   ]
 }
