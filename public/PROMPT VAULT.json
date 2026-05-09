@@ -115,6 +115,12 @@
       "name": "COPILOT",
       "url": "http://www.copilot.com/",
       "category": "🤖 IAS"
+    },
+    {
+      "id": "t1778359120119",
+      "name": "CHATGPT",
+      "url": "http://www.chatgpt.com/",
+      "category": "🤖 IAS"
     }
   ]
 }
