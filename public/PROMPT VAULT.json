@@ -40,7 +40,7 @@
       "link": "https://perchance.org/qinegen",
       "linkLabel": "QINEGEN",
       "modelo": "SD1.5",
-      "fav": true
+      "fav": false
     },
     {
       "id": "p1778283694628",
@@ -54,7 +54,7 @@
       "link": "https://lexica.art",
       "linkLabel": "LEXICA",
       "modelo": "FLUX",
-      "fav": true
+      "fav": false
     },
     {
       "id": "p1778282920039",
