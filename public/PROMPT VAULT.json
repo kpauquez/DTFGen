@@ -103,6 +103,12 @@
       "name": "GEMINI",
       "url": "https://gemini.google.com/app?hl=es",
       "category": "🤖 IAS"
+    },
+    {
+      "id": "t1778359082240",
+      "name": "CLAUDE",
+      "url": "https://claude.ai/new",
+      "category": "🤖 IAS"
     }
   ]
 }
