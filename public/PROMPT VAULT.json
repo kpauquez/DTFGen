@@ -7,7 +7,7 @@
       "promptNeg": "D (ultra HD),focus (net focus: 1.3),perfect facial symmetry,smooth skin texture,",
       "imgUrl": "https://cdn.prompthero.com/lkg26lcdjjat14nnvo20g7slw2-hero-10-masterpiece-newest-absurdres-safe-score9-score8up-score7up-masterpiece-break-best-quality-honey-lemon-13-long-blond-hair-red-bezel-3d.jpeg",
       "categoria": "CARTOON",
-      "modelo": "SD1.5",
+      "modelo": "PROBE",
       "link": "https://prompthero.com/prompt/fb8d8750b84-hero-10-masterpiece-newest-absurdres-safe-score9-score8up-score7up-masterpiece-break-best-quality-honey-lemon-13-long-blond-hair-red-bezel-3d",
       "linkLabel": "PROMPTHERO",
       "tags": "#CHICA #CARTOON",
@@ -30,7 +30,7 @@
     },
     {
       "id": "p1778284601138",
-      "titulo": "NAVES ESPACIALES",
+      "titulo": "NAVE ESPACIAL",
       "categoria": "ESPACIAL",
       "tags": "#espacial #futurista #naves",
       "promptPos": "(), (((epic space battle:1.5))),(Star Wars Space Battle Art Style:1.3), (Animated Star Wars Art style:1.3), (Space Battle Anime Art style:1.3), (Anime Art style:1.3), (Starship Battle Art Style:1.3), (bright color grading:1.2), (vibrant color grading:1.2), (light leaks), (lens flare)",
