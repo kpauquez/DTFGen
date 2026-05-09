@@ -12,7 +12,7 @@
       "link": "",
       "linkLabel": "",
       "modelo": "ChatGPT",
-      "fav": true
+      "fav": false
     },
     {
       "id": "p1778284601138",
@@ -26,7 +26,7 @@
       "link": "https://perchance.org/qinegen",
       "linkLabel": "QINEGEN",
       "modelo": "SD1.5",
-      "fav": false
+      "fav": true
     },
     {
       "id": "p1778283694628",
