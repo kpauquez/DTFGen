@@ -133,6 +133,12 @@
       "name": "IMGtoTEXT",
       "url": "https://imagetoprompt.org/",
       "category": "🖼️ IMG-TO-TXT"
+    },
+    {
+      "id": "t1778359368970",
+      "name": "MAXAI",
+      "url": "https://www.maxai.co/es/ai-tools/ai-writer/mejora-de-prompt/",
+      "category": "🚀 EXPANDIR IA"
     }
   ]
 }
