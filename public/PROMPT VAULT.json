@@ -127,6 +127,12 @@
       "name": "IMGPROMPT",
       "url": "https://imageprompt.org/es/image-to-prompt",
       "category": "🖼️ IMG-TO-TXT"
+    },
+    {
+      "id": "t1778359317788",
+      "name": "IMGtoTEXT",
+      "url": "https://imageprompt.org/es/image-to-prompt",
+      "category": "🖼️ IMG-TO-TXT"
     }
   ]
 }
