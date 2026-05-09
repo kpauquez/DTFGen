@@ -1,72 +1,75 @@
-[
-  {
-    "id": "p1778284601138",
-    "titulo": "NAVE ESPACIAL",
-    "categoria": "ESPACIAL",
-    "tags": "#espacial #futurista #naves",
-    "promptPos": "(), (((epic space battle:1.5))),(Star Wars Space Battle Art Style:1.3), (Animated Star Wars Art style:1.3), (Space Battle Anime Art style:1.3), (Anime Art style:1.3), (Starship Battle Art Style:1.3), (bright color grading:1.2), (vibrant color grading:1.2), (light leaks), (lens flare)",
-    "promptNeg": "(), low-quality, deformed, blurry, bad art",
-    "notas": "",
-    "imgUrl": "https://aigc.uploads.dev/image/9774976e0e09406646ab28fbaf7f48c396f4d20b3f66976c92d6804b269b5364.jpeg",
-    "link": "https://perchance.org/qinegen",
-    "linkLabel": "QINEGEN",
-    "modelo": "SD1.5",
-    "fav": false
-  },
-  {
-    "id": "p1778283694628",
-    "titulo": "CHICA ANIME 1980",
-    "categoria": "ANIME",
-    "tags": "#anime",
-    "promptPos": "90s anime art of Misato Katsuragi from Neon Genesis Evangelion, detailed scene, stunning details, anime, detailed environment,, 8k",
-    "promptNeg": "",
-    "notas": "",
-    "imgUrl": "https://image.lexica.art/full_jpg/b4a70aa1-6d82-43bf-a2b4-5692035b7121",
-    "link": "https://lexica.art",
-    "linkLabel": "LEXICA",
-    "modelo": "SD1.5",
-    "fav": false
-  },
-  {
-    "id": "p1778282920039",
-    "titulo": "CALAVERA REY",
-    "categoria": "ILUSTRACION",
-    "tags": "#ilustracion #calavera",
-    "promptPos": "(anime-style:1.4) illustration with perfect clean lines, illustration of a skull king with purple fire threw though moth and has a thrown with a cron on his head, anime drawing/art, bold linework, illustration, cel shaded, anime-style digital illustration. It's an anime-inspired 2D-style anime illustration. Aesthetic high-skill, professional anime illustration, which looks like a screencap from an anime series. It has clean line work and a pleasant, appealing drawn aesthetic style. Overall, it's a world-class illustration with flawless line work, perfect composition, and impeccable attention to detail.\n",
-    "promptNeg": "",
-    "notas": "",
-    "imgUrl": "https://aigc.uploads.dev/image/300dcbb45a908c00b52236d8f0d279708cc757d3567e2053d691331a49e619c1.jpeg",
-    "link": "https://perchance.org/qinegen",
-    "linkLabel": "QINEGEN",
-    "modelo": "SD1.5",
-    "fav": false
-  },
-  {
-    "id": "p1778282662241",
-    "titulo": "CHICA ANIME",
-    "categoria": "ANIME",
-    "tags": "#anime #girl",
-    "promptPos": "The image is rendered as a modern japanese animated movie, with clean and precise linework, and a bright, polished look. The composition feels dynamic yet harmonious, with careful attention to lighting, contratst, and atmosphere. The render evokes the clarity and visual depth of contempory high-quality anime films and series, combining expressivity and rich detailed visuals. It has sharp outlines and flat textures and captures the refined visual storytelling of modern anime. It brings the scene to life thanks to soft shading and a balanced use of light and color while contrasts bring more depth. It looks crisp, and visually engaging.The resolution is as high as possible so the picture remains clear even when zooming in. The composition is dynamic, varied, and asymmetrical. It avoids boredom, repetition and overly predictable patterns. It has the best output quality.\namateur portrait photo, shot candidly in 8k resolution without color grading and correction, raw photovaporwave aesthetic style, synthwave style, retrofuture style, glitchart, saturated glow, neon-litanime, illustration, hand-drawn, bold linework, anime illustration, cel shaded, 4k, fine details, masterpiece. ",
-    "promptNeg": "highly detailed, noisy and grainy, 3d render, illustration, drawing, watermarks and signatures bad photo, terrible 3D render, bad anatomy, worst quality, greyscale, black and white, disfigured, deformed, glitch, deformed, distorted, glitched, lifeless, low quality, bad proportions, extra fingers, extra digits, faded hands, awkward positioning, unrealistic_traits",
-    "notas": "",
-    "imgUrl": "https://aigc.uploads.dev/image/bcb696eceeca7742ffb840ada4b5a337b9909e9d669e35008477816b66d5e709.jpeg",
-    "link": "https://perchance.org/qinegen",
-    "linkLabel": "QINEGEN",
-    "modelo": "SD1.5",
-    "fav": false
-  },
-  {
-    "id": "p1778281910236",
-    "titulo": "GATO REALISTA",
-    "categoria": "REALISTA",
-    "tags": "#real #gato #animal",
-    "promptPos": "Realistic cat, portrait, dramatic,more realistic,, soft focus, depth of field, 8k photo, HDR, professional lighting, taken with Canon EOS R5, DSLR, 75mm lens Realistic cat, portrait, dramatic,more realistic,, sharp focus, depth of field, 8k photo, HDR, professional lighting, taken with Canon EOS R5, DSLR, 75mm lens                                    Realistic cat, portrait, dramatic,more realistic",
-    "promptNeg": "Poorly dog,poorly imagine, poorly foto,unrealistic, animated, sketches, (text), low-quality, (((glitch:1.3))), deformed, extra limbs, blurry, bad art, (logo), watermark, blurred, cut off, extra fingers, bad quality, distortion of proportions, deformed fingers, elongated body, cropped image, deformed hands, deformed legs, deformed face, twisted fingers, double image, long neck, extra limb, plastic, disfigured, mutation, sloppy, ugly, pixelated, bad hands, aliasing, overexposed, oversaturated, burnt image, fuzzy, poor quality, deformed arms, ugly, bland, boring, model, (neurotypical), oversized boobs, unnatural body, makeup, anime, manga, disney, anal anime, manga, Disney, cartoon, low resolution, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, anime, cartoon, rawing, illustration, boring, 3d render, long neck, out of frame, extra fingers mutation, deformed, canvas frame, high contrast:1.2, over saturated:1.2, glossy:1.1, bad lighting, deformed, text, bad lighting, deformed, text, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, distorted, distorted eyes, distorted fingers, distorted face. Poorly dog,, (low quality, worst quality:1.2), (unrealistic, CGI, Cinema 4D, render, 3D, octane render, 3D render), (bad photography, bad photo, sketch, oil painting, painting), (blurry, low resolution, out of focus), (washed out, high exposure, overexposed, underexposed), (grainy, distorted, artifacts, banding, vague details), (disjointed composition, inaccurate likeness, unrealistic resemblances, inaccurate representation, age misalignment, improper scale), (awkward pose, inaccurate pose, awkward posture), (unexpressive, dull, lifeless), (exaggerated proportions, overused, predictable), (poorly rendered lighting, inconsistent lighting, drab, flat lighting), (rough textures, unrealistic shadows, unrealistic colors, oversaturated colors, lack of depth, poorly defined textures), (unnatural intimacy, mismatched positioning, unnatural anatomy), (mutated hands, fused fingers, deformed hands, malformed fingers, twisted fingers, merged fingers, extra fingers, poorly drawn fingers, amputee, fused, mutated, mutation), (out of frame, distorted body proportions,   Poorly dog,poorly imagine, poorly foto,unrealistic, animated, sketches, (text), low-quality, (((glitch:1.3))), deformed, extra limbs, blurry, bad art, (logo), watermark, blurred, cut off, extra fingers, bad quality, distortion of proportions, deformed fingers, elongated body, cropped image, deformed hands, deformed legs, deformed face, twisted fingers, double image, long neck, extra limb, plastic, disfigured, mutation, sloppy, ugly, pixelated, bad hands, aliasing, overexposed, oversaturated, burnt image, fuzzy, poor quality, deformed arms, ugly, bland, boring, model, (neurotypical), oversized boobs, unnatural body, makeup, anime, manga, disney, anal anime, manga, Disney, cartoon, low resolution, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, anime, cartoon, rawing, illustration, boring, 3d render, long neck, out of frame, extra fingers mutation, deformed, canvas frame, high contrast:1.2, over saturated:1.2, glossy:1.1, bad lighting, deformed, text, bad ligh",
-    "notas": "",
-    "imgUrl": "https://aigc.uploads.dev/image/4125be47e349d934106dc20a6ede3d251a24f806ad0476adda4fe4ecdcb07d34.jpeg",
-    "link": "https://perchance.org/qinegen",
-    "linkLabel": "QINEGEN",
-    "modelo": "SD1.5",
-    "fav": false
-  }
-]
+{
+  "prompts": [
+    {
+      "id": "p1778284601138",
+      "titulo": "NAVE ESPACIAL",
+      "categoria": "ESPACIAL",
+      "tags": "#espacial #futurista #naves",
+      "promptPos": "(), (((epic space battle:1.5))),(Star Wars Space Battle Art Style:1.3), (Animated Star Wars Art style:1.3), (Space Battle Anime Art style:1.3), (Anime Art style:1.3), (Starship Battle Art Style:1.3), (bright color grading:1.2), (vibrant color grading:1.2), (light leaks), (lens flare)",
+      "promptNeg": "(), low-quality, deformed, blurry, bad art",
+      "notas": "",
+      "imgUrl": "https://aigc.uploads.dev/image/9774976e0e09406646ab28fbaf7f48c396f4d20b3f66976c92d6804b269b5364.jpeg",
+      "link": "https://perchance.org/qinegen",
+      "linkLabel": "QINEGEN",
+      "modelo": "SD1.5",
+      "fav": false
+    },
+    {
+      "id": "p1778283694628",
+      "titulo": "CHICA ANIME 1980",
+      "categoria": "ANIME",
+      "tags": "#anime",
+      "promptPos": "90s anime art of Misato Katsuragi from Neon Genesis Evangelion, detailed scene, stunning details, anime, detailed environment,, 8k",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "https://image.lexica.art/full_jpg/b4a70aa1-6d82-43bf-a2b4-5692035b7121",
+      "link": "https://lexica.art",
+      "linkLabel": "LEXICA",
+      "modelo": "FLUX",
+      "fav": false
+    },
+    {
+      "id": "p1778282920039",
+      "titulo": "CALAVERA REY",
+      "categoria": "ILUSTRACION",
+      "tags": "#ilustracion #calavera",
+      "promptPos": "(anime-style:1.4) illustration with perfect clean lines, illustration of a skull king with purple fire threw though moth and has a thrown with a cron on his head, anime drawing/art, bold linework, illustration, cel shaded, anime-style digital illustration. It's an anime-inspired 2D-style anime illustration. Aesthetic high-skill, professional anime illustration, which looks like a screencap from an anime series. It has clean line work and a pleasant, appealing drawn aesthetic style. Overall, it's a world-class illustration with flawless line work, perfect composition, and impeccable attention to detail.\n",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "https://aigc.uploads.dev/image/300dcbb45a908c00b52236d8f0d279708cc757d3567e2053d691331a49e619c1.jpeg",
+      "link": "https://perchance.org/qinegen",
+      "linkLabel": "QINEGEN",
+      "modelo": "SD1.5",
+      "fav": false
+    },
+    {
+      "id": "p1778282662241",
+      "titulo": "CHICA ANIME",
+      "categoria": "ANIME",
+      "tags": "#anime #girl",
+      "promptPos": "The image is rendered as a modern japanese animated movie, with clean and precise linework, and a bright, polished look. The composition feels dynamic yet harmonious, with careful attention to lighting, contratst, and atmosphere. The render evokes the clarity and visual depth of contempory high-quality anime films and series, combining expressivity and rich detailed visuals. It has sharp outlines and flat textures and captures the refined visual storytelling of modern anime. It brings the scene to life thanks to soft shading and a balanced use of light and color while contrasts bring more depth. It looks crisp, and visually engaging.The resolution is as high as possible so the picture remains clear even when zooming in. The composition is dynamic, varied, and asymmetrical. It avoids boredom, repetition and overly predictable patterns. It has the best output quality.\namateur portrait photo, shot candidly in 8k resolution without color grading and correction, raw photovaporwave aesthetic style, synthwave style, retrofuture style, glitchart, saturated glow, neon-litanime, illustration, hand-drawn, bold linework, anime illustration, cel shaded, 4k, fine details, masterpiece. ",
+      "promptNeg": "highly detailed, noisy and grainy, 3d render, illustration, drawing, watermarks and signatures bad photo, terrible 3D render, bad anatomy, worst quality, greyscale, black and white, disfigured, deformed, glitch, deformed, distorted, glitched, lifeless, low quality, bad proportions, extra fingers, extra digits, faded hands, awkward positioning, unrealistic_traits",
+      "notas": "",
+      "imgUrl": "https://aigc.uploads.dev/image/bcb696eceeca7742ffb840ada4b5a337b9909e9d669e35008477816b66d5e709.jpeg",
+      "link": "https://perchance.org/qinegen",
+      "linkLabel": "QINEGEN",
+      "modelo": "SD1.5",
+      "fav": false
+    },
+    {
+      "id": "p1778281910236",
+      "titulo": "GATO REALISTA",
+      "categoria": "REALISTA",
+      "tags": "#real #gato #animal",
+      "promptPos": "Realistic cat, portrait, dramatic,more realistic,, soft focus, depth of field, 8k photo, HDR, professional lighting, taken with Canon EOS R5, DSLR, 75mm lens Realistic cat, portrait, dramatic,more realistic,, sharp focus, depth of field, 8k photo, HDR, professional lighting, taken with Canon EOS R5, DSLR, 75mm lens                                    Realistic cat, portrait, dramatic,more realistic",
+      "promptNeg": "Poorly dog,poorly imagine, poorly foto,unrealistic, animated, sketches, (text), low-quality, (((glitch:1.3))), deformed, extra limbs, blurry, bad art, (logo), watermark, blurred, cut off, extra fingers, bad quality, distortion of proportions, deformed fingers, elongated body, cropped image, deformed hands, deformed legs, deformed face, twisted fingers, double image, long neck, extra limb, plastic, disfigured, mutation, sloppy, ugly, pixelated, bad hands, aliasing, overexposed, oversaturated, burnt image, fuzzy, poor quality, deformed arms, ugly, bland, boring, model, (neurotypical), oversized boobs, unnatural body, makeup, anime, manga, disney, anal anime, manga, Disney, cartoon, low resolution, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, anime, cartoon, rawing, illustration, boring, 3d render, long neck, out of frame, extra fingers mutation, deformed, canvas frame, high contrast:1.2, over saturated:1.2, glossy:1.1, bad lighting, deformed, text, bad lighting, deformed, text, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, worst quality, bad lighting, cropped, blurry, low-quality, deformed, text, poorly drawn, bad art, bad angle, boring, low-resolution, worst quality, bad composition, terrible lighting, bad anatomy, distorted, distorted eyes, distorted fingers, distorted face. Poorly dog,, (low quality, worst quality:1.2), (unrealistic, CGI, Cinema 4D, render, 3D, octane render, 3D render), (bad photography, bad photo, sketch, oil painting, painting), (blurry, low resolution, out of focus), (washed out, high exposure, overexposed, underexposed), (grainy, distorted, artifacts, banding, vague details), (disjointed composition, inaccurate likeness, unrealistic resemblances, inaccurate representation, age misalignment, improper scale), (awkward pose, inaccurate pose, awkward posture), (unexpressive, dull, lifeless), (exaggerated proportions, overused, predictable), (poorly rendered lighting, inconsistent lighting, drab, flat lighting), (rough textures, unrealistic shadows, unrealistic colors, oversaturated colors, lack of depth, poorly defined textures), (unnatural intimacy, mismatched positioning, unnatural anatomy), (mutated hands, fused fingers, deformed hands, malformed fingers, twisted fingers, merged fingers, extra fingers, poorly drawn fingers, amputee, fused, mutated, mutation), (out of frame, distorted body proportions,   Poorly dog,poorly imagine, poorly foto,unrealistic, animated, sketches, (text), low-quality, (((glitch:1.3))), deformed, extra limbs, blurry, bad art, (logo), watermark, blurred, cut off, extra fingers, bad quality, distortion of proportions, deformed fingers, elongated body, cropped image, deformed hands, deformed legs, deformed face, twisted fingers, double image, long neck, extra limb, plastic, disfigured, mutation, sloppy, ugly, pixelated, bad hands, aliasing, overexposed, oversaturated, burnt image, fuzzy, poor quality, deformed arms, ugly, bland, boring, model, (neurotypical), oversized boobs, unnatural body, makeup, anime, manga, disney, anal anime, manga, Disney, cartoon, low resolution, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, anime, cartoon, rawing, illustration, boring, 3d render, long neck, out of frame, extra fingers mutation, deformed, canvas frame, high contrast:1.2, over saturated:1.2, glossy:1.1, bad lighting, deformed, text, bad ligh",
+      "notas": "",
+      "imgUrl": "https://aigc.uploads.dev/image/4125be47e349d934106dc20a6ede3d251a24f806ad0476adda4fe4ecdcb07d34.jpeg",
+      "link": "https://perchance.org/qinegen",
+      "linkLabel": "QINEGEN",
+      "modelo": "SD1.5",
+      "fav": false
+    }
+  ],
+  "tools": []
+}
