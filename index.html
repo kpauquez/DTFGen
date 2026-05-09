@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Prompt Vault Pro | Robust Edition</title>
+<title>Prompt Vault Pro | Ultra Robust</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -16,48 +16,51 @@
 body { background: var(--bg); color: var(--text); font-family: var(--font-mono); display: flex; height: 100vh; overflow: hidden; }
 
 /* --- SIDEBAR --- */
-aside { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 2000; }
-.nav-label { font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1.5px; margin: 15px 15px 8px; display: block; font-weight: 700; }
+aside { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; z-index: 2000; transition: 0.3s; }
+.nav-label { font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 15px 10px; display: block; font-weight: 700; }
 .nav-item { padding: 10px 15px; cursor: pointer; font-size: 13px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; color: var(--muted); }
 .nav-item:hover, .nav-item.active { background: rgba(34,211,238,0.15); color: var(--text); }
 .tag-cloud { padding: 10px 15px; display: flex; flex-wrap: wrap; gap: 6px; }
-.tag-btn { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; cursor: pointer; border: none; }
+.tag-btn { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; cursor: pointer; }
 
 /* --- MAIN --- */
 main { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; min-width: 0; }
 .top-bar { padding: 12px 15px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: rgba(7,7,13,0.9); backdrop-filter: blur(10px); }
 .search-container { flex: 1; display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px 10px; gap: 8px; }
-.search-input { flex: 1; background: none; border: none; color: white; padding: 8px 0; outline: none; font-size: 14px; }
+.search-input { flex: 1; background: none; border: none; color: white; padding: 8px 0; outline: none; font-size: 14px; width: 100%; }
 #tag-badge { display: none; align-items: center; background: rgba(34,211,238,0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; gap: 6px; }
 
 .btn-primary { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 12px; }
 
 /* --- GRID --- */
-.grid { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; position: relative; height: fit-content; border: 1px solid var(--border); transition: 0.2s; }
+.grid { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; position: relative; height: fit-content; transition: 0.2s; border: 1px solid var(--border); }
 .card:hover { border-color: var(--cyan); }
-.card-img { width: 100%; height: 110px; object-fit: cover; cursor: pointer; background: #000; }
+.card-img { width: 100%; height: 120px; object-fit: cover; cursor: pointer; background: #000; }
 .card-content { padding: 12px; flex: 1; cursor: pointer; }
-.card-title { font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-info-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-bottom: 4px; }
+.card-title { font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.card-info-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-bottom: 5px; cursor: pointer; }
 .card-cat { color: var(--purple); font-weight: 700; }
-.card-hashtag { font-size: 9px; color: var(--muted); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; margin: 2px; display: inline-block; cursor: pointer; }
+.card-model { font-size: 9px; color: var(--cyan); background: rgba(34,211,238,0.1); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--cyan); }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.card-hashtag { font-size: 9px; color: var(--muted); background: rgba(255,255,255,0.05); padding: 2px 5px; border-radius: 4px; cursor: pointer; }
+.card-link-label { font-size: 10px; color: var(--cyan); margin-top: 4px; display: block; text-decoration: underline; text-underline-offset: 2px; }
+
 .card-actions { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
-.card-btn { background: var(--surface2); border: none; color: var(--text); padding: 10px; font-size: 11px; cursor: pointer; font-weight: 700; font-family: inherit; }
-.fav-btn-card { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #444; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; font-size: 14px; }
+.card-btn { background: var(--surface2); border: none; color: var(--text); padding: 12px; font-size: 11px; cursor: pointer; font-weight: 700; font-family: inherit; }
+.card-btn:hover { background: var(--cyan); color: #000; }
+
+.fav-btn-card { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #444; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 14px; }
 .fav-btn-card.active { color: var(--gold); border-color: var(--gold); }
 
 /* --- MODALES --- */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 15px; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
 .modal-overlay.open { display: flex; }
-.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 850px; max-height: 90vh; overflow-y: auto; display: grid; grid-template-columns: 280px 1fr; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 850px; max-height: 90vh; overflow-y: auto; display: grid; grid-template-columns: 280px 1fr; position: relative; }
 .modal label { font-size: 11px; color: var(--cyan); margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; }
 .modal input, .modal textarea { width: 100%; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-bottom: 15px; font-family: inherit; outline: none; }
 textarea { resize: vertical !important; min-height: 60px; }
 
-#weight-modal { position: absolute; background: #1a1a2e; border: 1px solid var(--cyan); border-radius: 6px; padding: 8px; z-index: 4000; display: none; flex-direction: column; gap: 5px; width: 130px; }
-#weight-modal input { background: #050508; border: 1px solid var(--border); color: white; padding: 4px; font-size: 10px; width: 100%; text-align: center; margin-bottom: 0; }
-#weight-modal button { background: var(--cyan); color: #000; border: none; font-size: 9px; padding: 6px; cursor: pointer; font-weight: 700; border-radius: 4px; }
 #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--cyan); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; font-size: 13px; }
 
 @media (max-width: 768px) {
@@ -84,7 +87,7 @@ textarea { resize: vertical !important; min-height: 60px; }
 
 <main>
     <div class="top-bar">
-        <button id="m-toggle" style="background:none; border:none; color:var(--cyan); font-size:24px; cursor:pointer; display:none;">☰</button>
+        <button id="m-toggle" style="background:none; border:none; color:var(--cyan); font-size:24px; cursor:pointer;">☰</button>
         <div class="search-container">
             <div id="tag-badge">
                 <span id="tag-text"></span>
@@ -92,27 +95,19 @@ textarea { resize: vertical !important; min-height: 60px; }
             </div>
             <input type="text" id="search-input" class="search-input" placeholder="Buscar por título, tag o categoría...">
         </div>
-        <button class="btn-primary" id="btn-new-prompt">+ NUEVO</button>
-        <button id="btn-open-config" style="background:none; border:1px solid var(--border); color:var(--cyan); padding:10px; border-radius:6px; cursor:pointer;">⚙</button>
+        <button class="btn-primary" id="btn-new">+ NUEVO</button>
+        <button id="btn-config" style="background:none; border:1px solid var(--border); color:var(--cyan); padding:10px; border-radius:6px; cursor:pointer;">⚙</button>
     </div>
     <div id="main-grid" class="grid"></div>
 </main>
-
-<div id="weight-modal">
-    <input type="text" id="weight-input" value="1.2">
-    <div style="display:flex; gap:4px">
-        <button id="btn-apply-weight" style="flex:2">APLICAR</button>
-        <button id="btn-undo-weight" style="flex:1; background:var(--red); color:white">UNDO</button>
-    </div>
-</div>
 
 <div class="modal-overlay" id="modal-edit">
     <div class="modal">
         <div class="modal-aside" style="padding:20px; border-right:1px solid var(--border); background:rgba(0,0,0,0.2)">
             <img id="prev-img" src="" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; margin-bottom:15px; background:#000;">
             <label>Imagen URL</label><input type="text" id="inp-img">
-            <label>Origen (Link)</label><input type="text" id="inp-link">
-            <label>Etiqueta Link</label><input type="text" id="inp-link-label">
+            <label>Link Origen (URL)</label><input type="text" id="inp-link">
+            <label>Etiqueta Link (Nombre)</label><input type="text" id="inp-link-label" placeholder="Ej: CivitAI, Pinterest...">
             <label>Modelo IA</label><input type="text" id="inp-model">
         </div>
         <div class="modal-main" style="padding:20px">
@@ -120,17 +115,17 @@ textarea { resize: vertical !important; min-height: 60px; }
             <label>Título</label><input type="text" id="inp-titulo">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
                 <div><label>Categoría</label><input type="text" id="inp-cat"></div>
-                <div><label>Tags (#hashtag)</label><input type="text" id="inp-tags"></div>
+                <div><label>Tags (#tag)</label><input type="text" id="inp-tags"></div>
             </div>
-            <label>Positivo <span id="btn-copy-pos" style="color:var(--cyan); cursor:pointer; float:right">COPIAR</span></label>
+            <label>Positivo <span id="copy-pos-modal" style="color:var(--cyan); cursor:pointer; float:right">COPIAR</span></label>
             <textarea id="inp-pos" rows="4"></textarea>
-            <label>Negativo <span id="btn-copy-neg" style="color:var(--cyan); cursor:pointer; float:right">COPIAR</span></label>
+            <label>Negativo <span id="copy-neg-modal" style="color:var(--cyan); cursor:pointer; float:right">COPIAR</span></label>
             <textarea id="inp-neg" rows="2"></textarea>
             <label>Notas</label><textarea id="inp-notas" rows="2"></textarea>
             <div style="display:flex; gap:10px">
-                <button class="btn-primary" style="flex:1" id="btn-save-entry">💾 GUARDAR</button>
-                <button id="btn-delete" style="color:var(--red); border:1px solid var(--red); background:none; padding:10px; border-radius:6px; cursor:pointer">🗑</button>
-                <button class="btn-close-modal" style="padding:10px; border-radius:6px; background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer">Cerrar</button>
+                <button class="btn-primary" style="flex:1" id="btn-save">💾 GUARDAR</button>
+                <button id="btn-delete" style="color:var(--red); border:1px solid var(--red); background:none; padding:10px; border-radius:6px; cursor:pointer">🗑 Borrar</button>
+                <button class="close-trigger" style="padding:10px; border-radius:6px; background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer">Cerrar</button>
             </div>
         </div>
     </div>
@@ -142,89 +137,73 @@ textarea { resize: vertical !important; min-height: 60px; }
         <label>Repo (user/repo)</label><input type="text" id="cfg-repo">
         <label>Path JSON</label><input type="text" id="cfg-path">
         <button class="btn-primary" style="width:100%" id="btn-save-config">GUARDAR CONFIG</button>
-        <button class="btn-close-modal" style="width:100%; margin-top:10px; background:none; border:none; color:var(--muted); cursor:pointer">Cerrar</button>
+        <button class="close-trigger" style="width:100%; margin-top:10px; background:none; border:none; color:var(--muted); cursor:pointer">Cerrar</button>
     </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// --- ESTADO GLOBAL ---
+// --- ESTADO ---
 let items = JSON.parse(localStorage.getItem('vault_data')) || [];
 let currentFilter = 'all';
-let selectionData = { text: '', start: 0, end: 0, targetId: '' };
 
+// --- CONFIG ---
 const getConfig = () => JSON.parse(localStorage.getItem('vault_config')) || { token: '', repo: '', path: '' };
 
-// --- MOTOR DE UI (EVENT DELEGATION) ---
-document.addEventListener('click', async (e) => {
-    // Abrir Modal Nuevo
-    if (e.target.id === 'btn-new-prompt') openModal();
-    
-    // Abrir Configuración
-    if (e.target.id === 'btn-open-config') openConfig();
+// --- UTILS ---
+const showToast = (m) => { 
+    const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; 
+    setTimeout(() => t.style.display='none', 2000); 
+};
 
-    // Cerrar Modales
-    if (e.target.classList.contains('btn-close-modal') || e.target.classList.contains('modal-overlay')) closeModal();
-
-    // Guardar Configuración
-    if (e.target.id === 'btn-save-config') saveConfig();
-
-    // Guardar Entrada
-    if (e.target.id === 'btn-save-entry') saveEntry();
-
-    // Borrar Entrada
-    if (e.target.id === 'btn-delete') deleteCurrent();
-
-    // Copiar desde Modal
-    if (e.target.id === 'btn-copy-pos') copyTxt(document.getElementById('inp-pos').value, "Positivo");
-    if (e.target.id === 'btn-copy-neg') copyTxt(document.getElementById('inp-neg').value, "Negativo");
-
-    // Favoritos en Grid
-    if (e.target.classList.contains('fav-btn-card')) {
-        const id = e.target.closest('.card').dataset.id;
-        toggleFavorite(id);
+const copyToClipboard = async (text, label) => {
+    if (!text) return;
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast(`📋 ${label} copiado`);
+    } catch (e) {
+        const el = document.createElement('textarea'); el.value = text;
+        document.body.appendChild(el); el.select(); document.execCommand('copy');
+        document.body.removeChild(el); showToast(`📋 ${label} copiado`);
     }
+};
 
-    // Copia rápida en Grid
-    if (e.target.classList.contains('card-btn')) {
-        const type = e.target.dataset.type;
-        const id = e.target.closest('.card').dataset.id;
-        const item = items.find(i => i.id === id);
-        copyTxt(type === 'pos' ? item.promptPos : item.promptNeg, type === 'pos' ? "Positivo" : "Negativo");
-    }
+// --- GITHUB SYNC ---
+async function pushToGH() {
+    const cfg = getConfig(); if (!cfg.token || !cfg.repo) return;
+    const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
+    try {
+        const gr = await fetch(url, { headers: { 'Authorization': `token ${cfg.token}` } });
+        let sha = gr.ok ? (await gr.json()).sha : "";
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(items, null, 2))));
+        const res = await fetch(url, { 
+            method: 'PUT', 
+            headers: { 'Authorization': `token ${cfg.token}` }, 
+            body: JSON.stringify({ message: "Update Vault", content, sha }) 
+        });
+        if (res.ok) showToast("✓ Sincronizado");
+    } catch(e) { console.error(e); }
+}
 
-    // Clic en Card (Editar)
-    if (e.target.closest('.card-img') || e.target.closest('.card-content')) {
-        const id = e.target.closest('.card').dataset.id;
-        openModal(id);
-    }
+async function syncAll() {
+    renderAll();
+    const cfg = getConfig(); if (!cfg.token || !cfg.repo) return;
+    try {
+        const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
+        const res = await fetch(url, { headers: { 'Authorization': `token ${cfg.token}` } });
+        if (res.ok) {
+            const data = await res.json();
+            items = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            localStorage.setItem('vault_data', JSON.stringify(items)); 
+            renderAll();
+        }
+    } catch(e) { console.error(e); }
+}
 
-    // Filtros Sidebar
-    if (e.target.classList.contains('nav-item')) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.dataset.filter;
-        renderAll();
-    }
-
-    // Click en Hashtag (Grid o Sidebar)
-    if (e.target.classList.contains('card-hashtag') || e.target.classList.contains('tag-btn')) {
-        setSearch(e.target.innerText);
-    }
-
-    // Limpiar Tag Badge
-    if (e.target.id === 'btn-clear-tag') clearHashtagSearch();
-
-    // Pesos SD
-    if (e.target.id === 'btn-apply-weight') applyWeight();
-    if (e.target.id === 'btn-undo-weight') undoWeight();
-});
-
-// --- FUNCIONES CORE ---
-function openModal(id = null) {
-    const modal = document.getElementById('modal-edit');
-    modal.classList.add('open');
+// --- MODALES ---
+const openModal = (id = null) => {
+    document.getElementById('modal-edit').classList.add('open');
     if (id) {
         const i = items.find(x => x.id === id);
         document.getElementById('edit-id').value = id;
@@ -236,114 +215,53 @@ function openModal(id = null) {
         document.getElementById('inp-notas').value = i.notas || '';
         document.getElementById('inp-img').value = i.imgUrl || '';
         document.getElementById('inp-link').value = i.link || '';
-        document.getElementById('inp-link-label').value = i.linkLabel || '';
+        document.getElementById('inp-link-label').value = i.linkLabel || ''; // NUEVO
         document.getElementById('inp-model').value = i.modelo || '';
-        updateImgPreview(i.imgUrl);
+        document.getElementById('prev-img').src = i.imgUrl || '';
         document.getElementById('btn-delete').style.display = 'block';
     } else {
         document.getElementById('edit-id').value = '';
         document.querySelectorAll('#modal-edit input, #modal-edit textarea').forEach(el => el.value = '');
-        updateImgPreview('');
+        document.getElementById('prev-img').src = '';
         document.getElementById('btn-delete').style.display = 'none';
     }
-}
+};
 
-function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
-
-function openConfig() {
-    const cfg = getConfig();
-    document.getElementById('cfg-token').value = cfg.token || '';
-    document.getElementById('cfg-repo').value = cfg.repo || '';
-    document.getElementById('cfg-path').value = cfg.path || '';
-    document.getElementById('modal-config').classList.add('open');
-}
-
-async function saveEntry() {
-    const id = document.getElementById('edit-id').value || 'p' + Date.now();
-    const e = {
-        id, 
-        titulo: document.getElementById('inp-titulo').value,
-        categoria: document.getElementById('inp-cat').value,
-        tags: document.getElementById('inp-tags').value,
-        promptPos: document.getElementById('inp-pos').value,
-        promptNeg: document.getElementById('inp-neg').value,
-        notas: document.getElementById('inp-notas').value,
-        imgUrl: document.getElementById('inp-img').value,
-        link: document.getElementById('inp-link').value,
-        linkLabel: document.getElementById('inp-link-label').value,
-        modelo: document.getElementById('inp-model').value,
-        fav: items.find(x => x.id === id)?.fav || false
-    };
-    const idx = items.findIndex(x => x.id === id);
-    if(idx > -1) items[idx] = e; else items.unshift(e);
-    localStorage.setItem('vault_data', JSON.stringify(items));
-    renderAll(); closeModal(); await pushToGH();
-}
-
-async function saveConfig() {
-    const cfg = {
-        token: document.getElementById('cfg-token').value,
-        repo: document.getElementById('cfg-repo').value,
-        path: document.getElementById('cfg-path').value
-    };
-    localStorage.setItem('vault_config', JSON.stringify(cfg));
-    closeModal(); await syncAll();
-}
-
-async function toggleFavorite(id) {
-    const idx = items.findIndex(x => x.id === id);
-    if (idx > -1) {
-        items[idx].fav = !items[idx].fav;
-        localStorage.setItem('vault_data', JSON.stringify(items));
-        renderGrid(); await pushToGH();
-    }
-}
-
-async function deleteCurrent() {
-    const id = document.getElementById('edit-id').value;
-    if(!id || !confirm("¿Eliminar?")) return;
-    items = items.filter(x => x.id !== id);
-    localStorage.setItem('vault_data', JSON.stringify(items));
-    renderAll(); closeModal(); await pushToGH();
-}
+const closeModal = () => document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
 
 // --- RENDER ---
 function renderGrid() {
-    const textQuery = document.getElementById('search-input').value.toLowerCase();
+    const q = document.getElementById('search-input').value.toLowerCase();
     const tagBadge = document.getElementById('tag-badge');
     const tagQuery = tagBadge.style.display === 'flex' ? document.getElementById('tag-text').innerText.toLowerCase() : '';
     
     const grid = document.getElementById('main-grid');
     const filtered = items.filter(i => {
-        const m = (i.titulo||'').toLowerCase().includes(textQuery) || (i.tags||'').toLowerCase().includes(textQuery) || (i.categoria||'').toLowerCase().includes(textQuery);
-        const tagMatch = tagQuery ? (i.tags || '').toLowerCase().includes(tagQuery) : true;
-        if (currentFilter === 'fav') return i.fav && m && tagMatch;
-        if (currentFilter !== 'all') return i.categoria === currentFilter && m && tagMatch;
-        return m && tagMatch;
+        const m = (i.titulo||'').toLowerCase().includes(q) || (i.tags||'').toLowerCase().includes(q) || (i.categoria||'').toLowerCase().includes(q);
+        const t = tagQuery ? (i.tags || '').toLowerCase().includes(tagQuery) : true;
+        if (currentFilter === 'fav') return i.fav && m && t;
+        if (currentFilter !== 'all') return i.categoria === currentFilter && m && t;
+        return m && t;
     });
 
-    grid.innerHTML = filtered.map(i => {
-        const hashtagsHtml = (i.tags || "").split(' ').filter(t => t.startsWith('#'))
-            .map(t => `<span class="card-hashtag">${t}</span>`).join('');
-
-        return `
+    grid.innerHTML = filtered.map(i => `
         <div class="card" data-id="${i.id}">
-            <button class="fav-btn-card ${i.fav ? 'active' : ''}">★</button>
-            <img src="${i.imgUrl || 'https://via.placeholder.com/300x150?text=No+Image'}" class="card-img">
-            <div class="card-content">
+            <div class="fav-btn-card ${i.fav ? 'active' : ''}">★</div>
+            <img src="${i.imgUrl || 'https://via.placeholder.com/300x150?text=No+Image'}" class="card-img edit-trigger">
+            <div class="card-content edit-trigger">
                 <div class="card-title">${i.titulo || 'Sin título'}</div>
                 <div class="card-info-row">
                     <span class="card-cat">${i.categoria || 'Gral'}</span>
                     <span class="card-model">${i.modelo || 'IA'}</span>
                 </div>
-                <div class="card-tags">${hashtagsHtml}</div>
+                ${i.linkLabel ? `<div class="card-link-label" onclick="window.open('${i.link}', '_blank'); event.stopPropagation();">${i.linkLabel} ↗</div>` : ''}
+                <div class="card-tags">${(i.tags||'').split(' ').filter(t=>t.startsWith('#')).map(t=>`<span class="card-hashtag">${t}</span>`).join('')}</div>
             </div>
             <div class="card-actions">
-                <button class="card-btn" data-type="pos">📋 POS</button>
-                <button class="card-btn" data-type="neg" style="border-left:1px solid var(--border)">📋 NEG</button>
+                <button class="card-btn copy-p" data-type="pos">📋 POS</button>
+                <button class="card-btn copy-n" data-type="neg" style="border-left:1px solid var(--border)">📋 NEG</button>
             </div>
-        </div>`;
-    }).join('');
+        </div>`).join('');
 }
 
 function renderSidebar() {
@@ -355,83 +273,112 @@ function renderSidebar() {
 
 function renderAll() { renderGrid(); renderSidebar(); }
 
-// --- SYNC ---
-async function pushToGH() {
-    const cfg = getConfig(); if (!cfg.token) return;
-    const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
-    try {
-        const gr = await fetch(url, { headers: { 'Authorization': `token ${cfg.token}` } });
-        let sha = gr.ok ? (await gr.json()).sha : "";
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(items, null, 2))));
-        await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${cfg.token}` }, body: JSON.stringify({ message: "Update Vault", content, sha }) });
-        showToast("✓ Sincronizado");
-    } catch(e) {}
-}
-
-async function syncAll() {
-    renderAll();
-    const cfg = getConfig(); 
-    if (!cfg.token || !cfg.repo || !cfg.path) return;
-    
-    try {
-        const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
-        const res = await fetch(url, { 
-            headers: { 
-                'Authorization': `token ${cfg.token}` 
-                // ELIMINAMOS 'Cache-Control': 'no-cache' DE AQUÍ
-            } 
-        });
-        
-        if (res.ok) {
-            const data = await res.json();
-            // GitHub devuelve el contenido en Base64, lo decodificamos
-            items = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-            localStorage.setItem('vault_data', JSON.stringify(items)); 
-            renderAll();
-        } else {
-            console.error("Error al obtener datos:", res.status);
-        }
-    } catch(e) {
-        console.error("Error de conexión:", e);
+// --- EVENTOS (DELEGACIÓN TOTAL) ---
+document.addEventListener('click', async (e) => {
+    // 1. Botones Principales
+    if (e.target.id === 'btn-new') openModal();
+    if (e.target.id === 'btn-config') {
+        const cfg = getConfig();
+        document.getElementById('cfg-token').value = cfg.token || '';
+        document.getElementById('cfg-repo').value = cfg.repo || '';
+        document.getElementById('cfg-path').value = cfg.path || '';
+        document.getElementById('modal-config').classList.add('open');
     }
-}
-// --- PESOS SD LOGIC ---
-document.querySelectorAll('textarea').forEach(area => {
-    area.onmouseup = (e) => {
-        const sel = area.value.substring(area.selectionStart, area.selectionEnd).trim();
-        if (sel.length > 0) {
-            selectionData = { text: sel, start: area.selectionStart, end: area.selectionEnd, targetId: area.id };
-            const mm = document.getElementById('weight-modal');
-            mm.style.display = 'flex'; mm.style.left = (e.pageX + 10) + 'px'; mm.style.top = (e.pageY - 60) + 'px';
-        } else { document.getElementById('weight-modal').style.display = 'none'; }
-    };
+    
+    // 2. Cerrar
+    if (e.target.classList.contains('close-trigger') || e.target.classList.contains('modal-overlay')) closeModal();
+
+    // 3. Guardar Entrada
+    if (e.target.id === 'btn-save') {
+        const id = document.getElementById('edit-id').value || 'p' + Date.now();
+        const entry = {
+            id, titulo: document.getElementById('inp-titulo').value,
+            categoria: document.getElementById('inp-cat').value,
+            tags: document.getElementById('inp-tags').value,
+            promptPos: document.getElementById('inp-pos').value,
+            promptNeg: document.getElementById('inp-neg').value,
+            notas: document.getElementById('inp-notas').value,
+            imgUrl: document.getElementById('inp-img').value,
+            link: document.getElementById('inp-link').value,
+            linkLabel: document.getElementById('inp-link-label').value, // NUEVO
+            modelo: document.getElementById('inp-model').value,
+            fav: items.find(x=>x.id===id)?.fav || false
+        };
+        const idx = items.findIndex(x => x.id === id);
+        if(idx > -1) items[idx] = entry; else items.unshift(entry);
+        localStorage.setItem('vault_data', JSON.stringify(items));
+        renderAll(); closeModal(); await pushToGH();
+    }
+
+    // 4. Copiar Modal
+    if (e.target.id === 'copy-pos-modal') copyToClipboard(document.getElementById('inp-pos').value, "Positivo");
+    if (e.target.id === 'copy-neg-modal') copyToClipboard(document.getElementById('inp-neg').value, "Negativo");
+
+    // 5. Botones Grid (Copia y Fav)
+    const card = e.target.closest('.card');
+    if (card) {
+        const id = card.dataset.id;
+        const item = items.find(i => i.id === id);
+        
+        if (e.target.classList.contains('copy-p')) copyToClipboard(item.promptPos, "Positivo");
+        if (e.target.classList.contains('copy-n')) copyToClipboard(item.promptNeg, "Negativo");
+        if (e.target.classList.contains('fav-btn-card')) {
+            item.fav = !item.fav; localStorage.setItem('vault_data', JSON.stringify(items));
+            renderGrid(); await pushToGH();
+        }
+        
+        // CORRECCIÓN: Título, Categoría e Imagen ahora son clickeables
+        if (e.target.classList.contains('edit-trigger') || e.target.closest('.edit-trigger') || e.target.classList.contains('card-title') || e.target.classList.contains('card-cat') || e.target.classList.contains('card-info-row')) {
+            openModal(id);
+        }
+
+        if (e.target.classList.contains('card-hashtag')) {
+            document.getElementById('tag-text').innerText = e.target.innerText;
+            document.getElementById('tag-badge').style.display = 'flex';
+            renderGrid();
+        }
+    }
+
+    // 6. Sidebar y Tags
+    if (e.target.classList.contains('nav-item')) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.filter; renderAll();
+    }
+    if (e.target.classList.contains('tag-btn')) {
+        document.getElementById('tag-text').innerText = e.target.innerText;
+        document.getElementById('tag-badge').style.display = 'flex'; renderGrid();
+    }
+    if (e.target.id === 'btn-clear-tag') {
+        document.getElementById('tag-badge').style.display = 'none'; renderGrid();
+    }
+
+    // 7. Guardar Config
+    if (e.target.id === 'btn-save-config') {
+        const cfg = {
+            token: document.getElementById('cfg-token').value,
+            repo: document.getElementById('cfg-repo').value,
+            path: document.getElementById('cfg-path').value
+        };
+        localStorage.setItem('vault_config', JSON.stringify(cfg));
+        closeModal(); await syncAll();
+    }
+
+    // 8. Borrar
+    if (e.target.id === 'btn-delete') {
+        const id = document.getElementById('edit-id').value;
+        if(confirm("¿Borrar?")) {
+            items = items.filter(x => x.id !== id);
+            localStorage.setItem('vault_data', JSON.stringify(items));
+            renderAll(); closeModal(); await pushToGH();
+        }
+    }
 });
 
-function applyWeight() {
-    const w = document.getElementById('weight-input').value;
-    const area = document.getElementById(selectionData.targetId);
-    let t = selectionData.text;
-    if (t.startsWith('(') && t.endsWith(')')) t = t.replace(/^\(|\)$/g, '').split(':')[0];
-    area.value = area.value.substring(0, selectionData.start) + `(${t}:${w})` + area.value.substring(selectionData.end);
-    document.getElementById('weight-modal').style.display = 'none';
-}
-
-function undoWeight() {
-    const area = document.getElementById(selectionData.targetId);
-    let t = selectionData.text.replace(/^\(+|\)+$/g, '').split(':')[0];
-    area.value = area.value.substring(0, selectionData.start) + t + area.value.substring(selectionData.end);
-    document.getElementById('weight-modal').style.display = 'none';
-}
-
-// --- OTROS ---
-function setSearch(t) { document.getElementById('tag-text').innerText = t; document.getElementById('tag-badge').style.display = 'flex'; renderGrid(); }
-function clearHashtagSearch() { document.getElementById('tag-badge').style.display = 'none'; renderGrid(); }
-function copyTxt(txt, msg) { if(!txt) return; navigator.clipboard.writeText(txt); showToast("📋 " + msg + " copiado"); }
-function updateImgPreview(url) { document.getElementById('prev-img').src = url || 'https://via.placeholder.com/300?text=No+Image'; }
-
-// Inicializar
+// --- INICIO ---
+document.getElementById('inp-img').oninput = (e) => document.getElementById('prev-img').src = e.target.value;
+document.getElementById('search-input').oninput = () => renderGrid();
 syncAll();
-document.getElementById('search-input').oninput = renderGrid;
 </script>
 </body>
 </html>
