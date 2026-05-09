@@ -121,6 +121,12 @@
       "name": "CHATGPT",
       "url": "http://www.chatgpt.com/",
       "category": "🤖 IAS"
+    },
+    {
+      "id": "t1778359276532",
+      "name": "IMGPROMPT",
+      "url": "https://imageprompt.org/es/image-to-prompt",
+      "category": "🖼️ IMG-TO-TXT"
     }
   ]
 }
