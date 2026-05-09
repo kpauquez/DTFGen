@@ -370,18 +370,31 @@ async function pushToGH() {
 
 async function syncAll() {
     renderAll();
-    const cfg = getConfig(); if (!cfg.token || !cfg.repo) return;
+    const cfg = getConfig(); 
+    if (!cfg.token || !cfg.repo || !cfg.path) return;
+    
     try {
         const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
-        const res = await fetch(url, { headers: { 'Authorization': `token ${cfg.token}`, 'Cache-Control': 'no-cache' } });
+        const res = await fetch(url, { 
+            headers: { 
+                'Authorization': `token ${cfg.token}` 
+                // ELIMINAMOS 'Cache-Control': 'no-cache' DE AQUÍ
+            } 
+        });
+        
         if (res.ok) {
             const data = await res.json();
+            // GitHub devuelve el contenido en Base64, lo decodificamos
             items = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-            localStorage.setItem('vault_data', JSON.stringify(items)); renderAll();
+            localStorage.setItem('vault_data', JSON.stringify(items)); 
+            renderAll();
+        } else {
+            console.error("Error al obtener datos:", res.status);
         }
-    } catch(e) {}
+    } catch(e) {
+        console.error("Error de conexión:", e);
+    }
 }
-
 // --- PESOS SD LOGIC ---
 document.querySelectorAll('textarea').forEach(area => {
     area.onmouseup = (e) => {
