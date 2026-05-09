@@ -82,7 +82,7 @@
       "link": "https://perchance.org/qinegen",
       "linkLabel": "QINEGEN",
       "modelo": "SD1.5",
-      "fav": false
+      "fav": true
     }
   ],
   "tools": [
