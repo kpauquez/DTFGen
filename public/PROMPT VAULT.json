@@ -82,7 +82,7 @@
       "link": "https://perchance.org/qinegen",
       "linkLabel": "QINEGEN",
       "modelo": "SD1.5",
-      "fav": true
+      "fav": false
     }
   ],
   "tools": [
@@ -97,6 +97,12 @@
       "category": "💡 INSPIRA",
       "name": "Qinegen",
       "url": "https://perchance.org/qinegen"
+    },
+    {
+      "id": "t1778359065176",
+      "name": "GEMINI",
+      "url": "https://gemini.google.com/app?hl=es",
+      "category": "🤖 IAS"
     }
   ]
 }
