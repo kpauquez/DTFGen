@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778353158666",
+      "titulo": "CHICA CARTOON",
+      "promptPos": "masterpiece,newest,absurdres,safe,score_9,score_8_up,score_7_up,masterpiece, break,best quality,(honey lemon: 1.3),long blond hair,red bezel,(3d: 1.0),Big levantado ass,(massive boobas: 1.5),ultra-detailed green,expressives green eyes,8K,4K,UHD (ultra HD),focus (net focus: 1.3),perfect facial symmetry,smooth skin texture,natural facial expression,detailed fingers,happy,beach background,(artstyle inspired by big Hero 6: 1.5),detailed,HD photo,((3D))Realistic,detailed,huge massive thighs,detailed hands,3D style,style inspir",
+      "promptNeg": "D (ultra HD),focus (net focus: 1.3),perfect facial symmetry,smooth skin texture,",
+      "imgUrl": "https://cdn.prompthero.com/lkg26lcdjjat14nnvo20g7slw2-hero-10-masterpiece-newest-absurdres-safe-score9-score8up-score7up-masterpiece-break-best-quality-honey-lemon-13-long-blond-hair-red-bezel-3d.jpeg",
+      "categoria": "CARTOONs",
+      "modelo": "SD1.5",
+      "link": "https://prompthero.com/prompt/fb8d8750b84-hero-10-masterpiece-newest-absurdres-safe-score9-score8up-score7up-masterpiece-break-best-quality-honey-lemon-13-long-blond-hair-red-bezel-3d",
+      "linkLabel": "PROMPTHERO",
+      "tags": "#CHICA #CARTOON",
+      "notas": "",
+      "fav": false
+    },
+    {
       "id": "p1778306622517",
       "titulo": "MEJORAR IMAGEN",
       "categoria": "UPSCALE",
@@ -61,7 +75,7 @@
       "titulo": "CHICA ANIME",
       "categoria": "ANIME",
       "tags": "#anime #girl",
-      "promptPos": "The image is rendered as a modern japanese animated movie, with clean and precise linework, and a bright, polished look. The composition feels dynamic yet harmonious, with careful attention to lighting, contratst, and atmosphere. The render evokes the clarity and visual depth of contempory high-quality anime films and series, combining expressivity and rich detailed visuals. It has sharp outlines and flat textures and captures the refined visual storytelling of modern anime. It brings the scene to life thanks to soft shading and a balanced use of light and color while contrasts bring more depth. It looks crisp, and visually engaging.The resolution is as high as possible so the picture remains clear even when zooming in. The composition is dynamic, varied, and asymmetrical. It avoids boredom, repetition and overly predictable patterns. It has the best output quality.\namateur portrait photo, shot candidly in 8k resolution without color grading and correction, raw photovaporwave aesthetic style, synthwave style, retrofuture style, glitchart, saturated glow, neon-litanime, illustration, hand-drawn, bold linework, anime illustration, cel shaded, 4k, fine details, masterpiece. ",
+      "promptPos": "The images is rendered as a modern japanese animated movie, with clean and precise linework, and a bright, polished look. The composition feels dynamic yet harmonious, with careful attention to lighting, contratst, and atmosphere. The render evokes the clarity and visual depth of contempory high-quality anime films and series, combining expressivity and rich detailed visuals. It has sharp outlines and flat textures and captures the refined visual storytelling of modern anime. It brings the scene to life thanks to soft shading and a balanced use of light and color while contrasts bring more depth. It looks crisp, and visually engaging.The resolution is as high as possible so the picture remains clear even when zooming in. The composition is dynamic, varied, and asymmetrical. It avoids boredom, repetition and overly predictable patterns. It has the best output quality.\namateur portrait photo, shot candidly in 8k resolution without color grading and correction, raw photovaporwave aesthetic style, synthwave style, retrofuture style, glitchart, saturated glow, neon-litanime, illustration, hand-drawn, bold linework, anime illustration, cel shaded, 4k, fine details, masterpiece. ",
       "promptNeg": "highly detailed, noisy and grainy, 3d render, illustration, drawing, watermarks and signatures bad photo, terrible 3D render, bad anatomy, worst quality, greyscale, black and white, disfigured, deformed, glitch, deformed, distorted, glitched, lifeless, low quality, bad proportions, extra fingers, extra digits, faded hands, awkward positioning, unrealistic_traits",
       "notas": "",
       "imgUrl": "https://aigc.uploads.dev/image/bcb696eceeca7742ffb840ada4b5a337b9909e9d669e35008477816b66d5e709.jpeg",
