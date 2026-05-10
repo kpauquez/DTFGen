@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778410235377",
+      "titulo": "MONOCHROME",
+      "categoria": "Ilustrado",
+      "tags": "#MONOCHROME",
+      "promptPos": "High-contrast monochrome vector illustration style with bold graphic shading and sharp angular forms. Clean digital line art combined with layered flat tones and hard shadows, creating a dramatic, intense visual impact. Limited grayscale palette accented by subtle neon cyan highlights for a modern edgy feel. Strong comic-book and street art influence, poster-style composition, crisp contours, exaggerated expressions, minimalist background, ultra-clean finish, graphic novel aesthetic, high clarity, modern digital illustration",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "",
+      "link": "Facebook",
+      "linkLabel": "",
+      "modelo": "CHATGPT",
+      "fav": false
+    },
+    {
       "id": "p1778384756052",
       "titulo": "FUTBOL",
       "categoria": "FUTBOL",
