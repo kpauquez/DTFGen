@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778384756052",
+      "titulo": "FUTBOL",
+      "categoria": "FUTBOL",
+      "tags": "#futbol",
+      "promptPos": "Create a modern football event poster featuring based on my attached image of Manchester United FC using the reference image, designed in a hyper-realistic multi-layer collage composition with five different football poses representing various player movements and positions: one large back-facing portrait placed in the center background, two medium side-profile poses looking left and right, one dynamic foreground pose dribbling the football, and one powerful foreground pose shooting the ball, all arranged in a clean and balanced vertical layout.Use a modern football academy campaign aesthetic with strong yellow and black color grading combined with Manchester United red tones, enhanced by glowing yellow light effects behind the subjects, geometric yellow and black rectangle blocks layered throughout the composition, soft white glow outlines around each cutout, subtle smoke and fog atmosphere, and a white football pitch-inspired background with soft vignette and realistic floor shadows beneath the players for added depth. Add bold giant headline typography reading “PromptersMX ” using condensed bold sans-serif fonts with an energetic professional sports branding style, include the Manchester United club crest on the left side, and apply dramatic sports studio lighting with high contrast, cinematic glow highlights, clean professional finishing, and a portrait 4:5 aspect ratio.",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "https://scontent.faep4-2.fna.fbcdn.net/v/t39.30808-6/690632659_122154351117063467_6485144362240700548_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeEJ08IvMoSdTdfOkCzl_-P08KbJudZHfEzwpsm51kd8TBnUS0F4y41h71sdCkP7MIw&_nc_ohc=qfBe9_Qwu7AQ7kNvwGNsgHZ&_nc_oc=Adqd8qsUMW3fuA-IXQfTWBKdDRKuUvPe3e5BLEMPKTeY9iQbMqXUa-Jw1BM9N-Smju4bWvglilliaDllys-gmSnh&_nc_zt=23&_nc_ht=scontent.faep4-2.fna&_nc_gid=uxTE_qbENOScXNU92lWQ4w&_nc_ss=782a8&oh=00_Af4qYaRIKg2Djbmvl-Sn7Zgelo9bF1VkotdOdtBkL6xebg&oe=6A05D55F",
+      "link": "https://www.facebook.com/photo?fbid=122154351111063467&set=a.122101749333063467",
+      "linkLabel": "FACEBOOK",
+      "modelo": "CHATGPT",
+      "fav": false
+    },
+    {
       "id": "p1778380465872",
       "titulo": "CHICA CON PISTOLA",
       "categoria": "ANIME",
