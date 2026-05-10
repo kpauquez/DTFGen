@@ -177,6 +177,12 @@
       "name": "UPSAMPLER",
       "url": "https://upsampler.com/free-image-upscaler-no-signup",
       "category": "🔍 UPSCALERS"
+    },
+    {
+      "id": "t1778375340726",
+      "name": "IA OLLAMA",
+      "url": "http://localhost:5173",
+      "category": "🤖 IAS"
     }
   ]
 }
