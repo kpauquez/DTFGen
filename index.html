@@ -103,8 +103,8 @@ main { flex: 1; display: flex; flex-direction: column; background: var(--bg); po
     aside { position: fixed; height: 100vh; width: 100vw; left: 0; top: 0; transform: translateX(-100%); z-index: 4000; background: var(--surface); transition: 0.3s; }
     aside.open { transform: translateX(0); }
     #close-sidebar { display: flex; }
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; align-content: start; }
-    .card { width: 100%; height: auto; min-height: unset; overflow: visible; }
+    .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; padding: 10px; align-content: start; }
+    .card { width: 100% !important; height: auto; min-height: unset; overflow: visible; }
     .card-img { height: 90px; }
     .card-model { top: 60px; }
     .card-link-label { top: 60px; }
