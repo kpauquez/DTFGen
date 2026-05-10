@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778378137855",
+      "titulo": "Futuristic geometric collage",
+      "categoria": "MUSICA",
+      "tags": "#musica",
+      "promptPos": "Futuristic geometric collage illustration style, ultra-detailed polygonal layered construction, sacred-tech aesthetic, intricate low-poly segmentation combined with smooth curved surfaces, complex wireframe overlays and glowing construction lines, fragmented angular panels assembled into a sculptural form, semi-abstract digital cubism composition, muted cinematic color palette dominated by deep teal blue, desaturated navy, dusty pink, muted coral, bronze gold, warm beige, and soft metallic gray, subtle luminous accents with matte textures, dark gradient background in deep blue-black tones, soft ambient vignette lighting, delicate circular geometric diagrams and orbital line patterns floating behind the subject, elegant symmetrical composition, layered translucent shapes with architectural precision, hybrid between digital painting and engineered paper collage, ultra-clean edge rendering, fine contour mapping lines across surfaces, dimensional cut-paper aesthetic blended with futuristic CAD drawing details, smooth atmospheric shading with softly glowing highlights, modern spiritual poster design, minimalist negative space, highly refined sci-fi ornamental geometry, premium art print quality, seamless fusion of abstract geometry and stylized realism",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "https://scontent.faep4-2.fna.fbcdn.net/v/t39.30808-6/689480510_10163636921304404_7546941623995217144_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=e06c5d&_nc_eui2=AeE3ti3UuuKlbR34q0eDyJwMJFRgvu0V2n4kVGC-7RXafj02MoOBRlQD6Fl96L0sGnY&_nc_ohc=1IOor-WCUtQQ7kNvwEQMmmg&_nc_oc=Adrms2twCVQunGwdUbtWvUhD7uorTZ7TCnvTF9bD7w0ty90HBRpuiQzpJSRUlVXeKT7O-dIvuVrLoVYMcSEUOVL_&_nc_zt=23&_nc_ht=scontent.faep4-2.fna&_nc_gid=YSEHcSCND8OIqJoK_O6LGA&_nc_ss=782a8&oh=00_Af4YOYFG7BJSid0NFHLEGTWn9JeL41fX18npTjGux-GzSg&oe=6A059D90",
+      "link": "https://www.facebook.com/photo/?fbid=10163636921294404&set=gm.35372204939093986&idorvanity=304788649595728",
+      "linkLabel": "FACEBOOK",
+      "modelo": "GENERAL",
+      "fav": false
+    },
+    {
       "id": "p1778363931827",
       "titulo": "CHICA CARTOON",
       "categoria": "CARTOON",
