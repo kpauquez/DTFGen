@@ -103,10 +103,15 @@ main { flex: 1; display: flex; flex-direction: column; background: var(--bg); po
     aside.open { transform: translateX(0); }
     #close-sidebar { display: flex; }
     .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; align-content: start; }
-    .card { width: 100%; height: auto; min-height: unset; }
-    .card-img { height: 130px; }
-    .card-model { top: 100px; }
-    .card-link-label { top: 100px; }
+    .card { width: 100%; height: auto; min-height: unset; overflow: visible; }
+    .card-img { height: 90px; }
+    .card-model { top: 60px; }
+    .card-link-label { top: 60px; }
+    .card-content { padding: 8px 10px; }
+    .card-title { font-size: 11px; margin-bottom: 3px; }
+    .card-info-row { font-size: 9px; margin-bottom: 4px; }
+    .card-hashtag { font-size: 8px; padding: 2px 5px; }
+    .card-btn { font-size: 9px; padding: 8px 4px; }
 }
 
 .modal label { font-size: 11px; color: var(--cyan); margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; }
