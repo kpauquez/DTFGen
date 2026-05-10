@@ -239,6 +239,12 @@
       "name": "IA OLLAMA",
       "url": "http://localhost:5173",
       "category": "🤖 IAS"
+    },
+    {
+      "id": "t1778440159677",
+      "name": "Halftonemaker",
+      "url": "https://halftonemaker.com/es",
+      "category": "📖 ENCICLOPEDIA"
     }
   ]
 }
