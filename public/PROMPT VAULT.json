@@ -40,7 +40,7 @@
       "link": "https://perchance.org/qinegen",
       "linkLabel": "QINEGEN",
       "modelo": "SD1.5",
-      "fav": true
+      "fav": false
     },
     {
       "id": "p1778378137855",
@@ -110,7 +110,7 @@
       "link": "https://lexica.art",
       "linkLabel": "LEXICA",
       "modelo": "FLUX",
-      "fav": true
+      "fav": false
     },
     {
       "id": "p1778282920039",
@@ -250,6 +250,12 @@
       "id": "t1778440221557",
       "name": "Halftone-machine",
       "url": "https://pedrojaques99.github.io/halftone-machine/",
+      "category": "📖 ENCICLOPEDIA"
+    },
+    {
+      "id": "t1778441458576",
+      "name": "Cgispread",
+      "url": "https://cgispread.com/?s=halftone",
       "category": "📖 ENCICLOPEDIA"
     }
   ]
