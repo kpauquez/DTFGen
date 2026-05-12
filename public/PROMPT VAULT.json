@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778572314768",
+      "titulo": "CARTOON MUSICA",
+      "categoria": "MUSICA",
+      "tags": "#musica #cartoon",
+      "promptPos": "Bold neo-expressionist urban illustration style with cinematic graphic-novel aesthetics, rough ink sketch linework, imperfect hand-drawn contours, layered painterly shading, and semi-flat cel shading. Dominant muted steel-blue background contrasted with intense glowing crimson-red typography blocks and signage. Deep navy and indigo tones on clothing and shadows, with warm orange-red highlights subtly reflecting onto the subject. High contrast lighting with dramatic dark shadows and soft atmospheric haze. Dynamic textured brush strokes mixed with vector-like clean shapes. Slightly gritty poster-art finish, distressed urban textures, abstract typographic composition filling the background, and minimal environmental detail. Flying birds scattered across the sky to create motion and scale. Composition feels cinematic, rebellious, poetic, and modern. Fine black sketch scratches and unfinished scribble details remain visible around buildings and edges. Matte color grading with subtle grain, graphic silhouette emphasis, and layered depth using soft foggy blue ambience.",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "",
+      "link": "https://www.facebook.com/share/p/17NwXxNJjU/",
+      "linkLabel": "FACEBOOK",
+      "modelo": "CHATGPT",
+      "fav": false
+    },
+    {
       "id": "p1778410235377",
       "titulo": "MONOCHROME",
       "categoria": "Ilustrado",
