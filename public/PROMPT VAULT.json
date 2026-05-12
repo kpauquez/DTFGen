@@ -241,13 +241,6 @@
       "category": "🤖 IAS"
     },
     {
-      "id": "t1778535444861",
-      "name": "airbrush",
-      "url": "https://airbrush.com/image-enhancer",
-      "category": "📖 ENCICLOPEDIA",
-      "folderId": null
-    },
-    {
       "id": "t1778544057766",
       "name": "halftonemaker",
       "url": "https://halftonemaker.com/es",
@@ -296,6 +289,12 @@
       "categoryLabel": "📖 ENCICLOPEDIA",
       "emoji": "📁",
       "name": "HALFTONES"
+    },
+    {
+      "id": "f1778544254392",
+      "categoryLabel": "📖 ENCICLOPEDIA",
+      "emoji": "📁",
+      "name": "TUTORIALES"
     }
   ],
   "categories": [
