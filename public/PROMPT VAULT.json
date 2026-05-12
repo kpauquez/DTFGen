@@ -275,6 +275,13 @@
       "name": "airbrush",
       "url": "https://airbrush.com/image-enhancer",
       "category": "📖 ENCICLOPEDIA"
+    },
+    {
+      "id": "t1778544057766",
+      "name": "halftonemaker",
+      "url": "https://halftonemaker.com/es",
+      "category": "📖 ENCICLOPEDIA",
+      "folderId": "f1778544017046"
     }
   ],
   "folders": [
