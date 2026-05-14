@@ -316,6 +316,13 @@
       "url": "https://airbrush.com/image-extender",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778757284108",
+      "name": "pigmentalab",
+      "url": "https://pigmentalab.io/app/semitono",
+      "category": "📖 ENCICLOPEDIA",
+      "folderId": "f1778544017046"
     }
   ],
   "folders": [
@@ -336,6 +343,48 @@
       "categoryLabel": "📂 REPOSITORIOS",
       "emoji": "📁",
       "name": "DOWNLOADS"
+    }
+  ],
+  "categories": [
+    {
+      "id": "c1",
+      "emoji": "💡",
+      "name": "INSPIRA"
+    },
+    {
+      "id": "c2",
+      "emoji": "🤖",
+      "name": "IAS"
+    },
+    {
+      "id": "c3",
+      "emoji": "🖼️",
+      "name": "IMG-TO-TXT"
+    },
+    {
+      "id": "c4",
+      "emoji": "🚀",
+      "name": "EXPANDIR IA"
+    },
+    {
+      "id": "c5",
+      "emoji": "🎨",
+      "name": "IMG GEN"
+    },
+    {
+      "id": "c6",
+      "emoji": "🔍",
+      "name": "UPSCALERS"
+    },
+    {
+      "id": "c7",
+      "emoji": "📂",
+      "name": "REPOSITORIOS"
+    },
+    {
+      "id": "c8",
+      "emoji": "📖",
+      "name": "ENCICLOPEDIA"
     }
   ]
 }
