@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1778857968965",
+      "titulo": "GTA VI",
+      "categoria": "GAMES",
+      "tags": "#game",
+      "promptPos": "Create a highly detailed portrait poster in the iconic GTA San Andreas-inspired art style, featuring the subject as the main focal point with a modern cinematic composition. Incorporate five recognizable landmarks from major cities in Indonesia as part of the background environment, blended naturally into the poster design with a dynamic urban atmosphere. Add decorative ornaments, graphic elements, textures, shapes, graffiti accents, street-style details, and layered visual decorations that strongly reflect the bold and stylish aesthetic of classic GTA San Andreas promotional artwork, while still feeling modern and trendy.\n\nThe subject’s pose must be completely different from the reference photo, with a more natural, expressive, and lively body language. Avoid stiff, flat, or awkward posing. The expression should feel charismatic, confident, and full of personality, with the elegance and attitude of an international fashion model. The pose should look dynamic yet classy, creating a strong visual presence inside the composition.\n\nThe outfit should feature modern casual fashion with stylish contemporary streetwear aesthetics. Use varied clothing colors, patterns, materials, and layering combinations that feel fashionable and visually rich, avoiding anything plain, repetitive, or monotonous. The styling should look trendy, premium, youthful, and suitable for a modern urban lifestyle campaign.\n\nDesign the poster with a highly engaging and non-generic layout. Every typography element inside the poster must use bold, eye-catching, stylish fonts with strong visual hierarchy, inspired by premium urban graphic design aesthetics. Avoid standard or overly simple typography styles. Add creative placement of text, layered title compositions, subtle distortions, sticker-like graphics, urban poster textures, and modern editorial design touches to make the poster feel visually alive and contemporary.\n\nThe overall visual must feel vibrant, cinematic, stylish, and high-end, not mediocre, flat, or overly simplistic. Use dramatic lighting, rich contrast, detailed shadows, vivid color grading, and immersive composition to create a premium modern GTA-inspired poster atmosphere. Ensure the final artwork looks ultra-detailed, polished, visually dense, and rendered in stunning 8K resolution. Humanity really looked at a 2004 game loading screen and decided, “this is eternal visual culture.” Strangely, they were correct.",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "",
+      "link": "https://www.threads.com/@journeypromted/post/DYUsWpnCphv?xmt=AQG042Nk2FwAGXM4N-GOoHO5jj0RYiIgq-0lhx4bDWWpb_xlkmGahxgwS6bC2m_09ecXk_DW&slof=1",
+      "linkLabel": "THREADS",
+      "modelo": "",
+      "fav": false
+    },
+    {
       "id": "p1778572314768",
       "titulo": "CARTOON MUSICA",
       "categoria": "MUSICA",
