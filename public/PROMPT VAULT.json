@@ -631,6 +631,13 @@
       "url": "https://notegpt.io/ai-models/gemini-3-pro",
       "category": "📖 ENCICLOPEDIA",
       "folderId": null
+    },
+    {
+      "id": "t1778955202672",
+      "name": "claila",
+      "url": "https://app.claila.com/chat",
+      "category": "📖 ENCICLOPEDIA",
+      "folderId": null
     }
   ],
   "folders": [
