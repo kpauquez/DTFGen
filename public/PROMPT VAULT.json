@@ -575,6 +575,13 @@
       "url": "https://imagefree.org/image-upscale",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778954268670",
+      "name": "imaginex",
+      "url": "https://imaginex.video/es/app?media=image&serviceId=image-tools",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
