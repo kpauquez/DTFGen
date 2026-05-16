@@ -659,6 +659,13 @@
       "url": "https://vanceai.com/workspace-new/?tool=image_enlarger",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778955631989",
+      "name": "visualgpt",
+      "url": "https://visualgpt.io/image-upscaler",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
