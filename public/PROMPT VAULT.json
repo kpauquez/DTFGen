@@ -666,6 +666,13 @@
       "url": "https://visualgpt.io/image-upscaler",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778955745047",
+      "name": "deep",
+      "url": "https://deepdreamgenerator.com/ai-upscaler",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
