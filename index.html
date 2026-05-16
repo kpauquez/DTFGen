@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Prompt Vault Pro | AI Cloud Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* --- OCULTAR SCROLLBARS EN MODALES --- */
+
+/* 1. Para el contenedor principal del modal */
+.modal {
+  /* ... tus otras propiedades se mantienen ... */
+  scrollbar-width: none; /* Oculta en Firefox */
+  -ms-overflow-style: none; /* Oculta en Internet Explorer y Edge antiguo */
+}
+
+.modal::-webkit-scrollbar {
+  display: none; /* Oculta en Chrome, Safari y Opera */
+}
+
+/* 2. Para el cuerpo interno del modal de herramientas (Tools) */
+#tools-modal-body {
+  /* ... tus otras propiedades se mantienen ... */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#tools-modal-body::-webkit-scrollbar {
+  display: none;
+}    
+:root {
+  --bg:#07070d; --surface:#0f0f1a; --surface2:#1a1a2e; --border:#2a2a48; 
+  --cyan:#22d3ee; --purple:#c4b5fd; --red:#f87171; --text:#ffffff; --muted:#a1a1aa;
+  --gold:#fbbf24; --r:10px; --font-mono: 'Space Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-mono); display: flex; height: 100vh; overflow: hidden; max-width: 100vw; }
+
+/* SIDEBAR — MINIMALISTA COLAPSABLE */
+aside {
+  width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 2000;
+  transition: width 0.28s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  overflow: hidden;
+}
+aside.collapsed { width: 52px; }
+aside.expanded { width: 260px; }
+
+/* Zona superior: logo + toggle */
+.sb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  min-height: 56px;
+  position: relative;
+}
+.sb-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  color: var(--cyan);
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 1;
+  width: auto;
+  margin-right: 8px;
+  transition: opacity 0.2s 0.15s, width 0.28s;
+  letter-spacing: 1px;
+}
+aside.collapsed .sb-logo { opacity: 0; width: 0; margin-right: 0; transition: opacity 0.2s 0s, width 0.28s; }
+aside.expanded .sb-logo { opacity: 1; width: auto; margin-right: 8px; transition: opacity 0.2s 0.15s, width 0.28s; }
+
+/* Botón toggle ☰ / ← */
+#sb-toggle {
+  background: none;
+  border: none;
+  color: var(--cyan);
+  font-size: 18px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+#sb-toggle:hover { background: rgba(34,211,238,0.12); }
+
+/* Botón nuevo prompt */
+.sb-new-btn-wrap {
+  padding: 10px 8px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+}
+.sb-new-btn-wrap .btn-primary {
+  width: 100%;
+  height: 36px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+aside.collapsed .sb-new-btn-wrap .btn-primary {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+aside.expanded .sb-new-btn-wrap .btn-primary {
+  width: 100%;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 10px 18px;
+}
+
+/* Textos que se ocultan cuando está colapsado */
+.sb-label-text, .sb-item-text, .sb-tag-text, .sb-section-label { 
+  white-space: nowrap; 
+  overflow: hidden;
+  opacity: 1;
+  width: auto;
+  transition: opacity 0.2s 0.15s, width 0s 0s;
+  pointer-events: auto;
+}
+aside.collapsed .sb-label-text,
+aside.collapsed .sb-item-text,
+aside.collapsed .sb-tag-text,
+aside.collapsed .sb-section-label {
+  opacity: 0;
+  width: 0;
+  transition: opacity 0.15s 0s, width 0s 0.28s;
+  pointer-events: none;
+}
+aside.expanded .sb-label-text,
+aside.expanded .sb-item-text,
+aside.expanded .sb-tag-text,
+aside.expanded .sb-section-label {
+  opacity: 1;
+  width: auto;
+  transition: opacity 0.2s 0.15s, width 0s 0s;
+  pointer-events: auto;
+}
+
+/* Scrollable nav area */
+.sb-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.sb-scroll::-webkit-scrollbar { display: none; }
+
+/* Sección label */
+.nav-label {
+  font-size: 10px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 16px 0 6px;
+  padding: 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  min-height: 24px;
+}
+.nav-label .sb-section-label { font-size: 10px; }
+
+/* Nav items */
+.nav-item {
+  padding: 9px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s, color 0.15s;
+  color: var(--muted);
+  text-decoration: none;
+  border-radius: 6px;
+  margin: 1px 6px;
+  white-space: nowrap;
+}
+.nav-item .nav-icon { flex-shrink: 0; font-size: 15px; width: 20px; text-align: center; }
+.nav-item:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.nav-item.active { background: rgba(34,211,238,0.15); color: var(--text); }
+.nav-item .nav-count { margin-left: auto; font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+/* Add cat btn */
+.add-cat-btn { cursor: pointer; font-size: 14px; font-weight: 700; color: #000; background: var(--cyan); border: none; border-radius: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; line-height: 1; padding: 0; opacity: 1; pointer-events: auto; }
+aside.collapsed .add-cat-btn { opacity: 0; pointer-events: none; transition: opacity 0.15s 0s; }
+aside.expanded .add-cat-btn { opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.15s; }
+.add-cat-btn:hover { background: #fff; transform: scale(1.1); }
+
+/* Tags */
+.tag-cloud { padding: 6px 8px; display: flex; flex-wrap: wrap; gap: 5px; overflow: hidden; max-height: 300px; opacity: 1; transition: opacity 0.2s 0.15s, max-height 0.3s; pointer-events: auto; }
+aside.collapsed .tag-cloud { max-height: 0; opacity: 0; transition: opacity 0.2s, max-height 0.2s; pointer-events: none; }
+aside.expanded .tag-cloud { max-height: 300px; opacity: 1; pointer-events: auto; transition: opacity 0.2s 0.15s, max-height 0.3s; }
+/* También ocultar el label de hashtags si no está expandido */
+#hashtag-nav-label { overflow: hidden; max-height: 40px; opacity: 1; transition: opacity 0.2s 0.15s, max-height 0.3s; }
+aside.collapsed #hashtag-nav-label { max-height: 0; opacity: 0; transition: opacity 0.2s, max-height 0.2s; }
+aside.expanded #hashtag-nav-label { max-height: 40px; opacity: 1; transition: opacity 0.2s 0.15s, max-height 0.3s; }
+.tag-btn { font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 3px 7px; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s; }
+.tag-btn:hover { border-color: var(--cyan); }
+
+/* Tooltip para ítems cuando está colapsado */
+.nav-item { position: relative; }
+aside.collapsed .nav-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1a2e;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.15s;
+}
+aside.collapsed .nav-item:hover::after { opacity: 1; }
+
+/* Tooltip genérico para botones del sidebar colapsado */
+aside.collapsed .sb-new-btn-wrap button,
+aside.collapsed .nav-label button {
+  position: relative;
+}
+aside.collapsed .sb-new-btn-wrap button::after,
+aside.collapsed .nav-label button::after {
+  content: attr(title);
+  position: absolute;
+  left: calc(100% + 22px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1a2e;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.15s;
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+}
+aside.collapsed .sb-new-btn-wrap button:hover::after,
+aside.collapsed .nav-label button:hover::after {
+  opacity: 1;
+}
+
+/* Cursor expansión en zona vacía del sidebar colapsado */
+@media (min-width: 769px) {
+  aside.collapsed { cursor: e-resize; }
+  aside.collapsed button,
+  aside.collapsed .nav-item,
+  aside.collapsed .tag-btn { cursor: pointer; }
+}
+
+/* Mobile: overlay total como antes */
+#close-sidebar { display: none; }
+
+@media (max-width: 768px) {
+  aside { width: 0; position: fixed; height: 100vh; left: 0; top: 0; background: var(--surface); z-index: 4000; transition: width 0.3s; overflow: hidden; border-right: none; }
+  aside.open, aside.expanded { width: 260px; border-right: 1px solid var(--border); }
+  #close-sidebar { display: flex; position: absolute; top: 14px; right: 14px; background: none; border: 1px solid var(--border); color: var(--cyan); font-size: 18px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; align-items: center; justify-content: center; z-index: 2010; }
+  aside .sb-label-text, aside .sb-item-text, aside .sb-tag-text, aside .sb-section-label { opacity: 1; width: auto; pointer-events: auto; }
+  aside .sb-new-btn-wrap .btn-primary { width: 100%; font-size: 12px; letter-spacing: 1px; padding: 10px 18px; }
+  aside .sb-logo { opacity: 1; width: auto; }
+}
+
+/* MAIN */
+main { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; min-width: 0; }
+.top-bar { padding: 12px 15px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; background: rgba(7,7,13,0.9); backdrop-filter: blur(10px); }
+.search-container { flex: 1; display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px 10px; gap: 8px; }
+.search-input { flex: 1; background: none; border: none; color: white; padding: 8px 0; outline: none; font-size: 14px; width: 100%; }
+#tag-badge { display: none; align-items: center; background: rgba(34,211,238,0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; gap: 6px; }
+.btn-primary { background: var(--cyan); color: #000; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 12px; }
+
+/* GRID */
+.grid { flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 250px)); gap: 12px; align-content: start; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; position: relative; width: 250px; height: 260px; transition: 0.2s; }
+.card:hover { border-color: var(--cyan); }
+.card-img { width: 100%; height: 140px; object-fit: cover; background: #000; cursor: pointer; flex-shrink: 0; }
+.card-model { position: absolute; top: 110px; right: 8px; background: rgba(7,7,13,0.8); backdrop-filter: blur(4px); color: var(--cyan); border: 1px solid var(--cyan); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; z-index: 15; }
+.card-link-label { position: absolute; top: 110px; left: 8px; background: rgba(7,7,13,0.8); backdrop-filter: blur(4px); color: var(--cyan); border: 1px solid var(--cyan); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; z-index: 15; text-decoration: none; transition: 0.2s; }
+.card-link-label:hover { background: var(--cyan); color: #000; }
+.card-content { padding: 10px 12px; flex: 1; cursor: pointer; display: flex; flex-direction: column; }
+.card-title { font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-info-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; margin-bottom: 6px; line-height: 1.2; }
+.card-cat { color: var(--purple); font-weight: 700; }
+.card-tags { display: flex; flex-wrap: nowrap; gap: 4px; margin-top: 4px; overflow-x: auto; scrollbar-width: none; }
+.card-tags::-webkit-scrollbar { display: none; }
+.card-hashtag { font-size: 9px; color: var(--muted); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+.card-actions { display: flex; border-top: 1px solid var(--border); flex-shrink: 0; }
+.card-btn { flex: 1; background: var(--surface2); border: none; color: var(--text); padding: 10px 5px; font-size: 10px; cursor: pointer; font-weight: 700; font-family: inherit; }
+.card-btn:first-child { border-right: 1px solid var(--border); }
+.card-btn:hover { background: var(--cyan); color: #000; }
+.fav-btn-card { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #444; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 14px; }
+.fav-btn-card.active { color: var(--gold); border-color: var(--gold); }
+
+/* MODALES */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 100%; max-width: 850px; max-height: 90vh; overflow-y: auto; display: grid; grid-template-columns: 280px 1fr; position: relative; }
+.modal label { font-size: 11px; color: var(--cyan); margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; }
+.modal input, .modal textarea { width: 100%; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-bottom: 15px; font-family: inherit; outline: none; }
+
+/* TOOLS GRID */
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; padding: 14px; }
+.tool-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px 10px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 7px; transition: 0.2s; cursor: pointer; position: relative; aspect-ratio: 1; justify-content: center; }
+.tool-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.tool-card img { width: 34px; height: 34px; border-radius: 8px; }
+.tool-card span { font-size: 10px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; width: 100%; white-space: nowrap; }
+.tool-card-actions { position: absolute; top: 5px; right: 5px; display: flex; gap: 3px; opacity: 0; transition: 0.2s; }
+.tool-card:hover .tool-card-actions { opacity: 1; }
+.tool-mini-btn { background: rgba(15,15,26,0.85); border: 1px solid var(--border); color: var(--text); padding: 4px 5px; border-radius: 5px; cursor: pointer; font-size: 10px; line-height: 1; transition: 0.15s; backdrop-filter: blur(4px); }
+.tool-mini-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.tool-mini-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* Tooltips Flotantes para las Características de las herramientas */
+.mini-badge-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: #000000;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    white-space: normal;
+    width: 160px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 99999 !important;
+}
+.mini-badge-tooltip:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* CARPETAS DENTRO DEL MODAL */
+.modal-folder-section { border-bottom: 1px solid var(--border); }
+.modal-folder-header { display: flex; align-items: center; gap: 10px; padding: 11px 16px; cursor: pointer; user-select: none; transition: 0.15s; }
+.modal-folder-header:hover { background: rgba(255,255,255,0.04); }
+.modal-folder-arrow { font-size: 9px; color: var(--muted); transition: transform 0.2s; flex-shrink: 0; width: 12px; }
+.modal-folder-section.open .modal-folder-arrow { transform: rotate(90deg); }
+.modal-folder-label { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+.modal-folder-count { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+.modal-folder-actions { display: flex; gap: 6px; opacity: 0; transition: 0.15s; flex-shrink: 0; }
+.modal-folder-header:hover .modal-folder-actions { opacity: 1; }
+.mf-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; font-size: 14px; background: rgba(15,15,26,0.9); border: 1px solid var(--border); color: var(--muted); border-radius: 5px; cursor: pointer; line-height: 1; transition: 0.15s; font-family: inherit; }
+.mf-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.mf-btn.del:hover { border-color: var(--red); color: var(--red); }
+.modal-folder-body { display: none; }
+.modal-folder-section.open .modal-folder-body { display: block; }
+
+/* Botones header del modal minimalista */
+#btn-new-folder, #btn-add-bookmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 18px;
+}
+
+/* Formulario inline de carpeta dentro del modal */
+.inline-folder-form { background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 8px; margin: 0 16px 16px; padding: 14px; display: none; }
+.inline-folder-form.open { display: block; }
+.inline-folder-form .form-row { display: flex; gap: 8px; align-items: stretch; margin-bottom: 10px; }
+.inline-folder-form input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 5px; font-family: inherit; font-size: 13px; outline: none; }
+.inline-folder-form .emoji-inp { width: 54px; text-align: center; font-size: 18px; flex-shrink: 0; }
+.inline-folder-form .name-inp { flex: 1; text-transform: uppercase; }
+.inline-folder-form .form-btns { display: flex; gap: 8px; align-items: center; }
+
+/* Sección raíz (sin carpeta) dentro del modal */
+.root-section-label { padding: 10px 16px 4px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-top: 1px solid var(--border); }
+
+/* Copy-tools */
+.copy-tab { flex-shrink: 0; padding: 10px 16px; font-size: 11px; font-weight: 700; font-family: var(--font-mono); color: var(--muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: 0.15s; white-space: nowrap; letter-spacing: 0.5px; }
+.copy-tab:hover { color: var(--text); }
+.copy-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+#copy-tools-grid .tool-card-actions { display: none; }
+
+/* misc */
+#weight-modal { position: absolute; background: #1a1a2e; border: 1px solid var(--cyan); border-radius: 6px; padding: 8px; z-index: 4000; display: none; flex-direction: column; gap: 5px; width: 130px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+#weight-modal input { background: #050508; border: 1px solid var(--border); color: white; padding: 4px; font-size: 10px; width: 100%; text-align: center; margin-bottom: 0; }
+#weight-modal button { border: none; font-size: 9px; padding: 6px; cursor: pointer; font-weight: 700; border-radius: 4px; transition: 0.2s; }
+#btn-apply-weight { background: var(--cyan); color: #000; }
+#btn-undo-weight { background: #333; color: var(--red); border: 1px solid var(--red) !important; }
+#toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--cyan); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 700; display: none; z-index: 5000; font-size: 13px; }
+
+@media (max-width: 768px) {
+    .modal { grid-template-columns: 1fr; }
+    .modal-aside { border-right: none !important; border-bottom: 1px solid var(--border); }
+    .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; padding: 10px; align-content: start; overflow-x: hidden; }
+    .card { width: 100% !important; max-width: 100%; height: 170px; min-height: unset; overflow: hidden; }
+    main { overflow-x: hidden; max-width: 100vw; }
+    .card-img { height: 100px; }
+    .card-model { top: 75px; }
+    .card-link-label { top: 75px; }
+    .card-content { padding: 8px 10px; }
+    .card-actions { display: none; }
+    .card-title { font-size: 11px; margin-bottom: 3px; }
+    .card-info-row { font-size: 9px; margin-bottom: 4px; }
+    .card-hashtag { font-size: 8px; padding: 2px 5px; }
+}
+</style>
+</head>
+<body>
+
+<aside id="sidebar" class="collapsed">
+    <button id="close-sidebar">×</button>
+
+    <div class="sb-header">
+        <span class="sb-logo">⬡ PROMPT VAULT</span>
+        <button id="sb-toggle" data-tooltip="Expandir menú" title="Expandir / colapsar sidebar">☰</button>
+    </div>
+
+    <div class="sb-new-btn-wrap">
+        <button class="btn-primary" id="btn-new" data-tooltip="Nuevo prompt" title="Nuevo prompt">
+            <span class="sb-new-icon">+</span>
+            <span class="sb-label-text" style="margin-left:6px; letter-spacing:1px;">NUEVO PROMPT</span>
+        </button>
+    </div>
+
+    <div class="sb-scroll">
+        <span class="nav-label">
+            <span class="sb-section-label">Biblioteca</span>
+        </span>
+        <div class="nav-item active" data-filter="all" data-tooltip="Todos" onclick="setGlobalFilter('all')">
+            <span class="nav-icon">🏠</span>
+            <span class="sb-item-text">Todos</span>
+        </div>
+        <div class="nav-item" data-filter="fav" data-tooltip="Favoritos" onclick="setGlobalFilter('fav')">
+            <span class="nav-icon">⭐</span>
+            <span class="sb-item-text">Favoritos</span>
+        </div>
+
+        <span class="nav-label">
+            <span class="sb-section-label">Tools</span>
+            <button class="add-cat-btn" id="btn-open-cat-modal" data-tooltip="Nueva categoría" title="Nueva categoría">+</button>
+        </span>
+        <div id="category-list"></div>
+
+        <span class="nav-label" id="hashtag-nav-label">
+            <span class="sb-section-label">Hashtags</span>
+        </span>
+        <div id="sidebar-tags" class="tag-cloud"></div>
+    </div>
+</aside>
+
+<main>
+    <div class="top-bar">
+        <button id="m-toggle" style="background:none; border:none; color:var(--cyan); font-size:24px; cursor:pointer;">☰</button>
+        <div class="search-container">
+            <div id="tag-badge">
+                <span id="tag-text"></span>
+                <span style="cursor:pointer" id="btn-clear-tag">×</span>
+            </div>
+            <input type="text" id="search-input" class="search-input" placeholder="Buscar en la bóveda...">
+        </div>
+        <button id="btn-config" style="background:none; border:1px solid var(--border); color:var(--cyan); padding:10px; border-radius:6px; cursor:pointer;">⚙</button>
+    </div>
+    <div id="main-grid" class="grid"></div>
+</main>
+
+<div class="modal-overlay" id="modal-edit">
+    <div class="modal">
+        <div class="modal-aside" style="padding:20px; border-right:1px solid var(--border); background:rgba(0,0,0,0.2)">
+            <img id="prev-img" src="" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; margin-bottom:15px; background:#000;">
+            <label>Imagen URL</label><input type="text" id="inp-img">
+            <label>Link Origen</label><input type="text" id="inp-link">
+            <label>Etiqueta Link</label><input type="text" id="inp-link-label" placeholder="Ej: CivitAI">
+            <label>Modelo IA</label><input type="text" id="inp-model">
+        </div>
+        <div class="modal-main" style="padding:20px">
+            <input type="hidden" id="edit-id">
+            <label>Título</label><input type="text" id="inp-titulo">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
+                <div><label>Categoría</label><input type="text" id="inp-cat"></div>
+                <div><label>Tags (#tag)</label><input type="text" id="inp-tags"></div>
+            </div>
+            <label>Positivo <span id="copy-pos-modal" style="cursor:pointer; color:var(--cyan); font-size:10px;">COPIAR</span></label>
+            <textarea id="inp-pos" rows="4" class="prompt-area" style="resize:vertical"></textarea>
+            <label>Negativo <span id="copy-neg-modal" style="cursor:pointer; color:var(--cyan); font-size:10px;">COPIAR</span></label>
+            <textarea id="inp-neg" rows="2" class="prompt-area" style="resize:vertical"></textarea>
+            <label>Notas</label><textarea id="inp-notas" rows="2" style="resize:vertical"></textarea>
+            <div style="display:flex; gap:10px">
+                <button class="btn-primary" style="flex:1" id="btn-save">💾 GUARDAR</button>
+                <button id="btn-delete" style="color:var(--red); border:1px solid var(--red); background:none; padding:10px; border-radius:6px; cursor:pointer">🗑</button>
+                <button class="close-trigger" style="padding:10px; border-radius:6px; background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-tools-grid">
+    <div class="modal" style="display:block; max-width:740px; padding:0; overflow:hidden;">
+        <div style="padding:15px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:10px; background:rgba(0,0,0,0.25); position:sticky; top:0; z-index:10;">
+            <div>
+                <h2 id="tools-grid-title" style="font-family:'Syne'; color:var(--cyan); font-size:17px;"></h2>
+                <p id="tools-grid-sub" style="font-size:10px; color:var(--muted); margin-top:2px;"></p>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button id="btn-new-folder" title="Nueva carpeta"
+                    style="background:rgba(196,181,253,0.12); color:var(--purple); border:1px solid rgba(196,181,253,0.4); border-radius:7px; cursor:pointer;">
+                    📁
+                </button>
+                <button id="btn-add-bookmark" title="Nuevo marcador"
+                    style="background:var(--cyan); color:#000; border:none; border-radius:7px; cursor:pointer;">
+                    🔖
+                </button>
+                <button class="close-trigger" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:24px; margin-left:5px;">×</button>
+            </div>
+        </div>
+
+        <div class="inline-folder-form" id="inline-folder-form">
+            <div style="font-size:10px; font-weight:700; color:var(--purple); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;" id="inline-folder-title">📁 Nueva Carpeta</div>
+            <input type="hidden" id="edit-folder-id">
+            <div class="form-row">
+                <input type="text" class="emoji-inp" id="edit-folder-emoji" placeholder="📁" maxlength="4">
+                <input type="text" class="name-inp" id="edit-folder-name" placeholder="Nombre de la carpeta">
+            </div>
+            <div class="form-btns">
+                <button class="btn-primary" style="font-size:11px; padding:8px 14px;" id="btn-save-folder">GUARDAR</button>
+                <button id="btn-cancel-folder" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:12px; font-family:inherit;">Cancelar</button>
+            </div>
+        </div>
+
+        <div id="tools-modal-body" style="overflow-y:auto; max-height:calc(90vh - 130px);"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-tool-form">
+    <div class="modal" style="display:block; padding:22px; max-width:420px">
+        <h3 id="tool-form-title" style="margin-bottom:16px; font-size:14px; color:var(--cyan); letter-spacing:1px;">NUEVO MARCADOR</h3>
+        <input type="hidden" id="tool-id">
+        <input type="hidden" id="tool-category">
+        <label>Nombre</label><input type="text" id="tool-name" placeholder="Ej: Pinterest">
+        <label>URL</label><input type="text" id="tool-url" placeholder="https://...">
+        <label>Carpeta</label>
+        <select id="tool-folder-select" style="width:100%; font-size:13px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:10px; border-radius:6px; margin-bottom:18px; font-family:inherit; outline:none;"></select>
+        <div style="display:flex; gap:10px">
+            <button class="btn-primary" style="flex:1" id="btn-save-tool">GUARDAR</button>
+            <button class="close-trigger" style="background:none; border:none; color:var(--muted); cursor:pointer; font-family:inherit; font-size:13px;">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-config">
+    <div class="modal" style="display:block; padding:20px; max-width:400px">
+        <label>Token GitHub</label><input type="password" id="cfg-token">
+        <label>Repo (user/repo)</label><input type="text" id="cfg-repo">
+        <label>Path JSON</label><input type="text" id="cfg-path">
+        <button class="btn-primary" style="width:100%" id="btn-save-config">GUARDAR CONFIG</button>
+        <button class="close-trigger" style="width:100%; margin-top:10px; background:none; border:none; color:var(--muted); cursor:pointer; font-family:inherit;">Cerrar</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-category">
+    <div class="modal" style="display:block; padding:24px; max-width:380px">
+        <h3 style="margin-bottom:18px; font-size:14px; color:var(--cyan); letter-spacing:1px;">➕ NUEVA CATEGORÍA</h3>
+        <label>Emoji</label>
+        <input type="text" id="new-cat-emoji" placeholder="💡" maxlength="4" style="width:70px; text-align:center; font-size:20px;">
+        <label>Nombre</label>
+        <input type="text" id="new-cat-name" placeholder="Ej: RECURSOS">
+        <div style="display:flex; gap:10px; margin-top:5px;">
+            <button class="btn-primary" style="flex:1" id="btn-save-new-category">CREAR</button>
+            <button class="close-trigger" style="background:none; border:none; color:var(--muted); cursor:pointer; padding:10px; font-family:inherit;">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div id="weight-modal">
+    <input type="text" id="weight-input" value="1.2">
+    <div style="display:flex; gap:4px">
+        <button id="btn-apply-weight" style="flex:2">APLICAR</button>
+        <button id="btn-undo-weight" style="flex:1.5">UNDO</button>
+    </div>
+</div>
+<div id="toast"></div>
+
+<script>
+let items = [];
+let tools = [];
+let currentFilter = 'all';
+let currentCategory = '';
+let selectionData = { text:'', start:0, end:0, targetId:'' };
+
+// LOGICA DE DATOS
+const DEFAULT_CATEGORIES = [
+    { id:'c1', emoji:'💡', name:'INSPIRA' }, { id:'c2', emoji:'🤖', name:'IAS' },
+    { id:'c3', emoji:'🖼️', name:'IMG-TO-TXT' }, { id:'c4', emoji:'🚀', name:'EXPANDIR IA' },
+    { id:'c5', emoji:'🎨', name:'IMG GEN' }, { id:'c6', emoji:'🔍', name:'UPSCALERS' },
+    { id:'c7', emoji:'📂', name:'REPOSITORIOS' }, { id:'c8', emoji:'📖', name:'ENCICLOPEDIA' },
+];
+function getCategories() { try { return JSON.parse(localStorage.getItem('vault_categories')) || DEFAULT_CATEGORIES; } catch(e) { return DEFAULT_CATEGORIES; } }
+function saveCategories(c) { localStorage.setItem('vault_categories', JSON.stringify(c)); }
+function getCatLabel(c) { return `${c.emoji} ${c.name}`; }
+function getFolders() { try { return JSON.parse(localStorage.getItem('vault_folders')) || []; } catch(e) { return []; } }
+function saveFolders(f) { localStorage.setItem('vault_folders', JSON.stringify(f)); }
+
+// SIDEBAR Y RENDER
+function renderCategoryList() {
+    const cats = getCategories();
+    document.getElementById('category-list').innerHTML = cats.map(c => {
+        const label = getCatLabel(c);
+        const count = tools.filter(t => t.category === label).length;
+        return `<div class="nav-item" data-tooltip="${label}" onclick="openToolsModal('${label.replace(/'/g,"\\'")}')">
+            <span class="nav-icon">${c.emoji}</span>
+            <span class="sb-item-text">${c.name}</span>
+            ${count ? `<span class="nav-count">${count}</span>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function openToolsModal(category) {
+    currentCategory = category;
+    document.getElementById('tools-grid-title').innerText = category;
+    updateToolsModalSub();
+    document.getElementById('inline-folder-form').classList.remove('open');
+    renderToolsModal();
+    document.getElementById('modal-tools-grid').classList.add('open');
+    if (window.innerWidth <= 768) { const sb = document.getElementById('sidebar'); sb.classList.remove('open'); sb.classList.remove('expanded'); }
+}
+
+function updateToolsModalSub() {
+    const total = tools.filter(t => t.category === currentCategory).length;
+    const fcount = getFolders().filter(f => f.categoryLabel === currentCategory).length;
+    document.getElementById('tools-grid-sub').innerText = `${total} marcador${total !== 1 ? 'es' : ''} · ${fcount} carpeta${fcount !== 1 ? 's' : ''}`;
+}
+
+function renderToolsModal() {
+    const cat = currentCategory;
+    const folders = getFolders().filter(f => f.categoryLabel === cat);
+    const body = document.getElementById('tools-modal-body');
+    let html = '';
+
+    if (folders.length === 0 && tools.filter(t => t.category === cat).length === 0) {
+        html = `<div style="padding:50px 20px; text-align:center; color:var(--muted); font-size:13px; line-height:1.8;">Sin marcadores todavía.</div>`;
+        body.innerHTML = html; return;
+    }
+
+    folders.forEach(f => {
+        const folderTools = tools.filter(t => t.category === cat && t.folderId === f.id);
+        const isOpen = localStorage.getItem('mf_open_' + f.id) === '1';
+        html += `
+        <div class="modal-folder-section${isOpen ? ' open' : ''}" id="mf-${f.id}">
+            <div class="modal-folder-header" onclick="toggleMFolder('${f.id}')">
+                <span class="modal-folder-arrow">▶</span>
+                <span class="modal-folder-label">${f.emoji} ${f.name}</span>
+                <div class="modal-folder-actions" onclick="event.stopPropagation()">
+                    <button class="mf-btn" onclick="openBookmarkForm('${cat.replace(/'/g,"\\'")}', null, '${f.id}')" title="Añadir marcador">＋</button>
+                    <button class="mf-btn" onclick="openEditFolderForm('${f.id}')" title="Editar carpeta">✏️</button>
+                    <button class="mf-btn del" onclick="deleteFolder('${f.id}')" title="Borrar carpeta">🗑</button>
+                </div>
+            </div>
+            <div class="modal-folder-body">
+                ${folderTools.length ? `<div class="tools-grid">${folderTools.map(t => toolCardHTML(t)).join('')}</div>` : `<div style="padding:16px 20px; font-size:11px; color:var(--muted);">Carpeta vacía</div>`}
+            </div>
+        </div>`;
+    });
+
+    const rootTools = tools.filter(t => t.category === cat && !t.folderId);
+    if (rootTools.length) {
+        html += `<div class="root-section-label">Sin carpeta</div>
+                 <div class="tools-grid">${rootTools.map(t => toolCardHTML(t)).join('')}</div>`;
+    }
+    body.innerHTML = html; updateToolsModalSub();
+}
+
+function toolCardHTML(t) {
+    let fav = ''; try { fav = `https://www.google.com/s2/favicons?domain=${new URL(t.url).origin}&sz=64`; } catch(e) {}
+    const safeUrl = t.url.replace(/'/g, "\\\\'");
+
+    // Contenedor dinámico de múltiples características
+    let badges = [];
+    const urlLower = t.url.toLowerCase();
+
+    if (urlLower.includes('unlimited.waifu2x') || urlLower.includes('halftone-machine') || urlLower.includes('halftone.xoihazard') || urlLower.includes('localhost')) {
+        badges.push({ icon: '🟢', text: 'Gratis' });
+    }
+    if (urlLower.includes('seaart') || urlLower.includes('krea') || urlLower.includes('fotor') || urlLower.includes('flexclip') || urlLower.includes('img2go')) {
+        badges.push({ icon: '🧰', text: 'Suite' });
+    }
+    if (urlLower.includes('chatgpt') || urlLower.includes('gemini') || urlLower.includes('claude') || urlLower.includes('copilot') || urlLower.includes('seaart')) {
+        badges.push({ icon: '🔄', text: 'Diario' });
+    }
+    if (urlLower.includes('vectorizer.ai') || urlLower.includes('vanceai') || urlLower.includes('letsenhance')) {
+        badges.push({ icon: '💳', text: 'Pago' });
+    }
+    if (urlLower.includes('letsenhance')) {
+        badges.push({ icon: '🪙', text: '10 créditos' });
+    }
+    if (urlLower.includes('bigjpg')) {
+        badges.push({ icon: '📅', text: '20 usos' });
+    }
+
+    if (badges.length === 0) {
+        badges.push({ icon: '🔗', text: 'Acceso Web' });
+    }
+
+    const badgesHTML = `<div class="tool-badges-container" style="display:flex; gap:4px; margin-top:6px; flex-wrap:wrap; justify-content:center;">
+        ${badges.map(b => `
+            <div class="mini-badge-tooltip" style="position:relative; display:inline-block; cursor:pointer; font-size:11px; background:rgba(255,255,255,0.07); padding:2px 5px; border-radius:4px; border:1px solid rgba(255,255,255,0.1);" data-tooltip="${b.text}">
+                ${b.icon}
+            </div>
+        `).join('')}
+    </div>`;
+
+    return `
+    <div class="tool-card" onclick="window.open('${safeUrl}','_blank')">
+        <div class="tool-card-actions">
+            <button class="tool-mini-btn" onclick="event.stopPropagation();editBookmark('${t.id}')">✏️</button>
+            <button class="tool-mini-btn del" onclick="event.stopPropagation();deleteBookmark('${t.id}')">🗑</button>
+        </div>
+        ${fav ? `<img src="${fav}" onerror="this.style.display='none'">` : '<span style="font-size:22px">🔗</span>'}
+        <span style="margin-top:4px; font-weight:700; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; display:block; text-align:center;">${t.name}</span>
+        ${badgesHTML}
+    </div>`;
+}
+
+function toggleMFolder(id) {
+    const el = document.getElementById('mf-' + id); if (!el) return;
+    el.classList.toggle('open'); localStorage.setItem('mf_open_' + id, el.classList.contains('open') ? '1' : '0');
+}
+
+// LOGICA DE CATEGORIAS
+function openNewCategoryModal() {
+    document.getElementById('new-cat-emoji').value = '💡';
+    document.getElementById('new-cat-name').value = '';
+    document.getElementById('modal-new-category').classList.add('open');
+}
+
+// LOGICA DE CARPETAS Y MARCADORES
+function openNewFolderForm() {
+    document.getElementById('inline-folder-title').innerText = '📁 Nueva Carpeta';
+    document.getElementById('edit-folder-id').value = '';
+    document.getElementById('edit-folder-emoji').value = '📁';
+    document.getElementById('edit-folder-name').value = '';
+    document.getElementById('inline-folder-form').classList.add('open');
+    document.getElementById('edit-folder-name').focus();
+}
+
+function openEditFolderForm(folderId) {
+    const f = getFolders().find(x => x.id === folderId); if (!f) return;
+    document.getElementById('inline-folder-title').innerText = '✏️ Editar Carpeta';
+    document.getElementById('edit-folder-id').value = f.id;
+    document.getElementById('edit-folder-emoji').value = f.emoji;
+    document.getElementById('edit-folder-name').value = f.name;
+    document.getElementById('inline-folder-form').classList.add('open');
+    document.getElementById('edit-folder-name').focus();
+}
+
+function saveFolder() {
+    const existingId = document.getElementById('edit-folder-id').value;
+    const emoji = document.getElementById('edit-folder-emoji').value.trim() || '📁';
+    const name = document.getElementById('edit-folder-name').value.trim().toUpperCase();
+    if (!name) { showToast('⚠ Ingresá un nombre'); return; }
+    let folders = getFolders();
+    if (existingId) { const f = folders.find(x => x.id === existingId); if (f) { f.emoji = emoji; f.name = name; } }
+    else { folders.push({ id: 'f' + Date.now(), categoryLabel: currentCategory, emoji, name }); }
+    saveFolders(folders); document.getElementById('inline-folder-form').classList.remove('open');
+    renderToolsModal(); renderCategoryList(); pushToGH(); showToast(existingId ? '✓ Carpeta actualizada' : '✓ Carpeta creada');
+}
+
+function deleteFolder(folderId) {
+    if (!confirm('¿Eliminar carpeta? Los marcadores se conservarán.')) return;
+    tools = tools.map(t => t.folderId === folderId ? { ...t, folderId: null } : t);
+    localStorage.setItem('vault_tools', JSON.stringify(tools));
+    saveFolders(getFolders().filter(x => x.id !== folderId));
+    renderToolsModal(); renderCategoryList(); pushToGH(); showToast('🗑 Carpeta eliminada');
+}
+
+// MARCADORES FORM
+function openBookmarkForm(category, toolId = null, folderId = null) {
+    const t = toolId ? tools.find(x => x.id === toolId) : null;
+    const cat = category || currentCategory;
+    document.getElementById('tool-form-title').innerText = t ? '✏️ EDITAR MARCADOR' : '＋ NUEVO MARCADOR';
+    document.getElementById('tool-id').value = t ? t.id : '';
+    document.getElementById('tool-category').value = cat;
+    document.getElementById('tool-name').value = t ? t.name : '';
+    document.getElementById('tool-url').value = t ? t.url : '';
+    const folders = getFolders().filter(f => f.categoryLabel === cat);
+    const sel = document.getElementById('tool-folder-select');
+    sel.innerHTML = `<option value="">— Sin carpeta —</option>` + folders.map(f => `<option value="${f.id}">${f.emoji} ${f.name}</option>`).join('');
+    sel.value = t ? (t.folderId || '') : (folderId || '');
+    document.getElementById('modal-tool-form').classList.add('open');
+}
+
+function editBookmark(id) { const t = tools.find(x => x.id === id); if (t) openBookmarkForm(t.category, id, t.folderId); }
+
+async function deleteBookmark(id) {
+    if (!confirm('¿Eliminar marcador?')) return;
+    tools = tools.filter(x => x.id !== id); localStorage.setItem('vault_tools', JSON.stringify(tools));
+    renderToolsModal(); renderCategoryList(); await pushToGH(); showToast('🗑 Marcador eliminado');
+}
+
+// SINCRONIZACION Y EVENTOS
+const getConfig = () => JSON.parse(localStorage.getItem('vault_config')) || { token:'', repo:'', path:'' };
+const showToast = (m) => { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(() => t.style.display='none', 2200); };
+
+async function syncAll() {
+    try { items = JSON.parse(localStorage.getItem('vault_data')) || []; tools = JSON.parse(localStorage.getItem('vault_tools')) || []; } catch(e) { items = []; tools = []; }
+    renderAll();
+    const cfg = getConfig(); if (!cfg.token || !cfg.repo) return;
+    try {
+        const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
+        const res = await fetch(url, { headers: { Authorization: `token ${cfg.token}` } });
+        if (res.ok) {
+            const data = await res.json();
+            const cloud = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+            if (cloud) {
+                if (cloud.prompts) items = cloud.prompts;
+                if (cloud.tools) tools = cloud.tools;
+                if (cloud.folders) saveFolders(cloud.folders);
+                if (cloud.categories) saveCategories(cloud.categories);
+            }
+            localStorage.setItem('vault_data', JSON.stringify(items));
+            localStorage.setItem('vault_tools', JSON.stringify(tools));
+            renderAll();
+        }
+    } catch(e) { console.error(e); }
+}
+
+async function pushToGH() {
+    const cfg = getConfig(); if (!cfg.token || !cfg.repo) return;
+    const url = `https://api.github.com/repos/${cfg.repo}/contents/${cfg.path}`;
+    const payload = { prompts: items, tools, folders: getFolders(), categories: getCategories() };
+    try {
+        const gr = await fetch(url, { headers: { Authorization: `token ${cfg.token}` } });
+        let sha = gr.ok ? (await gr.json()).sha : '';
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+        await fetch(url, { method:'PUT', headers:{ Authorization:`token ${cfg.token}` }, body: JSON.stringify({ message:'Update Vault', content, sha }) });
+        showToast('✓ Nube actualizada');
+    } catch(e) { console.error(e); }
+}
+
+function renderGrid() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const tagQ = document.getElementById('tag-badge').style.display === 'flex' ? document.getElementById('tag-text').innerText.toLowerCase() : '';
+    const filtered = items.filter(i => {
+        const m = (i.titulo||'').toLowerCase().includes(q) || (i.tags||'').toLowerCase().includes(q) || (i.categoria||'').toLowerCase().includes(q);
+        const t = tagQ ? (i.tags||'').toLowerCase().includes(tagQ) : true;
+        return currentFilter === 'fav' ? (i.fav && m && t) : (m && t);
+    });
+    document.getElementById('main-grid').innerHTML = filtered.map(i => `
+        <div class="card" data-id="${i.id}">
+            <div class="fav-btn-card ${i.fav?'active':''}" onclick="toggleFav('${i.id}',event)">★</div>
+            <img src="${i.imgUrl||'https://via.placeholder.com/300x150?text=No+Image'}" class="card-img" onclick="openModal('${i.id}')">
+            <span class="card-model">${i.modelo||'SDXL'}</span>
+            ${i.link?`<a href="${i.link}" target="_blank" class="card-link-label" onclick="event.stopPropagation()">${i.linkLabel||'ORIGEN'} ↗</a>`:''}
+            <div class="card-content" onclick="openModal('${i.id}')">
+                <div class="card-title">${i.titulo||'Sin título'}</div>
+                <div class="card-info-row"><span class="card-cat">${i.categoria||'Gral'}</span></div>
+                <div class="card-tags">${(i.tags||'').split(' ').filter(t=>t.startsWith('#')).map(t=>`<span class="card-hashtag" onclick="event.stopPropagation();setSearch('${t}')">${t}</span>`).join('')}</div>
+            </div>
+            <div class="card-actions">
+                <button class="card-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('${(i.promptPos||'').replace(/'/g,"\\'")}');showToast('📋 Copiado');">📋 POS</button>
+                <button class="card-btn" onclick="event.stopPropagation();navigator.clipboard.writeText('${(i.promptNeg||'').replace(/'/g,"\\'")}');showToast('📋 Copiado');">📋 NEG</button>
+            </div>
+        </div>`).join('');
+}
+
+function renderSidebar() {
+    const tags = [...new Set(items.flatMap(i => (i.tags||'').split(' ').filter(t => t.startsWith('#'))))];
+    document.getElementById('sidebar-tags').innerHTML = tags.map(t => `<button class="tag-btn" onclick="setSearch('${t}')">${t}</button>`).join('');
+}
+
+function renderAll() { renderGrid(); renderSidebar(); renderCategoryList(); }
+
+document.addEventListener('click', async (e) => {
+    const id = e.target.id;
+
+    // Helper: cierra sidebar en mobile al interactuar con nav
+    function closeSidebarMobile() {
+        if (window.innerWidth <= 768) {
+            const sb = document.getElementById('sidebar');
+            sb.classList.remove('open');
+            sb.classList.remove('expanded');
+            sb.classList.add('collapsed');
+        }
+    }
+
+    if (id === 'm-toggle') { const sb = document.getElementById('sidebar'); sb.classList.toggle('open'); sb.classList.remove('collapsed'); sb.classList.add('expanded'); }
+    if (id === 'close-sidebar') { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar').classList.remove('expanded'); document.getElementById('sidebar').classList.add('collapsed'); }
+    if (id === 'sb-toggle') {
+        const sb = document.getElementById('sidebar');
+        const isExpanded = !sb.classList.contains('collapsed');
+        if (isExpanded) {
+            sb.classList.add('collapsed');
+            sb.classList.remove('expanded');
+        } else {
+            sb.classList.remove('collapsed');
+            sb.classList.add('expanded');
+        }
+        const btn = document.getElementById('sb-toggle');
+        btn.textContent = sb.classList.contains('collapsed') ? '☰' : '←';
+        btn.setAttribute('data-tooltip', sb.classList.contains('collapsed') ? 'Expandir menú' : 'Colapsar menú');
+    }
+
+    // Expandir sidebar al click en zona vacía cuando está colapsado (solo desktop)
+    const sb = document.getElementById('sidebar');
+    if (
+        window.innerWidth > 768 &&
+        sb.classList.contains('collapsed') &&
+        sb.contains(e.target) &&
+        !e.target.closest('button') &&
+        !e.target.closest('a') &&
+        !e.target.closest('.nav-item') &&
+        !e.target.closest('.tag-btn')
+    ) {
+        sb.classList.remove('collapsed');
+        sb.classList.add('expanded');
+        document.getElementById('sb-toggle').textContent = '←';
+    }
+    if (id === 'btn-new') { openModal(); closeSidebarMobile(); }
+    if (id === 'btn-open-cat-modal') openNewCategoryModal();
+    if (id === 'btn-config') {
+        const cfg = getConfig(); document.getElementById('cfg-token').value = cfg.token;
+        document.getElementById('cfg-repo').value = cfg.repo; document.getElementById('cfg-path').value = cfg.path;
+        document.getElementById('modal-config').classList.add('open');
+    }
+    if (id === 'btn-new-folder') openNewFolderForm();
+    if (id === 'btn-add-bookmark') openBookmarkForm(currentCategory);
+    if (id === 'btn-save-folder') saveFolder();
+    if (id === 'btn-cancel-folder') document.getElementById('inline-folder-form').classList.remove('open');
+    if (id === 'btn-save-tool') {
+        const existId = document.getElementById('tool-id').value;
+        const category = document.getElementById('tool-category').value;
+        const folderId = document.getElementById('tool-folder-select').value || null;
+        const entry = { id: existId || 't' + Date.now(), name: document.getElementById('tool-name').value.trim(), url: document.getElementById('tool-url').value.trim(), category, folderId };
+        if (!entry.url) { showToast('⚠ URL requerida'); return; }
+        const idx = tools.findIndex(x => x.id === entry.id); if (idx > -1) tools[idx] = entry; else tools.push(entry);
+        localStorage.setItem('vault_tools', JSON.stringify(tools)); document.getElementById('modal-tool-form').classList.remove('open');
+        renderToolsModal(); renderCategoryList(); await pushToGH(); showToast('✓ Guardado');
+    }
+    if (id === 'btn-save-new-category') {
+        const emoji = document.getElementById('new-cat-emoji').value.trim() || '💡';
+        const name = document.getElementById('new-cat-name').value.trim().toUpperCase();
+        if (name) {
+            const cats = getCategories(); cats.push({ id: 'c' + Date.now(), emoji, name });
+            saveCategories(cats); document.getElementById('modal-new-category').classList.remove('open');
+            renderCategoryList(); pushToGH();
+        }
+    }
+    if (id === 'btn-save-config') {
+        const cfg = { token: document.getElementById('cfg-token').value.trim(), repo: document.getElementById('cfg-repo').value.trim(), path: document.getElementById('cfg-path').value.trim() };
+        localStorage.setItem('vault_config', JSON.stringify(cfg)); document.getElementById('modal-config').classList.remove('open');
+        showToast('✓ Configuración guardada'); syncAll();
+    }
+    if (id === 'btn-save') {
+        const pid = document.getElementById('edit-id').value || 'p' + Date.now();
+        const entry = { id:pid, titulo:document.getElementById('inp-titulo').value, categoria:document.getElementById('inp-cat').value, tags:document.getElementById('inp-tags').value, promptPos:document.getElementById('inp-pos').value, promptNeg:document.getElementById('inp-neg').value, notas:document.getElementById('inp-notas').value, imgUrl:document.getElementById('inp-img').value, link:document.getElementById('inp-link').value, linkLabel:document.getElementById('inp-link-label').value, modelo:document.getElementById('inp-model').value, fav: items.find(x=>x.id===pid)?.fav||false };
+        const idx = items.findIndex(x => x.id === pid); if (idx > -1) items[idx] = entry; else items.unshift(entry);
+        localStorage.setItem('vault_data', JSON.stringify(items)); renderAll();
+        document.getElementById('modal-edit').classList.remove('open'); await pushToGH();
+    }
+    if (id === 'btn-delete' && confirm('¿Borrar prompt?')) {
+        items = items.filter(x => x.id !== document.getElementById('edit-id').value);
+        localStorage.setItem('vault_data', JSON.stringify(items)); renderAll();
+        document.getElementById('modal-edit').classList.remove('open'); await pushToGH();
+    }
+    if (e.target.classList.contains('close-trigger') || e.target.classList.contains('modal-overlay')) {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+    }
+    if (id === 'btn-clear-tag') { document.getElementById('tag-badge').style.display = 'none'; renderGrid(); }
+});
+
+function openModal(id = null) {
+    document.getElementById('modal-edit').classList.add('open');
+    if (id) {
+        const i = items.find(x => x.id === id); document.getElementById('edit-id').value = id;
+        document.getElementById('inp-titulo').value = i.titulo; document.getElementById('inp-cat').value = i.categoria;
+        document.getElementById('inp-tags').value = i.tags; document.getElementById('inp-pos').value = i.promptPos;
+        document.getElementById('inp-neg').value = i.promptNeg; document.getElementById('inp-notas').value = i.notas;
+        document.getElementById('inp-img').value = i.imgUrl; document.getElementById('inp-link').value = i.link;
+        document.getElementById('inp-link-label').value = i.linkLabel; document.getElementById('inp-model').value = i.modelo;
+        document.getElementById('prev-img').src = i.imgUrl; document.getElementById('btn-delete').style.display = 'block';
+    } else {
+        document.getElementById('edit-id').value = '';
+        document.querySelectorAll('#modal-edit input, #modal-edit textarea').forEach(el => el.value = '');
+        document.getElementById('prev-img').src = ''; document.getElementById('btn-delete').style.display = 'none';
+    }
+}
+
+function toggleFav(id, e) {
+    e.stopPropagation(); const idx = items.findIndex(x => x.id === id);
+    if (idx > -1) { items[idx].fav = !items[idx].fav; localStorage.setItem('vault_data', JSON.stringify(items)); renderGrid(); pushToGH(); }
+}
+
+function setSearch(t) { document.getElementById('tag-text').innerText = t; document.getElementById('tag-badge').style.display = 'flex'; renderGrid(); if (window.innerWidth <= 768) { const sb = document.getElementById('sidebar'); sb.classList.remove('open'); sb.classList.remove('expanded'); sb.classList.add('collapsed'); } }
+function setGlobalFilter(f) { currentFilter = f; document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); event.target.closest('.nav-item').classList.add('active'); renderGrid(); if (window.innerWidth <= 768) { const sb = document.getElementById('sidebar'); sb.classList.remove('open'); sb.classList.remove('expanded'); sb.classList.add('collapsed'); } }
+
+// UPPERCASE / LOWERCASE AUTOMATICO
+['inp-titulo','inp-cat','inp-link-label','inp-model','new-cat-name','edit-folder-name'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.oninput = function() { const p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p,p); };
+});
+document.getElementById('inp-tags').oninput = function() { const p = this.selectionStart; this.value = this.value.toLowerCase(); this.setSelectionRange(p,p); };
+document.getElementById('inp-tags').addEventListener('keydown', function(e) {
+    if (e.key === ' ') {
+        e.preventDefault();
+        const val = this.value;
+        const pos = this.selectionStart;
+        // Find start of current word
+        let wordStart = pos;
+        while (wordStart > 0 && val[wordStart - 1] !== ' ') wordStart--;
+        const word = val.slice(wordStart, pos);
+        if (word.length > 0 && !word.startsWith('#')) {
+            this.value = val.slice(0, wordStart) + '#' + word + ' ' + val.slice(pos);
+            const newPos = wordStart + word.length + 2;
+            this.setSelectionRange(newPos, newPos);
+        } else {
+            this.value = val.slice(0, pos) + ' ' + val.slice(pos);
+            const newPos = pos + 1;
+            this.setSelectionRange(newPos, newPos);
+        }
+    }
+});
+
+// SELECCION DE PESO
+document.querySelectorAll('.prompt-area').forEach(area => {
+    area.onmouseup = (e) => {
+        const sel = area.value.substring(area.selectionStart, area.selectionEnd).trim();
+        if (sel.length > 0) {
+            selectionData = { text:sel, start:area.selectionStart, end:area.selectionEnd, targetId:area.id };
+            const mm = document.getElementById('weight-modal'); mm.style.display = 'flex'; mm.style.left = (e.pageX+10)+'px'; mm.style.top = (e.pageY-60)+'px';
+        } else { document.getElementById('weight-modal').style.display = 'none'; }
+    };
+});
+document.getElementById('btn-apply-weight').onclick = () => {
+    const w = document.getElementById('weight-input').value; const area = document.getElementById(selectionData.targetId);
+    area.value = area.value.substring(0, selectionData.start) + `(${selectionData.text}:${w})` + area.value.substring(selectionData.end);
+    document.getElementById('weight-modal').style.display = 'none';
+};
+document.getElementById('btn-undo-weight').onclick = () => {
+    const area = document.getElementById(selectionData.targetId); const t = selectionData.text;
+    if (t.startsWith('(') && t.endsWith(')')) {
+        const clean = t.replace(/^\(|\)$/g,'').split(':')[0];
+        area.value = area.value.substring(0, selectionData.start) + clean + area.value.substring(selectionData.end);
+    }
+    document.getElementById('weight-modal').style.display = 'none';
+};
+
+document.getElementById('inp-img').oninput = (e) => document.getElementById('prev-img').src = e.target.value;
+document.getElementById('search-input').oninput = () => renderGrid();
+
+// Colapsar sidebar al clickear en el grid de imágenes
+document.getElementById('main-grid').addEventListener('click', () => {
+    const sb = document.getElementById('sidebar');
+    if (!sb.classList.contains('collapsed')) {
+        sb.classList.add('collapsed');
+        sb.classList.remove('expanded');
+        if (window.innerWidth <= 768) sb.classList.remove('open');
+        document.getElementById('sb-toggle').textContent = '☰';
+    }
+});
+
+syncAll();
+</script>
+</body>
+</html>
