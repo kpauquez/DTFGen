@@ -582,6 +582,13 @@
       "url": "https://imaginex.video/es/app?media=image&serviceId=image-tools",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778954374805",
+      "name": "kaze.ai",
+      "url": "https://kaze.ai/es?utm_source=moge.ai",
+      "category": "📖 ENCICLOPEDIA",
+      "folderId": null
     }
   ],
   "folders": [
