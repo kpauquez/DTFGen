@@ -624,6 +624,13 @@
       "url": "https://imggen.ai/tools/upscale-image",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778955122759",
+      "name": "notegpt",
+      "url": "https://notegpt.io/ai-models/gemini-3-pro",
+      "category": "📖 ENCICLOPEDIA",
+      "folderId": null
     }
   ],
   "folders": [
