@@ -638,6 +638,13 @@
       "url": "https://app.claila.com/chat",
       "category": "📖 ENCICLOPEDIA",
       "folderId": null
+    },
+    {
+      "id": "t1778955288365",
+      "name": "vidmore",
+      "url": "https://www.vidmore.com/es/image-upscaler/",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
