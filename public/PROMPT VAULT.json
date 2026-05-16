@@ -617,6 +617,13 @@
       "url": "https://www.aiease.ai/es/image-upscaler/",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778954980905",
+      "name": "imggen",
+      "url": "https://imggen.ai/tools/upscale-image",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
