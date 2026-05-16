@@ -554,6 +554,13 @@
       "url": "https://app.morphstudio.com/image-upscaler",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778954031508",
+      "name": "cloudinary",
+      "url": "https://cloudinary.com/tools/image-upscale",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
