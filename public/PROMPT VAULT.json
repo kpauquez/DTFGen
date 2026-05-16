@@ -547,6 +547,13 @@
       "url": "https://ezremove.ai/es/image-upscaler/",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778953974217",
+      "name": "morphs",
+      "url": "https://app.morphstudio.com/image-upscaler",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
