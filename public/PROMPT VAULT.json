@@ -596,6 +596,13 @@
       "url": "https://www.leanimg.com/es/upscale-image",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778954752365",
+      "name": "labs.google",
+      "url": "https://labs.google/fx/es/tools/flow/project/eb671003-b879-4942-9d72-b07812ede347",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
