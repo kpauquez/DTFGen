@@ -589,6 +589,13 @@
       "url": "https://kaze.ai/es?utm_source=moge.ai",
       "category": "📖 ENCICLOPEDIA",
       "folderId": null
+    },
+    {
+      "id": "t1778954578938",
+      "name": "leanimg",
+      "url": "https://www.leanimg.com/es/upscale-image",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
