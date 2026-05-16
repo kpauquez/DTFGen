@@ -652,6 +652,13 @@
       "url": "https://digen.ai/es/tools/image-upscale",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778955603105",
+      "name": "vanceai",
+      "url": "https://vanceai.com/workspace-new/?tool=image_enlarger",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
