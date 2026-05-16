@@ -540,6 +540,13 @@
       "url": "https://www.webability.io/tools/ai-image-upscaler",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778953928219",
+      "name": "ezremove",
+      "url": "https://ezremove.ai/es/image-upscaler/",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
