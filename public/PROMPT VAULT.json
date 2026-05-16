@@ -435,6 +435,13 @@
       "url": "https://www.img2go.com/upscale-image",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778952838162",
+      "name": "anifun",
+      "url": "https://anifun.ai/app/ai-image-upscaler/",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
