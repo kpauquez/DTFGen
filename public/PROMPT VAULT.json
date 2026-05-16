@@ -407,6 +407,13 @@
       "url": "https://www.krea.ai/features/ai-upscaler",
       "category": "🔍 UPSCALERS",
       "folderId": null
+    },
+    {
+      "id": "t1778952644104",
+      "name": "IMGUpscaling",
+      "url": "https://image-upscaling.net/upscaling/en.html",
+      "category": "🔍 UPSCALERS",
+      "folderId": null
     }
   ],
   "folders": [
