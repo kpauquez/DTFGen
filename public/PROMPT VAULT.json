@@ -1,6 +1,20 @@
 {
   "prompts": [
     {
+      "id": "p1779024404059",
+      "titulo": "POSTER ILLUSTRATIONs",
+      "categoria": "POSTER",
+      "tags": "#poster ",
+      "promptPos": "A streetwear poster illustration using the attached objects, rendered 100% identical, ultra-detailed with a bold editorial manga layout, combining the aesthetics of modern Japanese fashion branding with high-energy shonen anime visuals. The white background is dominated by a paper texture, with intense saturated orange, deep black, and subtle gray accents as the primary color palette. A dynamic, asymmetrical composition filled with large-scale typography, layered Japanese kanji (words adapted to the object's theme), branding patches, barcode graphics, tactical labels, and magazine-inspired layout elements distributed around the characters.\nA strong urban-techwear visual identity is achieved with a glossy nylon fabric rendering, reflective highlights, detailed stitching, zipper textures, utility straps, embroidered patches, and layered accessories. Very subtle cel-shading is mixed with semi-realistic rendering, featuring sharp lines, dramatic contrast, sharp edge lighting, and painting-like shadow gradients. The folds of the garments are rendered with aggressive angular shapes and glossy reflections.\nThe background design uses expressive paint strokes, ink splatters, halftone textures, rough brushstrokes, worn print grain, smooth paper textures, and  The aesthetics of a manga poster. Typography is integrated into the composition using a large, dense, bold font, vertical Japanese text columns, emblem symbols, a power stats panel, logos, icons, and scattered micrographic details.\nThe poster layout feels premium, energetic, and collectible—a strong balance between negative space and dense graphic clusters. The clean white negative space contrasts with explosive orange paint strokes and black graphic accents. Highly detailed, cinematic anime illustrations with ultra-sharp rendering, dynamic pose framing, layered depth, and a stylish commercial poster finish",
+      "promptNeg": "",
+      "notas": "",
+      "imgUrl": "https://scontent.faep4-3.fna.fbcdn.net/v/t39.30808-6/702651790_10163670142289404_6406266962436584995_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFreSl4TWG1T2OQ9sTHT3ogFA8zU2Fd3TUUDzNTYV3dNdhcXOIfHuwvBUSKqSE-q4o&_nc_ohc=KoJvZMOzWY4Q7kNvwFquxOY&_nc_oc=AdrIoG9HzQ-qgNAwlsEbqEEGQz-8CoujTKhiBM3TzfqvTUKV4oJ28OdTurZo7dorm72cLzzmSzF88q7_Wwa62lty&_nc_zt=23&_nc_ht=scontent.faep4-3.fna&_nc_gid=8iq6-bEVKwJxpUyVHsah1Q&_nc_ss=782a8&oh=00_Af48LLhYR0r1LpbJJI9-3pBxRJwUJmea9OKQ78ZrZzQ5nw&oe=6A0F8EC0",
+      "link": "https://www.facebook.com/bondanisty/posts/pfbid09yPdaJ65fQjN255CBY6ENQbNQuPtGpCfWieeBZgUwuDNxs7f2npPeBJRocSGd7Vrl",
+      "linkLabel": "FACEBOOK",
+      "modelo": "CHATGPT",
+      "fav": false
+    },
+    {
       "id": "p1778857968965",
       "titulo": "GTA VI",
       "categoria": "GAMES",
@@ -693,48 +707,6 @@
       "categoryLabel": "📂 REPOSITORIOS",
       "emoji": "📁",
       "name": "DOWNLOADS"
-    }
-  ],
-  "categories": [
-    {
-      "id": "c1",
-      "emoji": "💡",
-      "name": "INSPIRA"
-    },
-    {
-      "id": "c2",
-      "emoji": "🤖",
-      "name": "IAS"
-    },
-    {
-      "id": "c3",
-      "emoji": "🖼️",
-      "name": "IMG-TO-TXT"
-    },
-    {
-      "id": "c4",
-      "emoji": "🚀",
-      "name": "EXPANDIR IA"
-    },
-    {
-      "id": "c5",
-      "emoji": "🎨",
-      "name": "IMG GEN"
-    },
-    {
-      "id": "c6",
-      "emoji": "🔍",
-      "name": "UPSCALERS"
-    },
-    {
-      "id": "c7",
-      "emoji": "📂",
-      "name": "REPOSITORIOS"
-    },
-    {
-      "id": "c8",
-      "emoji": "📖",
-      "name": "ENCICLOPEDIA"
     }
   ]
 }
